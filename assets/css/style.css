@@ -3,16 +3,30 @@
     margin-left: 10px;
     border-radius: 5px;
 } */
-
+body{
+    background-color: #444f5e;
+}
 #card1 {
-    background-color: #e9ecef;
+    background-color: #1d8686;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     padding: 2px 16px;
 }
 #card2 {
-    background-color: #e9ecef;
+    background-color: #1d8686;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
     padding: 2px 16px;
+}
+#card3 {
+    background-color: #1d8686;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    padding: 2px 16px;
+}
+.jumbotron {
+    background-color: #444f5e
+}
+.jumbotron h1, p{
+    color: white;
 }
