@@ -1,0 +1,22 @@
+{
+  "name": "nettenz.github.io",
+  "version": "1.0.0",
+  "description": "Trying out Bootstrap 4, svg's, and JS for animations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netteNz/netteNz.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/netteNz/netteNz.github.io/issues"
+  },
+  "homepage": "https://netteNz.github.io/mywebsite",
+  "dependencies": {
+    "gh-pages": "^2.0.1"
+  }
+}
