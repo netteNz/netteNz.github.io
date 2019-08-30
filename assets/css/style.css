@@ -11,6 +11,9 @@
     padding-left: 0%;
     padding-right: 0%;
 }
+.jumbotron {
+    margin-bottom: 0%;
+}
 .carousel-item {
     height: 100vh;
     min-height: 350px;
