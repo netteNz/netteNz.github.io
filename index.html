@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
+    <title>Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: sans-serif; }
+        body { 
+            font-family: sans-serif;
+            background: rgb(2,0,36);
+            background: linear-gradient(90deg, rgba(2,0,36,1) 5%, rgba(9,9,121,1) 44%, rgba(0,198,255,1) 100%);
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen text-gray-900">
-    <div class="max-w-2xl w-full p-8 text-center">
+<body class="text-white">
+    <nav class="w-full p-4 bg-opacity-50 bg-gray-900 shadow-md fixed top-0 left-0">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">My Portfolio</h1>
+            <ul class="flex space-x-6">
+                <li><a href="#" class="hover:text-gray-300">Home</a></li>
+                <li><a href="#projects" class="hover:text-gray-300">Projects</a></li>
+                <li><a href="#contact" class="hover:text-gray-300">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="flex flex-col items-center justify-center min-h-screen w-full text-center mt-24">
         <h1 class="text-4xl font-bold">Welcome to My Portfolio</h1>
         <p class="text-lg mt-4">A minimal setup using Tailwind CSS.</p>
         <div class="mt-6">
