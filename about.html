@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <!-- PyScript CSS -->
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <!-- This script tag bootstraps PyScript -->
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: rgb(2, 12, 78);
+            background: linear-gradient(90deg, rgba(2, 12, 78, 1) 0%, rgba(25, 61, 94, 1) 52%, rgba(64, 101, 142, 1) 100%);
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+    
+        #loading {
+            outline: none;
+            border: none;
+            background: transparent
+        }
+        
+        .pyscript {
+            padding-top: 60px; /* Gives space below navbar */
+        }
+    </style>
+    <script type="module">
+        const loading = document.getElementById('loading');
+        addEventListener('py:ready', () => loading.close());
+        loading.showModal();
+    </script>
+</head>
+
+<body class="text-white">
+    <dialog id="loading">
+        <h1>Loading...</h1>
+    </dialog>
+
+    <nav class="w-full p-4 bg-opacity-50 bg-gray-900 shadow-md fixed top-0 left-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold">Earthquakes Map</h1>
+            <ul class="flex space-x-6">
+                <li><a href="/index.html" class="hover:text-gray-300">Home</a></li>
+                <li><a href="#projects" class="hover:text-gray-300">Projects</a></li>
+                <li><a href="#contact" class="hover:text-gray-300">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="pyscript">
+        <div id="folium" style="height: 600px; width: 100%; margin-top: 80px; position: relative; z-index: 1;"></div>
+        <script type="py" src="./projects/earthquake-map/main.py" config="./pyscript.toml"></script>
+    </section>
+
+
+</body>
+
+</html>
