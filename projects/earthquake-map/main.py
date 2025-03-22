@@ -49,6 +49,12 @@ try:
     if element:
         element.innerHTML = map_html
         console.log("Map loaded successfully")
+        
+        # Dispatch event to signal map is loaded
+        from js import window
+        map_loaded_event = window.document.createEvent('Event')
+        map_loaded_event.initEvent('map:loaded', True, True)
+        window.document.dispatchEvent(map_loaded_event)
     else:
         console.error("Element with ID 'folium' not found")
 except Exception as e:
