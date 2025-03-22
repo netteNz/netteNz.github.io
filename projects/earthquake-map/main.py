@@ -7,7 +7,7 @@ try:
     url = "https://raw.githubusercontent.com/netteNz/earthquakes-pr/refs/heads/master/query45.csv"
 
     pr = folium.Map(location=[18.2208, -66.5901],
-                    zoom_start=10,
+                    zoom_start=8,
                     tiles='cartodbdark_matter',
                     prefer_canvas=True
                   )
@@ -21,9 +21,9 @@ try:
     
     # Function to set circle color based on earthquake magnitude
     def get_circle_color(magnitude):
-        if magnitude < 3.0:
+        if magnitude < 4:
             return '#00FF00'  # Green for small earthquakes
-        elif 3.0 <= magnitude < 5.0:
+        elif 4.5 <= magnitude < 5.5:
             return '#FFFF00'  # Yellow for moderate earthquakes
         else:
             return '#FF0000'  # Red for strong earthquakes
