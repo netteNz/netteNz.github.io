@@ -27,11 +27,22 @@
             padding-top: 60px; /* Gives space below navbar */
         }
     </style>
-    <script type="module">
-        const loading = document.getElementById('loading');
-        addEventListener('py:ready', () => loading.close());
-        loading.showModal();
-    </script>
+        <script type="module">
+            const loading = document.getElementById('loading');
+            
+            // Close on py:ready as a fallback
+            addEventListener('py:ready', () => {
+                console.log("Python runtime ready");
+            });
+            
+            // Close when map is actually loaded
+            addEventListener('map:loaded', () => {
+                console.log("Map fully loaded");
+                loading.close();
+            });
+            
+            loading.showModal();
+        </script>
     </head>
 
     <body class="text-white">
