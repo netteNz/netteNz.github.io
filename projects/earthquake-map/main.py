@@ -3,6 +3,7 @@ import pandas as pd
 from pyodide.http import open_url
 from js import document, console
 
+  
 try:
     url = "https://raw.githubusercontent.com/netteNz/earthquakes-pr/refs/heads/master/query45.csv"
 

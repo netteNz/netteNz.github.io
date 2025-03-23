@@ -11,11 +11,89 @@
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-okaidia.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
     <style>
         body {
             font-family: 'JetBrains Mono', monospace;
-            background: rgb(2, 12, 78);
-            background: linear-gradient(180deg, rgba(2, 12, 78, 1) 0%, rgba(25, 61, 94, 1) 52%, rgba(64, 101, 142, 1) 100%);
+            background: rgb(13, 17, 23);
+        }
+
+        pre[class*="language-"] {
+            background-color: #0d1117 !important;
+            padding: 2rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-size: 1.1rem;
+            width: 90%;
+            max-width: 900px;
+            margin: 2rem auto;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid #30363d;
+        }
+
+        code[class*="language-"] {
+            font-family: 'JetBrains Mono', monospace;
+            color: #c9d1d9;
+            background: transparent;
+        }
+
+        /* Syntax colors */
+        .token.comment,
+        .token.prolog,
+        .token.doctype,
+        .token.cdata {
+            color: #8b949e;
+            font-style: italic;
+        }
+
+        .token.punctuation {
+            color: #c9d1d9;
+        }
+
+        .token.property,
+        .token.constant,
+        .token.symbol,
+        .token.deleted {
+            color: #ffa198;
+        }
+
+        .token.boolean,
+        .token.number {
+            color: #f2cc60;
+        }
+
+        .token.string,
+        .token.char {
+            color: #a5d6ff;
+        }
+
+        .token.selector,
+        .token.inserted,
+        .token.attr-name {
+            color: #7ee787;
+        }
+
+        .token.function,
+        .token.class-name {
+            color: #79c0ff;
+        }
+
+        .token.keyword,
+        .token.atrule {
+            color: #ff7b72;
+        }
+
+        .token.operator,
+        .token.entity,
+        .token.url {
+            color: #d2a8ff;
+        }
+
+        .token.regex,
+        .token.variable {
+            color: #d2a8ff;
         }
     </style>
 </head>
@@ -32,12 +110,30 @@
         </div>
     </nav>
 
-    <div class="flex flex-col items-center justify-center min-h-screen w-full text-center mt-24">
-        <h1 class="text-4xl font-bold">Welcome to My Portfolio</h1>
-        <p class="text-lg mt-4">A minimal setup... under construction using Tailwind CSS and PyScript.</p>
-        <div class="mt-6">
-            <a href="/about.html" class="px-6 py-3 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600">Earthquakes Visualization Demo</a>
+    <div class="flex flex-col items-center justify-center min-h-screen w-full text-center mt-24 px-4">
+        <div class="w-full max-w-3xl bg-[#0d1117] border border-[#30363d] rounded-xl p-8 shadow-lg">
+            <h1 class="text-3xl sm:text-4xl font-bold text-white mb-4">Welcome to My Portfolio</h1>
+            <p class="text-base sm:text-lg text-[#c9d1d9] mb-6 font-mono">
+                A minimal setup... under construction using <span class="text-blue-400">Tailwind CSS</span> and <span class="text-pink-400">PyScript</span>.
+            </p>
+            <a href="/about.html"
+               class="inline-block px-6 py-3 font-mono text-sm text-blue-300 border border-blue-500 rounded-md hover:bg-blue-500 hover:text-white transition">
+                Earthquakes Visualization Demo
+            </a>
         </div>
+    </div>
+    
+
+    <div class="flex flex-col items-center justify-center min-h-screen w-full text-center mt-24 px-4" id="contact">
+        <h2 class="text-4xl font-bold mb-8">Contact Details</h2>
+        <pre><code class="language-python">
+    class ContactDetails:
+        def __init__(self):
+            self.name = "Emanuel Lugo Rivera"
+            self.email = "lugo.emanuel@gmail.com"
+            self.linkedin = "https://www.linkedin.com/in/lugo-emanuel/"
+            self.github = "https://github.com/netteNz"
+        </code></pre>
     </div>
 
     <footer class="w-full p-4 bg-opacity-50 bg-gray-900 text-center">
