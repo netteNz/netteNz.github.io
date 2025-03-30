@@ -7,8 +7,10 @@
     <!-- Primary Meta Tags -->
     <title>nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.</title>
     <meta name="title" content="nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
-    <meta name="description" content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
-    <meta name="keywords" content="nettenz, full-stack developer, web audio visualizer, React audio player, DJ streaming tools, LUFS meter, creative tech, GitHub Pages, portfolio">
+    <meta name="description"
+        content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
+    <meta name="keywords"
+        content="nettenz, full-stack developer, web audio visualizer, React audio player, DJ streaming tools, LUFS meter, creative tech, GitHub Pages, portfolio">
     <meta name="author" content="nettenz">
     <meta name="robots" content="index, follow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,14 +21,16 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nettenz.github.io/">
     <meta property="og:title" content="nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
-    <meta property="og:description" content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
+    <meta property="og:description"
+        content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
     <meta property="og:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://nettenz.github.io/">
     <meta name="twitter:title" content="nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
-    <meta name="twitter:description" content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
+    <meta name="twitter:description"
+        content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
     <meta name="twitter:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
 
 
@@ -36,8 +40,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-okaidia.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
@@ -49,7 +53,7 @@
 
         pre[class*="language-"] {
             background-color: #0d1117 !important;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 1rem;
             overflow-x: auto;
             font-size: 1.1rem;
@@ -122,6 +126,51 @@
         .token.variable {
             color: #d2a8ff;
         }
+
+        /* Responsive adjustments for the contact section */
+        @media (max-width: 768px) {
+            pre[class*="language-"] {
+                padding: 1rem;
+                font-size: 0.9rem;
+                width: 95%;
+            }
+
+            .contact-section {
+                min-height: auto !important;
+                padding: 4rem 0;
+            }
+        }
+
+        /* Add these styles to center contact details */
+        .contact-section pre {
+            text-align: left;
+            margin-left: auto;
+            margin-right: auto;
+            white-space: pre-wrap;
+            /* Allow wrapping */
+            word-break: break-word;
+            /* Break words that are too long */
+        }
+
+        /* For smaller screens, ensure text remains properly aligned */
+        @media (max-width: 768px) {
+            .contact-section pre {
+                width: 95%;
+                max-width: 100%;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            pre[class*="language-"] {
+                font-size: 0.8rem;
+                padding: 0.75rem;
+            }
+
+            .contact-section {
+                padding: 2rem 0;
+            }
+        }
     </style>
 </head>
 
@@ -164,7 +213,9 @@
             <!-- Description -->
             <div class="mb-10 max-w-2xl">
                 <p class="text-base sm:text-lg text-gray-400">
-                    I'm a Computer Engineer with a specialization in Cybersecurity. I enjoy building, designing, and creating intuitive digital experiences through software engineering, web development, data analysis, and interactive design. Take a look at some of my favorite projects below.
+                    I'm a Computer Engineer with a specialization in Cybersecurity. I enjoy building, designing, and
+                    creating intuitive digital experiences through software engineering, web development, data analysis,
+                    and interactive design. Take a look at some of my favorite projects below.
                 </p>
             </div>
 
@@ -183,11 +234,12 @@
         <div class="max-w-4xl w-full">
             <!-- Section title -->
             <h2 class="text-4xl font-bold mb-12 text-center sm:text-left">Projects</h2>
-            
+
             <!-- Projects grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Web Audio Player Card -->
-                <div class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
+                <div
+                    class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
                     <!-- Project image -->
                     <div class="h-48 bg-[#21262d] relative overflow-hidden">
                         <!-- Audio visualization placeholder -->
@@ -203,14 +255,14 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Project content -->
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-xl font-bold text-gray-100 mb-2">Web Audio Player</h3>
                         <p class="text-gray-400 mb-4">
                             A custom web audio player with visualization features, built using the Web Audio API.
                         </p>
-                        
+
                         <!-- Technologies -->
                         <div class="mb-4 mt-auto">
                             <div class="flex flex-wrap gap-2">
@@ -219,18 +271,24 @@
                                 <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Web Audio API</span>
                             </div>
                         </div>
-                        
+
                         <!-- Links -->
                         <div class="flex items-center space-x-4">
-                            <a href="https://github.com/netteNz/web-audio-app" class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            <a href="https://github.com/netteNz/web-audio-app"
+                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                                 </svg>
                                 Github
                             </a>
-                            <a href="http://nettenz.github.io/web-audio-app" class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            <a href="http://nettenz.github.io/web-audio-app"
+                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
                                 Live Demo
                             </a>
@@ -239,7 +297,8 @@
                 </div>
 
                 <!-- Earthquakes Visualization Card -->
-                <div class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
+                <div
+                    class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
                     <!-- Project image -->
                     <div class="h-48 bg-[#21262d] relative overflow-hidden">
                         <!-- Map visualization placeholder -->
@@ -247,26 +306,33 @@
                             <div class="relative w-full h-full flex items-center justify-center">
                                 <!-- Map background -->
                                 <div class="absolute inset-0 bg-[#1a1f29]"></div>
-                                
+
                                 <!-- Grid lines -->
-                                <div class="absolute inset-0" style="background-image: linear-gradient(rgba(110, 231, 183, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 231, 183, 0.1) 1px, transparent 1px); background-size: 20px 20px;"></div>
-                                
+                                <div class="absolute inset-0"
+                                    style="background-image: linear-gradient(rgba(110, 231, 183, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 231, 183, 0.1) 1px, transparent 1px); background-size: 20px 20px;">
+                                </div>
+
                                 <!-- Earthquake points -->
-                                <div class="absolute h-4 w-4 rounded-full bg-red-500 opacity-60 animate-ping" style="top: 45%; left: 35%;"></div>
-                                <div class="absolute h-3 w-3 rounded-full bg-yellow-500 opacity-60 animate-ping" style="top: 35%; left: 55%; animation-delay: 500ms;"></div>
-                                <div class="absolute h-2 w-2 rounded-full bg-green-400 opacity-60 animate-ping" style="top: 55%; left: 45%; animation-delay: 1000ms;"></div>
-                                <div class="absolute h-5 w-5 rounded-full bg-red-600 opacity-60 animate-ping" style="top: 60%; left: 30%; animation-delay: 1500ms;"></div>
+                                <div class="absolute h-4 w-4 rounded-full bg-red-500 opacity-60 animate-ping"
+                                    style="top: 45%; left: 35%;"></div>
+                                <div class="absolute h-3 w-3 rounded-full bg-yellow-500 opacity-60 animate-ping"
+                                    style="top: 35%; left: 55%; animation-delay: 500ms;"></div>
+                                <div class="absolute h-2 w-2 rounded-full bg-green-400 opacity-60 animate-ping"
+                                    style="top: 55%; left: 45%; animation-delay: 1000ms;"></div>
+                                <div class="absolute h-5 w-5 rounded-full bg-red-600 opacity-60 animate-ping"
+                                    style="top: 60%; left: 30%; animation-delay: 1500ms;"></div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Project content -->
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-xl font-bold text-gray-100 mb-2">Earthquake Visualization</h3>
                         <p class="text-gray-400 mb-4">
-                            Interactive map showing earthquake data in Puerto Rico with magnitude color coding and informative popups.
+                            Interactive map showing earthquake data in Puerto Rico with magnitude color coding and
+                            informative popups.
                         </p>
-                        
+
                         <!-- Technologies -->
                         <div class="mb-4 mt-auto">
                             <div class="flex flex-wrap gap-2">
@@ -276,44 +342,51 @@
                                 <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Pandas</span>
                             </div>
                         </div>
-                        
+
                         <!-- Links -->
                         <div class="flex items-center space-x-4">
-                            <a href="https://github.com/netteNz/earthquakes-pr" class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            <a href="https://github.com/netteNz/earthquakes-pr"
+                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
                                 </svg>
                                 Github
                             </a>
-                            <a href="earthquakes_pr.html" class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            <a href="earthquakes_pr.html"
+                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
                                 Live Demo
                             </a>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Additional project cards can be added here -->
             </div>
         </div>
     </section>
 
-    <div class="flex flex-col items-center justify-center min-h-screen w-full text-center mt-24 px-4" id="contact">
+    <div class="flex flex-col items-center justify-center py-16 w-full text-center px-4 contact-section" id="contact">
         <h2 class="text-4xl font-bold mb-8">Contact Details</h2>
-        <pre><code class="language-python">
-    class ContactDetails:
-        def __init__(self):
-            self.name = "Emanuel Lugo Rivera"
-            self.email = "lugo.emanuel@gmail.com"
-            self.linkedin = "https://www.linkedin.com/in/lugo-emanuel/"
-            self.github = "https://github.com/netteNz"
-        </code></pre>
+        <pre class="mx-auto"><code class="language-python">
+        class ContactDetails:
+            def __init__(self):
+                self.name     = "Emanuel Lugo Rivera"
+                self.email    = "lugo.emanuel@gmail.com"
+                self.linkedin = "<a href=\"https://www.linkedin.com/in/lugo-emanuel/\" class=\"text-blue-400 hover:underline\">https://www.linkedin.com/in/lugo-emanuel/</a>"
+                self.github   = "<a href=\"https://github.com/netteNz\" class=\"text-blue-400 hover:underline\">https://github.com/netteNz</a>"
+    </code></pre>
     </div>
 
     <footer class="w-full p-4 bg-opacity-50 bg-gray-900 text-center">
         <p>&copy; 2025 Emanuel Lugo. All rights reserved.</p>
+    </footer>
 </body>
 
 </html>
