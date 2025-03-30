@@ -21,11 +21,21 @@
         body {
             font-family: 'JetBrains Mono', monospace;
             background: rgb(13, 17, 23);
-            min-height: 100vh;
             padding-top: 64px;
             display: flex;
             flex-direction: column;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            /* Let them occupy full viewport */
         }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background: rgb(13, 17, 23);
+        }
+
 
         /* Fix PyScript styling */
         .pyscript {
@@ -37,22 +47,21 @@
 
         /* Fix Folium styling */
         #folium {
-            height: calc(100vh - 130px) !important; /* Account for nav + footer */
-            width: 100%;
-            margin: 0;
+            flex: 1;
+            /* Because you're using a dark background: */
             background-color: rgb(13, 17, 23) !important;
         }
-        
+
         /* Target Leaflet elements */
         .leaflet-container {
             background-color: rgb(13, 17, 23) !important;
         }
-        
+
         /* Footer positioning */
         footer {
             margin-top: auto;
         }
-        
+
         @media (max-height: 600px) {
             #folium {
                 height: 450px !important;
@@ -136,7 +145,7 @@
         <div id="folium"></div>
         <script type="py" src="./projects/earthquake-map/main.py" config="./pyscript.toml"></script>
     </section>
-    
+
     <!-- Footer -->
     <footer class="w-full p-4 bg-[#0d1117] text-center">
         <p class="text-gray-400">&copy; 2025 Emanuel Lugo. All rights reserved.</p>
