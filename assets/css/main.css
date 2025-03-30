@@ -17,22 +17,34 @@
     border: 5px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     border-top-color: #40658e;
-    animation: spin 1s ease-in-out infinite;
+    animation: spin 1s linear infinite;
     margin-bottom: 1.5rem;
 }
 
 @keyframes spin {
+    from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 .loading-text {
     font-size: 1.2rem;
     letter-spacing: 0.1em;
-    animation: pulse 1.5s infinite;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse {
-    0% { opacity: 0.6; }
-    50% { opacity: 1; }
-    100% { opacity: 0.6; }
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
 }

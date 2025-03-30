@@ -8,10 +8,19 @@ try:
     url = "https://raw.githubusercontent.com/netteNz/earthquakes-pr/refs/heads/master/query45.csv"
 
     pr = folium.Map(location=[18.2208, -66.5901],
-                    zoom_start=8,
+                    zoom_start=9,
                     tiles='cartodbdark_matter',
-                    prefer_canvas=True
+                    prefer_canvas=True,
+                    height='600px'  # Use a specific pixel value instead of calc()
                   )
+    
+    pr.get_name()  # Force initialization
+    # Additional styling for the map
+    pr.get_root().header.add_child(folium.Element("""
+        <style>
+            .leaflet-container { background: #0d1117 !important; }
+        </style>
+    """))
     
     data = open_url(url)
     
