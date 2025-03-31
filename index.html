@@ -51,12 +51,13 @@
             background: rgb(13, 17, 23);
         }
 
+
         pre[class*="language-"] {
             background-color: #0d1117 !important;
             padding: 1.5rem;
             border-radius: 1rem;
-            overflow-x: auto;
-            font-size: 1.1rem;
+            overflow-x: hidden;
+            font-size: 1rem;
             width: 90%;
             max-width: 900px;
             margin: 2rem auto;
@@ -215,15 +216,20 @@
                 <p class="text-base sm:text-lg text-gray-400">
                     I'm a Computer Engineer with a specialization in Cybersecurity. I enjoy building, designing, and
                     creating intuitive digital experiences through software engineering, web development, data analysis,
-                    and interactive design. Take a look at some of my favorite projects below.
+                    and interactive design. Take a look at some of my favorite projects with more to come.
                 </p>
             </div>
 
             <!-- Call to Action -->
             <div>
-                <a href="/index.html"
-                    class="px-6 py-3 border border-green-400 text-green-300 font-mono text-sm rounded hover:bg-green-400 hover:text-black transition">
-                    #
+                <a href="assets/documents/elr_2025_resume.pdf" download
+                    class="px-6 py-3 border border-green-400 text-green-300 font-mono text-sm rounded hover:bg-green-400 hover:text-black transition flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Download Resume
                 </a>
             </div>
 
@@ -375,12 +381,12 @@
     <div class="flex flex-col items-center justify-center py-16 w-full text-center px-4 contact-section" id="contact">
         <h2 class="text-4xl font-bold mb-8">Contact Details</h2>
         <pre class="mx-auto"><code class="language-python">
-        class ContactDetails:
-            def __init__(self):
-                self.name     = "Emanuel Lugo Rivera"
-                self.email    = "lugo.emanuel@gmail.com"
-                self.linkedin = "<a href=\"https://www.linkedin.com/in/lugo-emanuel/\" class=\"text-blue-400 hover:underline\">https://www.linkedin.com/in/lugo-emanuel/</a>"
-                self.github   = "<a href=\"https://github.com/netteNz\" class=\"text-blue-400 hover:underline\">https://github.com/netteNz</a>"
+    class ContactDetails:
+        def __init__(self):
+            self.name     = "Emanuel Lugo Rivera"
+            self.email    = "lugo.emanuel@gmail.com"
+            self.linkedin = "<a href=\"https://www.linkedin.com/in/lugo-emanuel/\" class=\"text-blue-400 hover:underline\">https://www.linkedin.com/in/lugo-emanuel/</a>"
+            self.github   = "<a href=\"https://github.com/netteNz\" class=\"text-blue-400 hover:underline\">https://github.com/netteNz</a>"
     </code></pre>
     </div>
 
