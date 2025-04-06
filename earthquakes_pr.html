@@ -8,6 +8,16 @@
         content="Interactive visualization of earthquake data in Puerto Rico using PyScript and Folium">
     <meta name="keywords" content="earthquake visualization, data visualization, folium, pyscript, interactive map">
     <title>Earthquake Visualization</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0L5LLER0MH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-0L5LLER0MH');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
@@ -24,14 +34,16 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
-            padding-top: 64px; /* Account for fixed navbar */
+            padding-top: 64px;
+            /* Account for fixed navbar */
         }
 
         /* Fix PyScript styling */
         .pyscript {
             position: relative;
             margin: 0;
-            flex: 1 0 auto; /* Changed to flex-grow: 1, flex-shrink: 0, flex-basis: auto */
+            flex: 1 0 auto;
+            /* Changed to flex-grow: 1, flex-shrink: 0, flex-basis: auto */
             display: flex;
             flex-direction: column;
             background-color: rgb(13, 17, 23);
@@ -40,17 +52,20 @@
         /* Fix Folium styling */
         #folium {
             width: 100%;
-            height: 100%; /* Use 100% of the parent container */
+            height: 100%;
+            /* Use 100% of the parent container */
             min-height: 450px;
             background-color: rgb(13, 17, 23) !important;
         }
 
         /* Footer positioning */
         footer {
-            flex-shrink: 0; /* Prevent footer from shrinking */
+            flex-shrink: 0;
+            /* Prevent footer from shrinking */
             width: 100%;
             z-index: 10;
-            margin-top: auto; /* Push to bottom when needed */
+            margin-top: auto;
+            /* Push to bottom when needed */
         }
 
         @media (max-height: 600px) {
