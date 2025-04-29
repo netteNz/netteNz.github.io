@@ -26,96 +26,60 @@
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
     <style>
-        body {
+        /* Master layout fix that works at all viewport widths */
+        html, body {
             font-family: 'JetBrains Mono', monospace;
-            background: rgb(13, 17, 23);
-            display: flex;
-            flex-direction: column;
+            height: 100%;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
-            padding-top: 64px;
-            /* Account for fixed navbar */
+            padding-top: 64px; /* Account for fixed navbar */
         }
-
-        /* Fix PyScript styling */
+        
+        /* Force proper layout container for map */
         .pyscript {
-            position: relative;
-            margin: 0;
             flex: 1 0 auto;
-            /* Changed to flex-grow: 1, flex-shrink: 0, flex-basis: auto */
             display: flex;
             flex-direction: column;
-            background-color: rgb(13, 17, 23);
+            position: relative;
+            width: 100%;
+            min-height: calc(100vh - 64px); /* Full height minus navbar */
         }
-
-        /* Fix Folium styling */
+        
+        /* Force Leaflet container to respect parent dimensions */
         #folium {
-            width: 100%;
-            height: 100%;
-            /* Use 100% of the parent container */
-            min-height: 450px;
-            background-color: rgb(13, 17, 23) !important;
-        }
-
-        /* Footer positioning */
-        footer {
-            flex-shrink: 0;
-            /* Prevent footer from shrinking */
-            width: 100%;
-            z-index: 10;
-            margin-top: auto;
-            /* Push to bottom when needed */
-        }
-
-        @media (max-height: 600px) {
-            #folium {
-                height: 450px !important;
-            }
-        }
-
-        /* Dialog styling */
-        dialog::backdrop {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .animate-spin {
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Add this to your existing styles */
-        .legend {
-            position: absolute;
-            pointer-events: none;
-            /* Allow clicks to pass through to the map */
-        }
-
-        /* Make the map container position relative to anchor the legend */
-        .pyscript {
-            position: relative;
-            margin: 0;
             flex: 1 0 auto;
-            display: flex;
-            flex-direction: column;
-            background-color: rgb(13, 17, 23);
+            width: 100% !important; 
+            height: 100% !important;
+            min-height: calc(100vh - 64px) !important; /* Full height minus navbar */
+            position: relative;
+            z-index: 1;
         }
-
-        /* Media query for smaller screens */
-        @media (max-width: 640px) {
-            .legend {
-                bottom: 4px;
-                right: 4px;
-                max-width: 120px;
+        
+        /* Make sure Leaflet's internal elements behave */
+        .leaflet-container {
+            height: 100% !important; 
+            width: 100% !important;
+        }
+        
+        /* Increase specificity for legend positioning */
+        .legend.legend {
+            position: fixed !important;
+            bottom: 20px !important; /* Moved up since no footer */
+            right: 25px !important;
+            z-index: 9999 !important;
+        }
+        
+        /* Handle large screens specifically */
+        @media (min-width: 1200px) {
+            #folium {
+                height: calc(100vh - 124px) !important; /* Fixed height on large screens */
             }
         }
     </style>
@@ -188,8 +152,7 @@
     </section>
 
     <!-- Legend overlay -->
-    <!-- Update the legend with better positioning -->
-    <div class="legend absolute bottom-20 md:bottom-16 right-4 lg:right-8 bg-gray-900 bg-opacity-80 rounded-lg p-3 shadow-lg border border-gray-700 z-20 max-w-xs">
+    <div class="legend bg-gray-900 bg-opacity-80 rounded-lg p-3 shadow-lg border border-gray-700 z-20 max-w-xs">
         <h3 class="text-white text-sm font-bold mb-2 border-b border-gray-700 pb-1">Earthquake Magnitude</h3>
         <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
             <div class="flex items-center">
@@ -211,10 +174,34 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="w-full p-4 bg-[#0d1117] text-center">
-        <p class="text-gray-400">&copy; 2025 Emanuel Lugo. All rights reserved.</p>
-    </footer>
+    <script>
+        // Handle resize events to fix Leaflet rendering
+        window.addEventListener('resize', function() {
+            // Force redraw for Leaflet maps after resize
+            setTimeout(function() {
+                const mapContainer = document.querySelector('.leaflet-container');
+                if (mapContainer && mapContainer._leaflet_id) {
+                    const leafletMap = window.L && window.L.maps && window.L.maps[mapContainer._leaflet_id];
+                    if (leafletMap) {
+                        leafletMap.invalidateSize(true);
+                    }
+                }
+            }, 250);
+        });
+        
+        // Force correct positioning after load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check periodically for map rendering and correct if needed
+            const checkInterval = setInterval(function() {
+                const mapContainer = document.getElementById('folium');
+                if (mapContainer && mapContainer.offsetHeight > 0) {
+                    clearInterval(checkInterval);
+                    // Force footer to bottom
+                    //document.querySelector('footer').style.marginTop = 'auto';
+                }
+            }, 500);
+        });
+    </script>
 </body>
 
 </html>

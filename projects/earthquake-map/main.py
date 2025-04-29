@@ -11,7 +11,9 @@ try:
                     zoom_start=9,
                     tiles='cartodbdark_matter',
                     prefer_canvas=True,
-                    #height='600px'  # Use a specific pixel value instead of calc()
+                    control_scale=True,
+                    width='100%',
+                    height='100%'
                   )
     
     pr.get_name()  # Force initialization
