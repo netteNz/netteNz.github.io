@@ -19,6 +19,25 @@ try:
     pr.get_root().header.add_child(folium.Element("""
         <style>
             .leaflet-container { background: #0d1117 !important; }
+            
+            /* Fix popup borders and styling */
+            .leaflet-popup-content-wrapper {
+                background-color: #1f2937 !important;
+                border-radius: 6px !important;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.5) !important;
+                border: none !important;
+            }
+            
+            .leaflet-popup-tip {
+                background-color: #1f2937 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            
+            .leaflet-popup-content {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
         </style>
     """))
     
@@ -44,14 +63,25 @@ try:
         radius = row['mag'] * 3
         color = get_circle_color(row['mag'])  # Set color based on magnitude
         
-        # Add the CircleMarker to the map
+        # Update the popup_html styling for better contrast
+        popup_html = f"""
+<div class="earthquake-popup" style="font-family: 'JetBrains Mono', monospace; min-width: 200px; background-color: #1f2937; padding: 12px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+    <h3 style="margin-bottom: 8px; color: #ffffff; border-bottom: 1px solid #4b5563; padding-bottom: 5px;">Earthquake Details</h3>
+    <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Location:</span> <span style="color: #ffffff;">{row['place']}</span></div>
+    <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Magnitude:</span> <span style="color: {color}; font-weight: bold;">{row['mag']}</span></div>
+    <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Coordinates:</span> <span style="color: #ffffff;">{row['latitude']:.4f}, {row['longitude']:.4f}</span></div>
+    <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Time:</span> <span style="color: #ffffff;">{pd.to_datetime(row['time']).strftime('%Y-%m-%d %H:%M:%S')}</span></div>
+</div>
+        """
+        
+        # Add the CircleMarker to the map with enhanced popup
         folium.CircleMarker(location=(row['latitude'], row['longitude']),
                             radius=radius,
                             color=color,
                             fill=True,
                             fill_color=color,
                             fill_opacity=0.6,
-                            popup=(f"Place: {row['place']}, Magnitude: {row['mag']}"),
+                            popup=folium.Popup(popup_html, max_width=300),  # Use Popup object with HTML content
                             ).add_to(pr)
     
     map_html = pr._repr_html_()

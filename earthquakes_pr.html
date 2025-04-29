@@ -92,6 +92,32 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Add this to your existing styles */
+        .legend {
+            position: absolute;
+            pointer-events: none;
+            /* Allow clicks to pass through to the map */
+        }
+
+        /* Make the map container position relative to anchor the legend */
+        .pyscript {
+            position: relative;
+            margin: 0;
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(13, 17, 23);
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 640px) {
+            .legend {
+                bottom: 4px;
+                right: 4px;
+                max-width: 120px;
+            }
+        }
     </style>
     <script type="module">
         const loading = document.getElementById('loading');
@@ -124,10 +150,21 @@
     <div class="fixed inset-0 bg-[#0d1117] -z-10"></div>
 
     <!-- Fix the dialog element -->
-    <dialog id="loading" class="bg-gray-800 p-8 rounded border-0">
+    <dialog id="loading" class="bg-gray-800 p-8 rounded-lg border border-blue-500 shadow-2xl backdrop:bg-black/70 max-w-md w-full mx-auto">
         <div class="flex flex-col items-center">
-            <div class="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <div class="text-white text-lg tracking-wider animate-pulse">Loading Earthquake Data...</div>
+            <!-- Enhanced loading spinner with glow effect -->
+            <div class="relative mb-6">
+                <div class="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                <div class="absolute inset-0 w-16 h-16 rounded-full bg-blue-500 opacity-20 blur-md"></div>
+            </div>
+            <!-- Better typography with gradual fade-in effect -->
+            <div class="text-white text-lg font-medium tracking-wider">
+                <span class="inline-block animate-pulse">Loading Earthquake Data</span>
+                <span class="inline-block animate-pulse delay-100">.</span>
+                <span class="inline-block animate-pulse delay-200">.</span>
+                <span class="inline-block animate-pulse delay-300">.</span>
+            </div>
+            <p class="text-gray-400 text-sm mt-4 text-center">Fetching recent seismic activity from USGS</p>
         </div>
     </dialog>
 
@@ -149,6 +186,30 @@
         <div id="folium"></div>
         <script type="py" src="./projects/earthquake-map/main.py" config="./pyscript.toml"></script>
     </section>
+
+    <!-- Legend overlay -->
+    <!-- Update the legend with better positioning -->
+    <div class="legend absolute bottom-20 md:bottom-16 right-4 lg:right-8 bg-gray-900 bg-opacity-80 rounded-lg p-3 shadow-lg border border-gray-700 z-20 max-w-xs">
+        <h3 class="text-white text-sm font-bold mb-2 border-b border-gray-700 pb-1">Earthquake Magnitude</h3>
+        <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+            <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+                <span class="text-white">&lt; 3.0</span>
+            </div>
+            <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
+                <span class="text-white">3.0 - 4.0</span>
+            </div>
+            <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-orange-500 mr-2"></div>
+                <span class="text-white">4.1 - 5.0</span>
+            </div>
+            <div class="flex items-center">
+                <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+                <span class="text-white">&gt; 5.0</span>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="w-full p-4 bg-[#0d1117] text-center">
