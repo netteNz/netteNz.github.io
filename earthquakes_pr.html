@@ -83,124 +83,113 @@
             }
         }
     </style>
-    <script type="module">
-        const loading = document.getElementById('loading');
-
-        // Add timeout as fallback
-        const loadingTimeout = setTimeout(() => {
-            console.log("Loading timeout reached, closing dialog");
-            loading.close();
-        }, 30000); // 30 second max loading time
-
-        addEventListener('py:ready', () => {
-            console.log("Python runtime ready");
-        });
-
-        addEventListener('map:loaded', () => {
-            console.log("Map fully loaded");
-            clearTimeout(loadingTimeout);
-            loading.close();
-        });
-
-        // Open the dialog immediately
-        document.addEventListener('DOMContentLoaded', () => {
-            loading.showModal();
-        });
-    </script>
 </head>
 
-<body class="text-white">
-    <!-- Background container -->
-    <div class="fixed inset-0 bg-[#0d1117] -z-10"></div>
-
-    <!-- Fix the dialog element -->
-    <dialog id="loading" class="bg-gray-800 p-8 rounded-lg border border-blue-500 shadow-2xl backdrop:bg-black/70 max-w-md w-full mx-auto">
-        <div class="flex flex-col items-center">
-            <!-- Enhanced loading spinner with glow effect -->
-            <div class="relative mb-6">
-                <div class="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-                <div class="absolute inset-0 w-16 h-16 rounded-full bg-blue-500 opacity-20 blur-md"></div>
-            </div>
-            <!-- Better typography with gradual fade-in effect -->
-            <div class="text-white text-lg font-medium tracking-wider">
-                <span class="inline-block animate-pulse">Loading Earthquake Data</span>
-                <span class="inline-block animate-pulse delay-100">.</span>
-                <span class="inline-block animate-pulse delay-200">.</span>
-                <span class="inline-block animate-pulse delay-300">.</span>
-            </div>
-            <p class="text-gray-400 text-sm mt-4 text-center">Fetching recent seismic activity from USGS</p>
-        </div>
-    </dialog>
-
+<body class="text-white bg-[#0d1117]">
+    <!-- Navigation -->
     <nav class="w-full p-4 bg-opacity-100 bg-gray-900 shadow-md fixed top-0 left-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">Earhquakes Visualization</h1>
+            <div class="text-xl font-mono font-bold"><a href="index.html" class="hover:text-[#6ee7b7] transition-colors">Earthquakes Visualization</a></div>
             <ul class="flex space-x-6">
-                <li><a href="index.html" class="text-white hover:text-cyan-400 transition-colors">Home</a></li>
-                <li><a href="index.html#projects" class="text-white hover:text-cyan-400 transition-colors">Projects</a>
-                </li>
-                <li><a href="index.html#contact" class="text-white hover:text-cyan-400 transition-colors">Contact</a>
-                </li>
+                <li><a href="index.html" class="hover:text-[#6ee7b7] transition-colors">Home</a></li>
+                <li><a href="index.html#projects" class="hover:text-[#6ee7b7] transition-colors">Projects</a></li>
+                <li><a href="index.html#contact" class="hover:text-[#6ee7b7] transition-colors">Contact</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- PyScript section -->
-    <section class="pyscript">
-        <div id="folium"></div>
-        <script type="py" src="./projects/earthquake-map/main.py" config="./pyscript.toml"></script>
-    </section>
+    <main class="pt-16 min-h-screen" style="
+    padding-top: 0px;">
+        <!-- Loading Dialog -->
+        <dialog id="loading" class="bg-transparent outline-none border-none">
+            <div class="flex flex-col items-center justify-center p-8 text-white">
+                <div class="spinner"></div>
+                <div class="loading-text mt-4">Loading visualization...</div>
+            </div>
+        </dialog>
 
-    <!-- Legend overlay -->
-    <div class="legend bg-gray-900 bg-opacity-80 rounded-lg p-3 shadow-lg border border-gray-700 z-20 max-w-xs">
-        <h3 class="text-white text-sm font-bold mb-2 border-b border-gray-700 pb-1">Earthquake Magnitude</h3>
-        <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
-            <div class="flex items-center">
-                <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
-                <span class="text-white">&lt; 3.0</span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
-                <span class="text-white">3.0 - 4.0</span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-4 h-4 rounded-full bg-orange-500 mr-2"></div>
-                <span class="text-white">4.1 - 5.0</span>
-            </div>
-            <div class="flex items-center">
-                <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
-                <span class="text-white">&gt; 5.0</span>
-            </div>
+        <!-- Map Container -->
+        <div id="folium" class="w-full h-screen"></div>
+    </main>
+
+    <!-- Map Legends -->
+    <div class="fixed bottom-4 right-4 bg-gray-900 bg-opacity-75 rounded-lg p-3 z-10 shadow-lg">
+        <h4 class="text-sm font-bold mb-2">Earthquake Magnitude</h4>
+        <div class="grid grid-cols-2 gap-x-3 gap-y-1">
+            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span> &lt; 3.0</div>
+            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span> 3.0 - 4.0</div>
+            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-orange-500 mr-2"></span> 4.1 - 5.0</div>
+            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span> &gt; 5.0</div>
         </div>
     </div>
-
+    
+    <!-- PyScript configuration -->
+    <py-config>
+        packages = ["folium", "pandas"]
+    </py-config>
+    
+    <py-script src="./projects/earthquake-map/main.py"></py-script>
+    
     <script>
-        // Handle resize events to fix Leaflet rendering
-        window.addEventListener('resize', function() {
-            // Force redraw for Leaflet maps after resize
-            setTimeout(function() {
-                const mapContainer = document.querySelector('.leaflet-container');
-                if (mapContainer && mapContainer._leaflet_id) {
-                    const leafletMap = window.L && window.L.maps && window.L.maps[mapContainer._leaflet_id];
-                    if (leafletMap) {
-                        leafletMap.invalidateSize(true);
-                    }
-                }
-            }, 250);
+        // Get loading dialog
+        const loading = document.getElementById('loading');
+        
+        // Show the loading dialog immediately
+        document.addEventListener('DOMContentLoaded', () => {
+            loading.showModal();
+            console.log("Loading dialog opened");
         });
         
-        // Force correct positioning after load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check periodically for map rendering and correct if needed
-            const checkInterval = setInterval(function() {
-                const mapContainer = document.getElementById('folium');
-                if (mapContainer && mapContainer.offsetHeight > 0) {
-                    clearInterval(checkInterval);
-                    // Force footer to bottom
-                    //document.querySelector('footer').style.marginTop = 'auto';
-                }
-            }, 500);
+        // Multiple approaches to detect map loading
+        
+        // 1. Listen for our custom event
+        document.addEventListener('map:loaded', () => {
+            console.log("Map loaded event received");
+            setTimeout(() => {
+                loading.close();
+                console.log("Loading dialog closed");
+            }, 500); // Small delay to ensure map is rendered
         });
+        
+        // 2. Timer-based fallback
+        setTimeout(() => {
+            if (loading.open) {
+                console.log("Fallback timer closing loading dialog");
+                loading.close();
+            }
+        }, 20000); // 20 second timeout
+        
+        // 3. DOM-based detection
+        const checkMapInterval = setInterval(() => {
+            if (document.querySelector('.leaflet-container') && 
+                document.querySelector('.leaflet-tile-loaded')) {
+                console.log("Leaflet map detected in DOM");
+                if (loading.open) {
+                    loading.close();
+                    clearInterval(checkMapInterval);
+                }
+            }
+        }, 1000);
+        
+        // 4. Observe the folium container for changes
+        const foliumObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList' && 
+                    document.querySelector('.leaflet-container')) {
+                    console.log("Map container detected via MutationObserver");
+                    setTimeout(() => {
+                        if (loading.open) loading.close();
+                        foliumObserver.disconnect();
+                    }, 1000);
+                }
+            }
+        });
+        
+        // Start observing the folium element
+        const foliumElement = document.getElementById('folium');
+        if (foliumElement) {
+            foliumObserver.observe(foliumElement, { childList: true, subtree: true });
+        }
     </script>
 </body>
 

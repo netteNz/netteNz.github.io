@@ -186,7 +186,7 @@
 </head>
 
 <body class="text-white">
-    <nav class="w-full p-4 bg-opacity-100 bg-gray-900 shadow-md fixed top-0 left-0">
+    <nav class="w-full p-4 bg-opacity-100 bg-gray-900 shadow-md fixed top-0 left-0 z-50">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold">ELR</h1>
             <ul class="flex space-x-6">
@@ -197,7 +197,7 @@
         </div>
     </nav>
 
-    <section class="w-full min-h-screen flex items-center justify-center bg-[#0d1117] px-6 sm:px-16 pt-24">
+    <section class="w-full min-h-screen flex items-center justify-center bg-[#0d1117] px-6 sm:px-16 pt-24 pb-16">
         <div class="max-w-4xl w-full flex flex-col items-start justify-center stagger-children">
             <!-- Intro line -->
             <div class="mb-2">
@@ -232,30 +232,28 @@
 
             <!-- Call to Action -->
             <div>
-                <a href="assets/documents/elr_2025_resume.pdf" download
-                onclick="gtag('event', 'download_resume', {
+                <a href="assets/documents/elr_2025_resume.pdf" download onclick="gtag('event', 'download_resume', {
                     event_category: 'Resume',
                     event_label: 'GitHub Pages'
                 });"
-                class="px-6 py-3 border border-green-400 text-green-300 font-mono text-sm rounded hover:bg-green-400 hover:text-black transition flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Download Resume
-             </a>             
+                    class="px-6 py-3 border border-green-400 text-green-300 font-mono text-sm rounded hover:bg-green-400 hover:text-black transition flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Download Resume
+                </a>
             </div>
 
         </div>
     </section>
 
-    <section class="w-full min-h-screen flex items-center justify-center bg-[#0d1117] px-6 sm:px-16 pt-24"
+    <section class="w-full min-h-screen flex items-center justify-center bg-[#0d1117] px-6 sm:px-16 pt-28 pb-16"
         id="projects">
         <div class="max-w-4xl w-full animate-on-scroll">
             <!-- Section title -->
-            <h2 class="text-4xl font-bold mb-12 text-center sm:text-left">Projects</h2>
-
+            <h2 class="text-4xl font-bold mb-8 text-center">Projects</h2>
             <!-- Projects grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 stagger-children">
                 <!-- Web Audio Player Card -->
@@ -404,7 +402,8 @@
                                         <div class="w-2 h-2 bg-green-500 rounded-full"></div>
                                     </div>
                                 </div>
-                                <div class="w-3/4 bg-[#0d1117] rounded p-2 text-xs text-[#6ee7b7] flex flex-col items-start">
+                                <div
+                                    class="w-3/4 bg-[#0d1117] rounded p-2 text-xs text-[#6ee7b7] flex flex-col items-start">
                                     <div class="flex items-center mb-1 w-full">
                                         <span class="text-gray-400 mr-1">$</span>
                                         <span class="typing-animation">npm start</span>
@@ -421,7 +420,8 @@
                     <div class="p-6 flex flex-col flex-grow">
                         <h3 class="text-xl font-bold text-gray-100 mb-2">Coming Soon</h3>
                         <p class="text-gray-400 mb-4">
-                            A new project currently in development. Check back soon for updates on this exciting addition.
+                            A new project currently in development. Check back soon for updates on this exciting
+                            addition.
                         </p>
 
                         <!-- Technologies -->
@@ -435,7 +435,8 @@
 
                         <!-- Links -->
                         <div class="flex items-center space-x-4">
-                            <a href="#" class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center cursor-not-allowed opacity-50">
+                            <a href="#"
+                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center cursor-not-allowed opacity-50">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
                                     viewBox="0 0 24 24">
                                     <path
@@ -443,7 +444,8 @@
                                 </svg>
                                 Coming Soon
                             </a>
-                            <a href="#" class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center cursor-not-allowed opacity-50">
+                            <a href="#"
+                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center cursor-not-allowed opacity-50">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -460,7 +462,8 @@
         </div>
     </section>
 
-    <div class="flex flex-col items-center justify-center py-16 w-full text-center px-4 contact-section slide-up" id="contact">
+    <div class="flex flex-col items-center justify-center py-16 w-full text-center px-4 contact-section slide-up"
+        id="contact">
         <h2 class="text-4xl font-bold mb-8">Contact Details</h2>
         <pre class="mx-auto whitespace-pre-wrap break-words fade-in"><code class="language-python">
     class ContactDetails:
@@ -479,28 +482,28 @@
     <!-- Add this script at the end of the body -->
     <script>
         // Initialize animation detection when DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Get all elements to be animated
             const animatedElements = document.querySelectorAll(
                 '.animate-on-scroll, .stagger-children, .fade-in, .slide-up'
             );
-            
+
             // Set up the Intersection Observer
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    // Add 'visible' class when element is in view
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        // Optional: Unobserve after animation is triggered
-                        // observer.unobserve(entry.target);
+                    } else {
+                        // Optional: Remove the class when scrolling away for reusable animations
+                        // entry.target.classList.remove('visible');
                     }
                 });
             }, {
-                root: null, // viewport
-                threshold: 0.1, // trigger when 10% of the element is visible
-                rootMargin: '0px 0px -50px 0px' // trigger slightly before element comes into view
+                root: null,
+                threshold: 0.15, // Slightly higher threshold for better timing
+                rootMargin: '-50px 0px -50px 0px' // Better margin for triggering
             });
-            
+
             // Observe all elements with animation classes
             animatedElements.forEach(el => {
                 observer.observe(el);

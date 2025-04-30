@@ -1,7 +1,7 @@
 import folium
 import pandas as pd
 from pyodide.http import open_url
-from js import document, console
+from js import document, console, window
 
   
 try:
@@ -101,3 +101,12 @@ try:
         console.error("Element with ID 'folium' not found")
 except Exception as e:
     console.error(f"Error: {str(e)}")
+
+# Signal that map is loaded
+def signal_map_loaded():
+    event = document.createEvent('Event')
+    event.initEvent('map:loaded', True, True)
+    document.dispatchEvent(event)
+
+# Call after map is created and data is loaded
+signal_map_loaded()

@@ -1,4 +1,98 @@
-/* Loading animation styles */
+/* ===== Basic Scroll Behavior ===== */
+html {
+    scroll-padding-top: 5rem; /* Prevent section headings from being hidden under fixed navbar */
+    scroll-behavior: smooth; /* Enable smooth scrolling between anchors */
+}
+
+/* ===== Section Spacing and Layout ===== */
+section {
+    scroll-margin-top: 5rem; /* For anchor targets */
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+/* Section z-index handling */
+#projects,
+#contact {
+    position: relative;
+    z-index: 1;
+}
+
+/* Contact section specific spacing */
+.contact-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+}
+
+/* ===== Animation Base Classes ===== */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    will-change: opacity, transform; /* Performance optimization */
+    position: relative;
+    z-index: 1;
+}
+
+.animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== Staggered Animations ===== */
+.stagger-children > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    position: relative; /* Ensure proper stacking context */
+    z-index: 1;
+}
+
+.stagger-children.visible > *:nth-child(1) { transition-delay: 0.1s; }
+.stagger-children.visible > *:nth-child(2) { transition-delay: 0.2s; }
+.stagger-children.visible > *:nth-child(3) { transition-delay: 0.3s; }
+.stagger-children.visible > *:nth-child(4) { transition-delay: 0.4s; }
+.stagger-children.visible > *:nth-child(5) { transition-delay: 0.5s; }
+.stagger-children.visible > *:nth-child(6) { transition-delay: 0.6s; }
+.stagger-children.visible > *:nth-child(7) { transition-delay: 0.7s; }
+.stagger-children.visible > *:nth-child(8) { transition-delay: 0.8s; }
+
+.stagger-children.visible > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== Specific Animation Types ===== */
+.fade-in {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+}
+
+.slide-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.slide-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Typing animation */
+.typing-animation {
+    overflow: hidden;
+    border-right: 2px solid #6ee7b7;
+    white-space: nowrap;
+    animation: typing 3s steps(30, end), blink-caret 0.5s step-end infinite alternate;
+    display: inline-block;
+}
+
+/* Loading animations */
 #loading {
     outline: none;
     border: none;
@@ -21,36 +115,10 @@
     margin-bottom: 1.5rem;
 }
 
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 .loading-text {
     font-size: 1.2rem;
     letter-spacing: 0.1em;
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.5;
-    }
-}
-
-dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .animate-pulse {
@@ -61,99 +129,27 @@ dialog::backdrop {
     animation: spin 1s linear infinite;
 }
 
-
-/* Animation base classes */
-.animate-on-scroll {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.animate-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Staggered animations for child elements */
-.stagger-children>* {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-}
-
-.stagger-children.visible>*:nth-child(1) {
-    transition-delay: 0.1s;
-}
-
-.stagger-children.visible>*:nth-child(2) {
-    transition-delay: 0.2s;
-}
-
-.stagger-children.visible>*:nth-child(3) {
-    transition-delay: 0.3s;
-}
-
-.stagger-children.visible>*:nth-child(4) {
-    transition-delay: 0.4s;
-}
-
-.stagger-children.visible>*:nth-child(5) {
-    transition-delay: 0.5s;
-}
-
-.stagger-children.visible>* {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Different animation styles */
-.fade-in {
-    opacity: 0;
-    transition: opacity 1s ease-out;
-}
-
-.fade-in.visible {
-    opacity: 1;
-}
-
-.slide-up {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-}
-
-.slide-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Animation for the typing effect */
-.typing-animation {
-    overflow: hidden;
-    border-right: 2px solid #6ee7b7;
-    white-space: nowrap;
-    animation: typing 3s steps(30, end), blink-caret 0.5s step-end infinite alternate;
-    display: inline-block;
-}
-
+/* ===== Animation Keyframes ===== */
 @keyframes typing {
-    from {
-        width: 0
-    }
-
-    to {
-        width: 100%
-    }
+    from { width: 0 }
+    to { width: 100% }
 }
 
 @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #6ee7b7 }
+}
 
-    from,
-    to {
-        border-color: transparent
-    }
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
 
-    50% {
-        border-color: #6ee7b7
-    }
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
 }
