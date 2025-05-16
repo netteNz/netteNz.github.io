@@ -153,3 +153,42 @@ dialog::backdrop {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
 }
+
+/* Circle animation for DoorDashboard chart */
+@keyframes circle-pop {
+  from { 
+    r: 0;
+    opacity: 0;
+    transform: scale(0);
+  }
+  to { 
+    r: 2;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fill-fade {
+  from { 
+    opacity: 0;
+  }
+  to { 
+    opacity: 1;
+  }
+}
+
+/* Enhanced dash animation */
+@keyframes dash {
+  0% {
+    stroke-dashoffset: 200;
+    stroke-width: 1.5;
+  }
+  70% {
+    stroke-dashoffset: 0;
+    stroke-width: 1.5;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    stroke-width: 1.5;
+  }
+}
