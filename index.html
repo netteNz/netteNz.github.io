@@ -279,54 +279,91 @@
     </nav>
 
     <section class="w-full min-h-screen flex items-center justify-center bg-[#0d1117] px-6 sm:px-16 pt-24 pb-16">
-        <div class="max-w-4xl w-full flex flex-col items-start justify-center stagger-children">
-            <!-- Intro line -->
-            <div class="mb-2">
-                <p class="text-sm font-mono text-white border-b-2 border-[#6ee7b7] inline-block pb-0.5">
-                    Hi, my name is
-                </p>
-            </div>
+        <div class="max-w-5xl w-full flex flex-col items-start justify-center stagger-children">
+            <!-- Top eyebrow -->
+            <p class="text-sm font-mono text-white border-b-2 border-[#6ee7b7] inline-block pb-0.5 mb-3">
+                Hi, my name is
+            </p>
 
+            <!-- Name -->
+            <h1 class="text-4xl sm:text-6xl font-bold text-gray-100 leading-tight mb-2">
+                Emanuel Lugo
+            </h1>
 
-            <!-- Main headline -->
-            <div class="mb-2">
-                <h1 class="text-3xl sm:text-6xl font-bold text-gray-100 leading-tight">
-                    Emanuel Lugo.
-                </h1>
-            </div>
+            <!-- Value prop -->
+            <h2 class="text-xl sm:text-2xl text-gray-300 leading-relaxed mb-4">
+                Full‑stack engineer building audio, data‑viz, and real‑time web experiences.
+            </h2>
 
-            <!-- Subheadline -->
-            <div class="mb-6">
-                <h2 class="text-2xl sm:text-5xl font-bold text-gray-500">
-                    I like to build, design and create.
-                </h2>
-            </div>
+            <!-- Tech stack badges -->
+            <ul class="flex flex-wrap gap-2 mb-6" aria-label="Primary tech stack">
+                <li><span class="px-2.5 py-1 rounded-md border border-[#30363d] bg-[#161b22] text-sm">Python ·
+                        Flask · Django</span></li>
+                <li><span class="px-2.5 py-1 rounded-md border border-[#30363d] bg-[#161b22] text-sm">Node.js · TypeScript · React</span>
+                </li>
+                <li><span class="px-2.5 py-1 rounded-md border border-[#30363d] bg-[#161b22] text-sm">TypeScript</span>
+                </li>
+                <li><span class="px-2.5 py-1 rounded-md border border-[#30363d] bg-[#161b22] text-sm">Tailwind · Vite</span>
+                </li>
 
-            <!-- Description -->
-            <div class="mb-10 max-w-2xl">
-                <p class="text-base sm:text-lg text-gray-400">
-                    I'm a Computer Engineer with a specialization in Cybersecurity. I enjoy building, designing, and
-                    creating intuitive digital experiences through software engineering, web development, data analysis,
-                    and interactive design. Take a look at some of my favorite projects with more to come.
-                </p>
-            </div>
+            </ul>
 
-            <!-- Call to Action -->
-            <div>
-                <a href="assets/documents/elr_2025_resume.pdf" download onclick="gtag('event', 'download_resume', {
-                    event_category: 'Resume',
-                    event_label: 'GitHub Pages'
-                });"
-                    class="px-6 py-3 border border-green-400 text-green-300 font-mono text-sm rounded hover:bg-green-400 hover:text-black transition flex items-center">
+            <!-- Short supporting copy -->
+            <p class="text-base sm:text-lg text-gray-400 max-w-3xl mb-8">
+                I design and ship modern UIs, web audio tools, and interactive data visualizations.
+                Check out a few projects below or grab my resume — I’m open to roles and collabs.
+            </p>
+
+            <!-- CTAs -->
+            <div class="flex flex-wrap items-center gap-3">
+                <a href="assets/documents/elr_2025_resume.pdf" download
+                    class="px-6 py-3 border border-[#6ee7b7] text-[#6ee7b7] rounded-md hover:bg-[#6ee7b7] hover:text-black transition flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
+                    aria-label="Download my resume PDF">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h6l6 6v3" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 16h8m-4-4v8m0 0l-3-3m3 3l3-3" />
                     </svg>
                     Download Resume
                 </a>
+
+                <a href="#projects"
+                    class="inline-flex items-center px-3 py-2 text-sm text-gray-300 hover:text-white underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
+                    aria-label="Jump to projects section">
+                    View Projects
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor"
+                        aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M10 18a1 1 0 01-.707-1.707l5-5H4a1 1 0 110-2h10.586l-5-5A1 1 0 1110.707 2.293l7 7a1 1 0 010 1.414l-7 7A.997.997 0 0110 18z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </a>
             </div>
 
+            <!-- Socials (lightweight) -->
+            <div class="flex items-center gap-4 mt-6" aria-label="Social profiles">
+                <a href="https://github.com/netteNz" target="_blank" rel="noopener noreferrer me"
+                    class="text-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
+                    aria-label="Open my GitHub in a new tab">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
+                        <path
+                            d="M12 .5C5.73.5.99 5.24.99 11.52c0 4.86 3.15 8.98 7.51 10.43.55.1.75-.24.75-.53v-1.86c-3.05.66-3.7-1.32-3.7-1.32-.5-1.27-1.22-1.61-1.22-1.61-1-.69.08-.68.08-.68 1.1.08 1.68 1.14 1.68 1.14.98 1.67 2.58 1.19 3.21.91.1-.72.38-1.19.69-1.47-2.66-.3-5.46-1.33-5.46-5.9 0-1.3.47-2.37 1.24-3.21-.13-.3-.53-1.52.12-3.17 0 0 1.01-.32 3.31 1.23a11.49 11.49 0 0 1 5.99 0c2.3-1.55 3.31-1.23 3.31-1.23.65 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.21 0 4.58-2.81 5.6-5.49 5.9.39.34.75 1.02.75 2.06v3.05c0 .32.19.69.77.58 4.35-1.45 7.49-5.57 7.49-10.43C23.01 5.24 18.27.5 12 .5z" />
+                    </svg>
+                    <span class="sr-only">GitHub</span>
+                </a>
+
+                <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer me"
+                    class="text-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
+                    aria-label="Open my LinkedIn in a new tab">
+                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.784 1.764-1.75 1.764zm13.5 11.268h-3v-5.604c0-1.337-.027-3.059-1.865-3.059-1.867 0-2.153 1.458-2.153 2.962v5.701h-3v-10h2.881v1.367h.041c.401-.759 1.38-1.559 2.841-1.559 3.04 0 3.602 2.002 3.602 4.605v5.587z" />
+                    </svg>
+                    <span class="sr-only">LinkedIn</span>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -473,7 +510,8 @@
                     <!-- Project image -->
                     <div class="h-48 bg-[#21262d] relative overflow-hidden flex items-center justify-center">
                         <!-- Terminal-like container for chart - width reduced from 4/5 to 3/5 -->
-                        <div class="w-3/5 h-4/5 flex flex-col rounded overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
+                        <div
+                            class="w-3/5 h-4/5 flex flex-col rounded overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
                             <!-- Terminal header with dots -->
                             <div class="h-6 bg-[#161b22] flex items-center px-2">
                                 <div class="flex space-x-1">
@@ -487,13 +525,13 @@
                             <!-- Chart area with dark background - edge-to-edge chart -->
                             <div class="flex-1 bg-[#0d1117] relative">
                                 <!-- Horizontal grid lines only - more subtle -->
-                                <div class="absolute inset-0"
-                                    style="background-image: linear-gradient(rgba(110,231,183,0.04) 1px, transparent 1px); 
+                                <div class="absolute inset-0" style="background-image: linear-gradient(rgba(110,231,183,0.04) 1px, transparent 1px); 
                background-size: 100% 10px;">
                                 </div>
 
                                 <!-- Chart with area fill -->
-                                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
+                                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 50"
+                                    preserveAspectRatio="none">
                                     <!-- Gradient definition for area fill -->
                                     <defs>
                                         <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -512,10 +550,7 @@
                                     <!-- Smooth curve line -->
                                     <path
                                         d="M15,40 C18,37 22,35 25,32 C28,29 32,26 35,29 C38,32 42,28 45,26 C48,24 52,20 55,18 C58,16 62,14 65,16 C68,18 72,16 85,12"
-                                        fill="none"
-                                        stroke="#6ee7b7"
-                                        stroke-width="1.8"
-                                        stroke-linecap="round"
+                                        fill="none" stroke="#6ee7b7" stroke-width="1.8" stroke-linecap="round"
                                         style="stroke-dasharray: 200; stroke-dashoffset: 200; animation: dash 2s ease-out forwards;">
                                     </path>
                                 </svg>
