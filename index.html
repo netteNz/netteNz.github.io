@@ -836,32 +836,58 @@
 
     <!-- Add this script at the end of the body -->
     <script>
-        // Initialize animation detection when DOM is fully loaded
         document.addEventListener('DOMContentLoaded', function () {
             // Get all elements to be animated
             const animatedElements = document.querySelectorAll(
                 '.animate-on-scroll, .stagger-children, .fade-in, .slide-up'
             );
 
-            // Set up the Intersection Observer
+            // Set up the Intersection Observer for general elements
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                    } else {
-                        // Optional: Remove the class when scrolling away for reusable animations
-                        // entry.target.classList.remove('visible');
                     }
                 });
             }, {
                 root: null,
-                threshold: 0.15, // Slightly higher threshold for better timing
-                rootMargin: '-50px 0px -50px 0px' // Better margin for triggering
+                threshold: 0.15,
+                rootMargin: '-50px 0px -50px 0px'
             });
 
             // Observe all elements with animation classes
             animatedElements.forEach(el => {
                 observer.observe(el);
+            });
+
+            // Separate observer for project cards to trigger SVG animations
+            const projectCards = document.querySelectorAll('#projects .bg-\\[\\#161b22\\]');
+            
+            const cardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Add visible class for CSS animations
+                        entry.target.classList.add('visible');
+                        
+                        // Trigger SVG animations by restarting them
+                        const svgElements = entry.target.querySelectorAll('svg path, svg polygon, svg circle, svg line');
+                        svgElements.forEach(svg => {
+                            // Clone and replace to restart animation
+                            const parent = svg.parentNode;
+                            const newSvg = svg.cloneNode(true);
+                            parent.replaceChild(newSvg, svg);
+                        });
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.2, // Trigger when 20% of card is visible
+                rootMargin: '0px 0px -100px 0px' // Offset to trigger earlier
+            });
+
+            // Observe each project card individually
+            projectCards.forEach(card => {
+                cardObserver.observe(card);
             });
         });
     </script>
