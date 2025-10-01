@@ -529,6 +529,7 @@ class MacOSInterface {
 - whoami: Display user information
 - ls: List directory contents
 - clear: Clear terminal
+- <project-name>: Open project directory
 - projects: Open projects directory
 - exit: Close terminal</div>`;
                 break;
