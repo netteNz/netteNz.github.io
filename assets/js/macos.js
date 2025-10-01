@@ -537,10 +537,9 @@ class MacOSInterface {
                 output.innerHTML = `<div style="color: var(--terminal-text-secondary); line-height: 1.6;">Available commands:
 - help: Show this help message
 - whoami: Display user information
+- projects: Open projects directory
 - ls: List directory contents
 - clear: Clear terminal
-- <project-name>: Open project directory
-- projects: Open projects directory
 - exit: Close terminal</div>`;
                 break;
             case 'whoami':
