@@ -4,7 +4,57 @@ class MacOSInterface {
         this.zIndex = 100;
         this.activeWindow = null;
         this.performanceOptimizations();
+        this.waitForGSAP();
+    }
+
+    waitForGSAP() {
+        if (typeof gsap === 'undefined') {
+            setTimeout(() => this.waitForGSAP(), 50);
+            return;
+        }
+        
+        // Initialize GSAP plugins
+        if (typeof ScrollTrigger !== 'undefined') {
+            gsap.registerPlugin(ScrollTrigger);
+        }
+        
         this.init();
+        this.initGSAPAnimations();
+    }
+
+    initGSAPAnimations() {
+        // Animate page load
+        gsap.from('#desktop', {
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power2.out'
+        });
+
+        // Enhanced dock hover animations with GSAP
+        document.querySelectorAll('.dock-item').forEach(item => {
+            const icon = item.querySelector('div');
+            
+            // Set initial transform origin for better animations
+            gsap.set(icon, { transformOrigin: 'center center' });
+            
+            item.addEventListener('mouseenter', () => {
+                gsap.to(icon, {
+                    scale: 1.2,
+                    y: -8,
+                    duration: 0.3,
+                    ease: 'back.out(1.7)'
+                });
+            });
+
+            item.addEventListener('mouseleave', () => {
+                gsap.to(icon, {
+                    scale: 1,
+                    y: 0,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+        });
     }
 
     performanceOptimizations() {
@@ -58,7 +108,13 @@ class MacOSInterface {
             hour12: true
         });
         const timeElement = document.getElementById('current-time');
-        if (timeElement) {
+        if (timeElement && timeElement.textContent !== timeString) {
+            if (typeof gsap !== 'undefined') {
+                gsap.fromTo(timeElement,
+                    { opacity: 0.7 },
+                    { opacity: 1, duration: 0.3, ease: 'power1.out' }
+                );
+            }
             timeElement.textContent = timeString;
         }
     }
@@ -129,6 +185,20 @@ class MacOSInterface {
         // Check if app is already open
         if (this.windows.has(appName)) {
             this.focusWindow(appName);
+            // Shake animation for existing window with GSAP
+            const windowElement = this.windows.get(appName);
+            if (typeof gsap !== 'undefined') {
+                gsap.to(windowElement, {
+                    x: -10,
+                    duration: 0.05,
+                    repeat: 5,
+                    yoyo: true,
+                    ease: 'power1.inOut',
+                    onComplete: () => {
+                        gsap.set(windowElement, { x: 0 });
+                    }
+                });
+            }
             return;
         }
 
@@ -138,14 +208,29 @@ class MacOSInterface {
         // Position window
         this.positionWindow(windowElement);
 
-        // Add to DOM with animation
+        // Add to DOM
         const container = document.getElementById('windows-container') || document.body;
         container.appendChild(windowElement);
 
-        // Use requestAnimationFrame for smooth animation
-        requestAnimationFrame(() => {
+        // Animate with GSAP
+        if (typeof gsap !== 'undefined') {
+            gsap.set(windowElement, {
+                scale: 0.8,
+                opacity: 0,
+                y: 50
+            });
+
+            gsap.to(windowElement, {
+                scale: 1,
+                opacity: 1,
+                y: 0,
+                duration: 0.4,
+                ease: 'back.out(1.4)'
+            });
+        } else {
+            // Fallback CSS animation
             windowElement.classList.add('window-enter');
-        });
+        }
 
         // Focus the new window
         this.focusWindow(appName);
@@ -245,11 +330,24 @@ class MacOSInterface {
         // Window dragging
         this.makeDraggable(windowElement, header);
 
-        // Window controls
+        // Window controls with GSAP
         if (closeBtn) {
             closeBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                this.closeWindow(appName);
+                if (typeof gsap !== 'undefined') {
+                    gsap.to(windowElement, {
+                        scale: 0.8,
+                        opacity: 0,
+                        y: 50,
+                        duration: 0.3,
+                        ease: 'back.in(1.4)',
+                        onComplete: () => {
+                            this.closeWindow(appName);
+                        }
+                    });
+                } else {
+                    this.closeWindow(appName);
+                }
             });
         }
 
@@ -299,10 +397,18 @@ class MacOSInterface {
                 const maxY = window.innerHeight - windowElement.offsetHeight;
 
                 currentX = Math.max(0, Math.min(currentX, maxX));
-                currentY = Math.max(32, Math.min(currentY, maxY)); // Account for menu bar
+                currentY = Math.max(32, Math.min(currentY, maxY));
 
-                windowElement.style.left = `${currentX}px`;
-                windowElement.style.top = `${currentY}px`;
+                // Use GSAP for smooth dragging
+                if (typeof gsap !== 'undefined') {
+                    gsap.set(windowElement, {
+                        left: currentX + 'px',
+                        top: currentY + 'px'
+                    });
+                } else {
+                    windowElement.style.left = `${currentX}px`;
+                    windowElement.style.top = `${currentY}px`;
+                }
             }
         });
 
@@ -342,7 +448,7 @@ class MacOSInterface {
                         }
                     }
                 };
-                
+
                 newInput.addEventListener('keydown', handleKeydown);
 
                 // Focus input when clicking anywhere in the window
@@ -383,7 +489,7 @@ class MacOSInterface {
                         }
                     }
                 };
-                
+
                 newInput.addEventListener('keydown', handleKeydown);
 
                 // Focus input when clicking anywhere in the window
@@ -552,7 +658,6 @@ class MacOSInterface {
                 output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Opening projects directory...</div>`;
                 setTimeout(() => this.openApp('projects'), 500);
                 break;
-            // Removed contact case
             case 'clear':
                 this.clearTerminal(terminalContent);
                 return;
@@ -751,26 +856,57 @@ Team decision-making platform with veto capabilities
 
         const windowElement = this.windows.get(appName);
 
-        // Add fadeout animation
-        windowElement.style.animation = 'fadeOut 0.3s ease-out forwards';
+        if (windowElement.parentNode) {
+            windowElement.parentNode.removeChild(windowElement);
+        }
+        this.windows.delete(appName);
 
-        setTimeout(() => {
-            if (windowElement.parentNode) {
-                windowElement.parentNode.removeChild(windowElement);
-            }
-            this.windows.delete(appName);
-
-            if (this.activeWindow === appName) {
-                this.activeWindow = null;
-            }
-        }, 300);
+        if (this.activeWindow === appName) {
+            this.activeWindow = null;
+        }
     }
 
     toggleMaximizeWindow(appName) {
         if (!this.windows.has(appName)) return;
 
         const windowElement = this.windows.get(appName);
-        windowElement.classList.toggle('maximized');
+        const isMaximized = windowElement.classList.contains('maximized');
+
+        if (typeof gsap !== 'undefined') {
+            if (!isMaximized) {
+                // Store original dimensions
+                windowElement.dataset.originalLeft = windowElement.style.left;
+                windowElement.dataset.originalTop = windowElement.style.top;
+                windowElement.dataset.originalWidth = windowElement.style.width;
+                windowElement.dataset.originalHeight = windowElement.style.height;
+
+                // Maximize animation
+                gsap.to(windowElement, {
+                    left: '20px',
+                    top: '40px',
+                    width: 'calc(100vw - 120px)',
+                    height: 'calc(100vh - 60px)',
+                    duration: 0.4,
+                    ease: 'power2.out'
+                });
+
+                windowElement.classList.add('maximized');
+            } else {
+                // Restore animation
+                gsap.to(windowElement, {
+                    left: windowElement.dataset.originalLeft,
+                    top: windowElement.dataset.originalTop,
+                    width: windowElement.dataset.originalWidth,
+                    height: windowElement.dataset.originalHeight,
+                    duration: 0.4,
+                    ease: 'power2.out'
+                });
+
+                windowElement.classList.remove('maximized');
+            }
+        } else {
+            windowElement.classList.toggle('maximized');
+        }
     }
 
     closeActiveWindow() {
@@ -780,19 +916,7 @@ Team decision-making platform with veto capabilities
     }
 }
 
-// Add fadeOut animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeOut {
-        to {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// Initialize the macOS interface
+// Initialize the MacOS interface when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.macOSInterface = new MacOSInterface();
+    window.macOS = new MacOSInterface();
 });

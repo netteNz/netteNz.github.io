@@ -45,15 +45,28 @@
 
         gtag('config', 'G-0L5LLER0MH');
     </script>
+    
+    <!-- Resource Hints for Performance -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
+    <!-- Performance-optimized Animation Libraries -->
+    <!-- GSAP - Highly performant animation library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/macos.js"></script>
+    <script src="assets/js/macos.js" defer></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-okaidia.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js" defer></script>
     <style>
         body {
             font-family: 'Lato', sans-serif;
@@ -317,7 +330,7 @@
         <div class="bg-gray-900 bg-opacity-80 backdrop-blur-md rounded-2xl p-3 shadow-2xl border border-gray-700">
             <div class="flex flex-col items-center space-y-3">
                 <div class="dock-item group relative" data-app="about">
-                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 hover:scale-110 transition-all cursor-pointer">
+                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" stroke-width="2"/>
                             <path d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22" stroke="currentColor" stroke-width="2"/>
@@ -327,7 +340,7 @@
                 </div>
                 
                 <div class="dock-item group relative" data-app="projects">
-                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 hover:scale-110 transition-all cursor-pointer">
+                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 8L3 12L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             <path d="M17 8L21 12L17 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -338,7 +351,7 @@
                 </div>
                 
                 <div class="dock-item group relative" data-app="terminal">
-                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 hover:scale-110 transition-all cursor-pointer">
+                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
                             <path d="M7 10L10 13L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
