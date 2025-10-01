@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Primary Meta Tags -->
-    <title>nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.</title>
-    <meta name="title" content="nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
+    <title>nettenzOS | Full-Stack Engineer, DJ, Cybersecurity Specialist.</title>
+    <meta name="title" content="nettenzOS | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
     <meta name="description"
         content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
     <meta name="keywords"
@@ -21,7 +21,7 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nettenz.github.io/">
-    <meta property="og:title" content="nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
+    <meta property="og:title" content="nettenzOS | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
     <meta property="og:description"
         content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
     <meta property="og:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
@@ -29,7 +29,7 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://nettenz.github.io/">
-    <meta name="twitter:title" content="nettenz | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
+    <meta name="twitter:title" content="nettenzOS | Full-Stack Engineer, DJ, Cybersecurity Specialist.">
     <meta name="twitter:description"
         content="Portfolio that showcases innovative full-stack engineering projects, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
     <meta name="twitter:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
@@ -45,10 +45,9 @@
 
         gtag('config', 'G-0L5LLER0MH');
     </script>
-    <!--<link rel="icon" href="/favicon.ico" type="image/x-icon">-->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+    <script src="assets/js/macos.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="assets/css/main.css">
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
@@ -57,7 +56,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js"></script>
     <style>
         body {
-            font-family: 'JetBrains Mono', monospace;
+            font-family: 'Lato', sans-serif;
             background: rgb(13, 17, 23);
         }
 
@@ -266,631 +265,321 @@
     </style>
 </head>
 
-<body class="text-white">
-    <nav class="w-full p-4 bg-opacity-100 bg-gray-900 shadow-md fixed top-0 left-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold">ELR</h1>
-            <ul class="flex space-x-6">
-                <li><a href="index.html" class="text-white hover:text-cyan-400 transition-colors">Home</a></li>
-                <li><a href="#projects" class="text-white hover:text-cyan-400 transition-colors">Projects</a></li>
-                <li><a href="#contact" class="text-white hover:text-cyan-400 transition-colors">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <section class="w-full min-h-screen flex items-center justify-center bg-[#0d1117] px-6 sm:px-16 pt-24 pb-16">
-        <div class="max-w-5xl w-full flex flex-col items-start justify-center stagger-children">
-            <!-- Top eyebrow -->
-            <p class="text-sm font-mono text-white border-b-2 border-[#6ee7b7] inline-block pb-0.5 mb-3">
-                Hi, my name is
-            </p>
-
-            <!-- Name -->
-            <h1 class="text-4xl sm:text-6xl font-bold text-gray-100 leading-tight mb-2">
-                Emanuel Lugo
-            </h1>
-
-            <!-- Value prop -->
-            <h2 class="text-xl sm:text-2xl text-gray-300 leading-relaxed mb-4">
-                Full‑stack engineer, cybersecurity specialist building audio, data‑viz, and real‑time web experiences.
-            </h2>
-
-            <!-- Tech stack badges -->
-            <ul class="flex flex-wrap gap-2 mb-6" aria-label="Primary tech stack">
-                <li><span class="px-2.5 py-1 rounded-md border border-[#30363d] bg-[#161b22] text-sm">Python ·
-                        Flask · Django</span></li>
-                <li><span class="px-2.5 py-1 rounded-md border border-[#30363d] bg-[#161b22] text-sm">Node.js ·
-                        TypeScript · React</span>
-                </li>
-                </li>
-                <li><span class="px-2.5 py-1 rounded-md border border-[#30363d] bg-[#161b22] text-sm">Tailwind ·
-                        Vite</span>
-                </li>
-
-            </ul>
-
-            <!-- Short supporting copy -->
-            <p class="text-base sm:text-lg text-gray-400 max-w-3xl mb-8">
-                I design and ship modern UIs, web audio tools, and interactive data visualizations.
-                Check out a few projects below or grab my resume — I’m open to roles and collabs.
-            </p>
-
-            <!-- CTAs -->
-            <div class="flex flex-wrap items-center gap-3">
-                <a href="assets/documents/elr_2025_resume.pdf" download
-                    class="px-6 py-3 border border-[#6ee7b7] text-[#6ee7b7] rounded-md hover:bg-[#6ee7b7] hover:text-black transition flex items-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
-                    aria-label="Download my resume PDF">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 16a4 4 0 01-4-4V7a4 4 0 014-4h6l6 6v3" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M8 16h8m-4-4v8m0 0l-3-3m3 3l3-3" />
-                    </svg>
-                    Download Resume
-                </a>
-
-                <a href="#projects"
-                    class="inline-flex items-center px-3 py-2 text-sm text-gray-300 hover:text-white underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
-                    aria-label="Jump to projects section">
-                    View Projects
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor"
-                        aria-hidden="true">
-                        <path fill-rule="evenodd"
-                            d="M10 18a1 1 0 01-.707-1.707l5-5H4a1 1 0 110-2h10.586l-5-5A1 1 0 1110.707 2.293l7 7a1 1 0 010 1.414l-7 7A.997.997 0 0110 18z"
-                            clip-rule="evenodd" />
-                    </svg>
-                </a>
-            </div>
-
-            <!-- Socials (lightweight) -->
-            <div class="flex items-center gap-4 mt-6" aria-label="Social profiles">
-                <a href="https://github.com/netteNz" target="_blank" rel="noopener noreferrer me"
-                    class="text-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
-                    aria-label="Open my GitHub in a new tab">
-                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
-                        <path
-                            d="M12 .5C5.73.5.99 5.24.99 11.52c0 4.86 3.15 8.98 7.51 10.43.55.1.75-.24.75-.53v-1.86c-3.05.66-3.7-1.32-3.7-1.32-.5-1.27-1.22-1.61-1.22-1.61-1-.69.08-.68.08-.68 1.1.08 1.68 1.14 1.68 1.14.98 1.67 2.58 1.19 3.21.91.1-.72.38-1.19.69-1.47-2.66-.3-5.46-1.33-5.46-5.9 0-1.3.47-2.37 1.24-3.21-.13-.3-.53-1.52.12-3.17 0 0 1.01-.32 3.31 1.23a11.49 11.49 0 0 1 5.99 0c2.3-1.55 3.31-1.23 3.31-1.23.65 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.21 0 4.58-2.81 5.6-5.49 5.9.39.34.75 1.02.75 2.06v3.05c0 .32.19.69.77.58 4.35-1.45 7.49-5.57 7.49-10.43C23.01 5.24 18.27.5 12 .5z" />
-                    </svg>
-                    <span class="sr-only">GitHub</span>
-                </a>
-
-                <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer me"
-                    class="text-gray-400 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#6ee7b7]"
-                    aria-label="Open my LinkedIn in a new tab">
-                    <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor" aria-hidden="true">
-                        <path
-                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.784 1.764-1.75 1.764zm13.5 11.268h-3v-5.604c0-1.337-.027-3.059-1.865-3.059-1.867 0-2.153 1.458-2.153 2.962v5.701h-3v-10h2.881v1.367h.041c.401-.759 1.38-1.559 2.841-1.559 3.04 0 3.602 2.002 3.602 4.605v5.587z" />
-                    </svg>
-                    <span class="sr-only">LinkedIn</span>
-                </a>
+<body class="h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black font-['Lato']">
+    <!-- macOS Menu Bar -->
+    <div class="fixed top-0 left-0 right-0 h-8 bg-black bg-opacity-50 backdrop-blur-md border-b border-gray-700 z-50 flex items-center px-4">
+        <div class="flex items-center space-x-4">
+            <div class="text-white text-sm font-medium">nettenzOS</div>
+            <div class="flex space-x-4 text-sm text-gray-300">
+                <span class="hover:text-white cursor-pointer transition-colors" data-app="about">About</span>
+                <span class="hover:text-white cursor-pointer transition-colors" data-app="projects">Portfolio</span>
+                <span class="hover:text-white cursor-pointer transition-colors" data-app="projects">Projects</span>
             </div>
         </div>
-    </section>
-
-    <section class="w-full min-h-screen flex items-center justify-center bg-[#0d1117] px-6 sm:px-16 pt-28 pb-16"
-        id="projects">
-        <div class="max-w-4xl w-full animate-on-scroll">
-            <!-- Section title -->
-            <h2 class="text-4xl font-bold mb-8 text-center">Projects</h2>
-            <!-- Projects grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 stagger-children">
-                <!-- Web Audio Player Card -->
-                <div
-                    class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
-                    <!-- Project image -->
-                    <div class="h-48 bg-[#21262d] relative overflow-hidden">
-                        <!-- Audio visualization placeholder -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="flex items-end space-x-1 h-20">
-                                <div class="w-2 bg-[#6ee7b7] h-8 animate-pulse"></div>
-                                <div class="w-2 bg-[#6ee7b7] h-16 animate-pulse delay-100"></div>
-                                <div class="w-2 bg-[#6ee7b7] h-12 animate-pulse delay-200"></div>
-                                <div class="w-2 bg-[#6ee7b7] h-20 animate-pulse delay-150"></div>
-                                <div class="w-2 bg-[#6ee7b7] h-10 animate-pulse delay-75"></div>
-                                <div class="w-2 bg-[#6ee7b7] h-16 animate-pulse delay-300"></div>
-                                <div class="w-2 bg-[#6ee7b7] h-8 animate-pulse delay-200"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project content -->
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-gray-100 mb-2">Web Audio Player</h3>
-                        <p class="text-gray-400 mb-4">
-                            A custom web audio player with visualization features, built using the Web Audio API.
-                        </p>
-
-                        <!-- Technologies -->
-                        <div class="mb-4 mt-auto">
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">React</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">TailwindCSS</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Web Audio API</span>
-                            </div>
-                        </div>
-
-                        <!-- Links -->
-                        <div class="flex items-center space-x-4">
-                            <a href="https://github.com/netteNz/web-audio-app"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.39.34.75 1.02.75 2.06v3.05c0 .32.19.69.77.58 4.35-1.45 7.49-5.57 7.49-10.43C23.01 5.24 18.27.5 12 .5z" />
-                                </svg>
-                                Github
-                            </a>
-                            <a href="http://nettenz.github.io/web-audio-app"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                                Live Demo
-                            </a>
-                        </div>
-                    </div>
+        <div class="ml-auto flex items-center space-x-3 text-white text-sm">
+            <!-- System Status Icons -->
+            <div class="flex items-center space-x-2">
+                <!-- WiFi Icon -->
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+                </svg>
+                
+                <!-- Bluetooth Icon -->
+                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/>
+                </svg>
+                
+                <!-- Battery Icon -->
+                <div class="flex items-center space-x-1">
+                    <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.67 4H14V2c0-0.55-0.45-1-1-1h-2c-0.55 0-1 0.45-1 1v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c0.74 0 1.34-0.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/>
+                        <rect x="9" y="6" width="6" height="12" rx="1" fill="currentColor"/>
+                    </svg>
+                    <span class="text-xs">87%</span>
                 </div>
-
-                <!-- Earthquakes Visualization Card -->
-                <div
-                    class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
-                    <!-- Project image -->
-                    <div class="h-48 bg-[#21262d] relative overflow-hidden">
-                        <!-- Map visualization placeholder -->
-                        <div class="absolute inset-0 flex items-center justify-center overflow-hidden">
-                            <div class="relative w-full h-full flex items-center justify-center">
-                                <!-- Map background -->
-                                <div class="absolute inset-0 bg-[#1a1f29]"></div>
-
-                                <!-- Grid lines -->
-                                <div class="absolute inset-0"
-                                    style="background-image: linear-gradient(rgba(110, 231, 183, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 231, 183, 0.05) 1px, transparent 1px); background-size: 20px 20px;">
-                                </div>
-
-                                <!-- Earthquake points -->
-                                <div class="absolute h-4 w-4 rounded-full bg-red-500 opacity-60 animate-ping"
-                                    style="top: 45%; left: 35%;"></div>
-                                <div class="absolute h-3 w-3 rounded-full bg-yellow-500 opacity-60 animate-ping"
-                                    style="top: 35%; left: 55%; animation-delay: 500ms;"></div>
-                                <div class="absolute h-2 w-2 rounded-full bg-green-400 opacity-60 animate-ping"
-                                    style="top: 55%; left: 45%; animation-delay: 1000ms;"></div>
-                                <div class="absolute h-5 w-5 rounded-full bg-red-600 opacity-60 animate-ping"
-                                    style="top: 60%; left: 30%; animation-delay: 1500ms;"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project content -->
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-gray-100 mb-2">Earthquake Visualization</h3>
-                        <p class="text-gray-400 mb-4">
-                            Interactive map showing earthquake data in Puerto Rico with magnitude color coding and
-                            informative popups.
-                        </p>
-
-                        <!-- Technologies -->
-                        <div class="mb-4 mt-auto">
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Python</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">PyScript</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Folium</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Pandas</span>
-                            </div>
-                        </div>
-
-                        <!-- Links -->
-                        <div class="flex items-center space-x-4">
-                            <a href="https://github.com/netteNz/earthquakes-pr"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.39.34.75 1.02.75 2.06v3.05c0 .32.19.69.77.58 4.35-1.45 7.49-5.57 7.49-10.43C23.01 5.24 18.27.5 12 .5z" />
-                                </svg>
-                                Github
-                            </a>
-                            <a href="earthquakes_pr.html"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                                Live Demo
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- DoorDashboard Card -->
-                <div
-                    class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
-                    <!-- Project image -->
-                    <div class="h-48 bg-[#21262d] relative overflow-hidden flex items-center justify-center">
-                        <!-- Terminal-like container for chart - width reduced from 4/5 to 3/5 -->
-                        <div
-                            class="w-3/5 h-4/5 flex flex-col rounded overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.2)]">
-                            <!-- Terminal header with dots -->
-                            <div class="h-6 bg-[#161b22] flex items-center px-2">
-                                <div class="flex space-x-1">
-                                    <div class="w-2 h-2 bg-red-500 rounded-full"></div>
-                                    <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                                </div>
-                                <div class="ml-2 text-xs text-green-400 opacity-70">earnings-tracker.dash</div>
-                            </div>
-
-                            <!-- Chart area with dark background - edge-to-edge chart -->
-                            <div class="flex-1 bg-[#0d1117] relative">
-                                <!-- Horizontal grid lines only - more subtle -->
-                                <div class="absolute inset-0" style="background-image: linear-gradient(rgba(110,231,183,0.04) 1px, transparent 1px); 
-               background-size: 100% 10px;">
-                                </div>
-
-                                <!-- Chart with area fill -->
-                                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 50"
-                                    preserveAspectRatio="none">
-                                    <!-- Gradient definition for area fill -->
-                                    <defs>
-                                        <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#6ee7b7; stop-opacity:0.3" />
-                                            <stop offset="100%" style="stop-color:#6ee7b7; stop-opacity:0" />
-                                        </linearGradient>
-                                    </defs>
-
-                                    <!-- Area fill -->
-                                    <path
-                                        d="M15,40 C18,37 22,35 25,32 C28,29 32,26 35,29 C38,32 42,28 45,26 C48,24 52,20 55,18 C58,16 62,14 65,16 C68,18 72,16 85,12 L85,45 L15,45 Z"
-                                        fill="url(#areaGradient)"
-                                        style="opacity: 0; animation: fill-fade 2s ease-out 0.5s forwards;">
-                                    </path>
-
-                                    <!-- Smooth curve line -->
-                                    <path
-                                        d="M15,40 C18,37 22,35 25,32 C28,29 32,26 35,29 C38,32 42,28 45,26 C48,24 52,20 55,18 C58,16 62,14 65,16 C68,18 72,16 85,12"
-                                        fill="none" stroke="#6ee7b7" stroke-width="1.8" stroke-linecap="round"
-                                        style="stroke-dasharray: 200; stroke-dashoffset: 200; animation: dash 2s ease-out forwards;">
-                                    </path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project content -->
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-gray-100 mb-2">DoorDashboard</h3>
-                        <p class="text-gray-400 mb-4">
-                            Analytics dashboard for DoorDash drivers to track earnings, optimize routes, and maximize
-                            profitability.
-                        </p>
-
-                        <!-- Technologies -->
-                        <div class="mb-4 mt-auto">
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">React</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Flask</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Tailwind</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Full-Stack</span>
-
-                            </div>
-                        </div>
-
-                        <!-- Links -->
-                        <div class="flex items-center space-x-4">
-                            <a href="https://github.com/netteNz/DoorDashboard"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.39.34.75 1.02.75 2.06v3.05c0 .32.19.69.77.58 4.35-1.45 7.49-5.57 7.49-10.43C23.01 5.24 18.27.5 12 .5z" />
-                                </svg>
-                                Github
-                            </a>
-                            <a href="#"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center cursor-not-allowed opacity-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                                In Progress
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Veto System Card - Redesigned -->
-                <div
-                    class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
-                    <!-- Project image -->
-                    <div class="h-48 bg-[#21262d] relative overflow-hidden">
-                        <!-- Geometric voting visualization inspired by game icons -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="relative w-32 h-32">
-                                <!-- Central hexagonal decision chamber -->
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <svg class="w-20 h-20 text-[#6ee7b7]" viewBox="0 0 100 100">
-                                        <!-- Hexagonal border -->
-                                        <polygon points="50,5 85,25 85,75 50,95 15,75 15,25" fill="none"
-                                            stroke="#6ee7b7" stroke-width="2"
-                                            style="stroke-dasharray: 300; stroke-dashoffset: 300; animation: draw-hex 2s ease-out forwards;" />
-
-                                        <!-- Inner consensus circle -->
-                                        <circle cx="50" cy="50" r="15" fill="#6ee7b7" opacity="0.2"
-                                            style="transform: scale(0); animation: pulse-center 1.5s ease-out 1s forwards;" />
-
-                                        <!-- Checkmark -->
-                                        <path d="M42 50 L47 55 L58 44" fill="none" stroke="#6ee7b7" stroke-width="2"
-                                            stroke-linecap="round"
-                                            style="stroke-dasharray: 20; stroke-dashoffset: 20; animation: draw-check 0.8s ease-out 2s forwards;" />
-                                    </svg>
-                                </div>
-
-                                <!-- Voting nodes positioned around hexagon points -->
-                                <!-- Top -->
-                                <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <div class="w-3 h-3 rounded-full bg-green-500 opacity-0"
-                                        style="animation: vote-appear 0.5s ease-out 0.5s forwards;"></div>
-                                </div>
-
-                                <!-- Top Right -->
-                                <div class="absolute top-3 right-2 transform translate-x-1/2 -translate-y-1/2">
-                                    <div class="w-3 h-3 rounded-full bg-red-500 opacity-0"
-                                        style="animation: vote-appear 0.5s ease-out 0.8s forwards;"></div>
-                                </div>
-
-                                <!-- Bottom Right -->
-                                <div class="absolute bottom-3 right-2 transform translate-x-1/2 translate-y-1/2">
-                                    <div class="w-3 h-3 rounded-full bg-yellow-500 opacity-0"
-                                        style="animation: vote-appear 0.5s ease-out 1.1s forwards;"></div>
-                                </div>
-
-                                <!-- Bottom -->
-                                <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-                                    <div class="w-3 h-3 rounded-full bg-green-500 opacity-0"
-                                        style="animation: vote-appear 0.5s ease-out 1.4s forwards;"></div>
-                                </div>
-
-                                <!-- Bottom Left -->
-                                <div class="absolute bottom-3 left-2 transform -translate-x-1/2 translate-y-1/2">
-                                    <div class="w-3 h-3 rounded-full bg-green-500 opacity-0"
-                                        style="animation: vote-appear 0.5s ease-out 1.7s forwards;"></div>
-                                </div>
-
-                                <!-- Top Left -->
-                                <div class="absolute top-3 left-2 transform -translate-x-1/2 -translate-y-1/2">
-                                    <div class="w-3 h-3 rounded-full bg-red-500 opacity-0"
-                                        style="animation: vote-appear 0.5s ease-out 2s forwards;"></div>
-                                </div>
-
-                                <!-- Connecting lines that animate from outer nodes to center -->
-                                <svg class="absolute inset-0 w-full h-full" viewBox="0 0 128 128">
-                                    <g stroke="#6ee7b7" stroke-width="1" opacity="0.3" fill="none">
-                                        <!-- Lines connecting votes to center - all 6 nodes -->
-                                        <!-- Top node to center -->
-                                        <line x1="64" y1="8" x2="64" y2="50"
-                                            style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: draw-line 0.8s ease-out 2.2s forwards;" />
-
-                                        <!-- Top Right node to center -->
-                                        <line x1="110" y1="32" x2="78" y2="58"
-                                            style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: draw-line 0.8s ease-out 2.4s forwards;" />
-
-                                        <!-- Bottom Right node to center -->
-                                        <line x1="110" y1="96" x2="78" y2="70"
-                                            style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: draw-line 0.8s ease-out 2.6s forwards;" />
-
-                                        <!-- Bottom node to center -->
-                                        <line x1="64" y1="120" x2="64" y2="78"
-                                            style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: draw-line 0.8s ease-out 2.8s forwards;" />
-
-                                        <!-- Bottom Left node to center -->
-                                        <line x1="18" y1="96" x2="50" y2="70"
-                                            style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: draw-line 0.8s ease-out 3.0s forwards;" />
-
-                                        <!-- Top Left node to center -->
-                                        <line x1="18" y1="32" x2="50" y2="58"
-                                            style="stroke-dasharray: 50; stroke-dashoffset: 50; animation: draw-line 0.8s ease-out 3.2s forwards;" />
-                                    </g>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project content -->
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-gray-100 mb-2">Veto System</h3>
-                        <p class="text-gray-400 mb-4">
-                            Team based veto and pick system for Halo derived from CDL's map veto process. Support for Bo5, Bo7 series formats.
-                        </p>
-
-                        <!-- Technologies -->
-                        <div class="mb-4 mt-auto">
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">React +
-                                    TailwindCSS</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Django</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">PostgreSQL</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">RESTful API</span>
-                            </div>
-                        </div>
-
-                        <!-- Links -->
-                        <div class="flex items-center space-x-4">
-                            <a href="https://github.com/netteNz/veto-webapp/"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                </svg>
-                                Github
-                            </a>
-                            <a href="https://nettenz.github.io/veto-tsd/"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                                Live Demo
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- New Project Card (Placeholder) -->
-                <div
-                    class="bg-[#161b22] rounded-lg overflow-hidden border border-[#30363d] hover:border-[#6ee7b7] transition-all duration-300 flex flex-col">
-                    <!-- Project image placeholder -->
-                    <div class="h-48 bg-[#21262d] relative overflow-hidden">
-                        <!-- Code visualization placeholder -->
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="flex flex-col items-center space-y-2">
-                                <!-- Terminal-like animation -->
-                                <div class="w-3/4 h-6 bg-[#0d1117] rounded flex items-center px-2">
-                                    <div class="flex space-x-1">
-                                        <div class="w-2 h-2 bg-red-500 rounded-full"></div>
-                                        <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                                    </div>
-                                </div>
-                                <div
-                                    class="w-3/4 bg-[#0d1117] rounded p-2 text-xs text-[#6ee7b7] flex flex-col items-start">
-                                    <div class="flex items-center mb-1 w-full">
-                                        <span class="text-gray-400 mr-1">$</span>
-                                        <span class="typing-animation">npm start</span>
-                                    </div>
-                                    <div class="text-gray-400 opacity-60">Initializing project...</div>
-                                    <div class="text-yellow-300 opacity-60 mt-1">Starting development server...</div>
-                                    <div class="text-green-400 mt-1">Project ready!</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Project content -->
-                    <div class="p-6 flex flex-col flex-grow">
-                        <h3 class="text-xl font-bold text-gray-100 mb-2">Coming Soon</h3>
-                        <p class="text-gray-400 mb-4">
-                            A new project currently in development. Check back soon for updates on this exciting
-                            addition.
-                        </p>
-
-                        <!-- Technologies -->
-                        <div class="mb-4 mt-auto">
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">React</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">Node.js</span>
-                                <span class="px-2 py-1 bg-[#21262d] text-xs rounded text-[#6ee7b7]">MongoDB</span>
-                            </div>
-                        </div>
-
-                        <!-- Links -->
-                        <div class="flex items-center space-x-4">
-                            <a href="#"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center cursor-not-allowed opacity-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                </svg>
-                                Coming Soon
-                            </a>
-                            <a href="#"
-                                class="text-sm text-gray-300 hover:text-[#6ee7b7] flex items-center cursor-not-allowed opacity-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                                In Progress
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Additional project cards can be added here -->
             </div>
+            
+            <span id="current-time">3:01 PM</span>
         </div>
-    </section>
-
-    <div class="flex flex-col items-center justify-center py-16 w-full text-center px-4 contact-section slide-up"
-        id="contact">
-        <h2 class="text-4xl font-bold mb-8">Contact Details</h2>
-        <pre class="mx-auto whitespace-pre-wrap break-words fade-in"><code class="language-python">
-    class ContactDetails:
-        def __init__(self):
-            self.name     = "Emanuel Lugo Rivera"
-            self.email    = "lugo.emanuel@gmail.com"
-            self.linkedin = "https://www.linkedin.com/in/lugo-emanuel/"
-            self.github   = "https://github.com/netteNz"
-    </code></pre>
     </div>
 
-    <footer class="w-full p-4 bg-opacity-50 bg-gray-900 text-center">
-        <p>&copy; 2025 Emanuel Lugo. All rights reserved.</p>
-    </footer>
+    <!-- Desktop Area -->
+    <div id="desktop" class="pt-8 h-full relative overflow-hidden">
+        <!-- Desktop Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black"></div>
+        
+        <!-- Windows Container -->
+        <div id="windows-container" class="absolute inset-0 pt-8"></div>
+    </div>
 
-    <!-- Add this script at the end of the body -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Get all elements to be animated
-            const animatedElements = document.querySelectorAll(
-                '.animate-on-scroll, .stagger-children, .fade-in, .slide-up'
-            );
+    <!-- macOS Dock (Vertical Left Side) -->
+    <div class="fixed left-4 top-1/2 transform -translate-y-1/2 z-40">
+        <div class="bg-gray-900 bg-opacity-80 backdrop-blur-md rounded-2xl p-3 shadow-2xl border border-gray-700">
+            <div class="flex flex-col items-center space-y-3">
+                <div class="dock-item group relative" data-app="finder">
+                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 hover:scale-110 transition-all cursor-pointer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 7V17C3 18.1046 3.89543 19 5 19H19C20.1046 19 21 18.1046 21 17V9C21 7.89543 20.1046 7 19 7H13L11 5H5C3.89543 5 3 5.89543 3 7Z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <span class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">Finder</span>
+                </div>
+                
+                <div class="dock-item group relative" data-app="about">
+                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 hover:scale-110 transition-all cursor-pointer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" stroke-width="2"/>
+                            <path d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <span class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">About</span>
+                </div>
+                
+                <div class="dock-item group relative" data-app="projects">
+                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 hover:scale-110 transition-all cursor-pointer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 8L3 12L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M17 8L21 12L17 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 4L10 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <span class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">Projects</span>
+                </div>
+                
+                <div class="dock-item group relative" data-app="terminal">
+                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 hover:scale-110 transition-all cursor-pointer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M7 10L10 13L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13 16H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <span class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">Terminal</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            // Set up the Intersection Observer for general elements
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, {
-                root: null,
-                threshold: 0.15,
-                rootMargin: '-50px 0px -50px 0px'
-            });
+    <!-- Window Templates -->
+    <template id="window-template">
+        <div class="window absolute overflow-hidden" style="width: 900px; height: 650px;">
+            <div class="window-header">
+                <div class="window-controls">
+                    <button class="window-control window-close" title="Close"></button>
+                    <button class="window-control window-minimize" title="Minimize"></button>
+                    <button class="window-control window-maximize" title="Maximize"></button>
+                </div>
+                <div class="window-title"></div>
+                <div style="width: 64px;"></div>
+            </div>
+            <div class="window-content"></div>
+        </div>
+    </template>
 
-            // Observe all elements with animation classes
-            animatedElements.forEach(el => {
-                observer.observe(el);
-            });
-
-            // Separate observer for project cards to trigger SVG animations
-            const projectCards = document.querySelectorAll('#projects .bg-\\[\\#161b22\\]');
+    <!-- App Content Templates -->
+    <template id="finder-app">
+        <div class="terminal-content">
+            <div class="terminal-header">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ ls -la
+            </div>
             
-            const cardObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Add visible class for CSS animations
-                        entry.target.classList.add('visible');
-                        
-                        // Trigger SVG animations by restarting them
-                        const svgElements = entry.target.querySelectorAll('svg path, svg polygon, svg circle, svg line');
-                        svgElements.forEach(svg => {
-                            // Clone and replace to restart animation
-                            const parent = svg.parentNode;
-                            const newSvg = svg.cloneNode(true);
-                            parent.replaceChild(newSvg, svg);
-                        });
-                    }
-                });
-            }, {
-                root: null,
-                threshold: 0.2, // Trigger when 20% of card is visible
-                rootMargin: '0px 0px -100px 0px' // Offset to trigger earlier
-            });
+            <div class="terminal-output">
+                <div style="margin-bottom: 20px; font-family: 'Monaco', monospace;">
+                    <div style="color: var(--terminal-text-secondary); margin-bottom: 4px;">total 32</div>
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 4px;">drwxr-xr-x  5 emanuel  staff   160 Sep 30 15:01 .</div>
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 4px;">drwxr-xr-x  8 emanuel  staff   256 Sep 30 14:30 ..</div>
+                    <div style="color: var(--terminal-text-secondary); margin-bottom: 4px;">-rw-r--r--  1 emanuel  staff  2048 Sep 30 14:45 about.md</div>
+                    <div style="color: var(--terminal-text-secondary); margin-bottom: 4px;">-rw-r--r--  1 emanuel  staff   512 Sep 30 14:30 contact.vcf</div>
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 4px;">drwxr-xr-x  6 emanuel  staff   192 Sep 30 15:01 projects/</div>
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 4px;">drwxr-xr-x  3 emanuel  staff    96 Sep 30 14:30 documents/</div>
+                </div>
 
-            // Observe each project card individually
-            projectCards.forEach(card => {
-                cardObserver.observe(card);
-            });
-        });
-    </script>
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">## QUICK_LINKS</div>
+                    <div style="margin-left: 20px; line-height: 1.8;">
+                        <div>📁 <a href="#" onclick="event.preventDefault(); window.macOSInterface?.openApp('projects')" style="color: var(--terminal-accent); cursor: pointer;">projects/</a> - View portfolio projects</div>
+                        <div>👤 <a href="#" onclick="event.preventDefault(); window.macOSInterface?.openApp('about')" style="color: var(--terminal-accent); cursor: pointer;">about.md</a> - About Emanuel Lugo</div>
+                        <div>💻 <a href="#" onclick="event.preventDefault(); window.macOSInterface?.openApp('terminal')" style="color: var(--terminal-accent); cursor: pointer;">terminal</a> - Open terminal</div>
+                        <div>📄 <a href="assets/documents/elr_2025_resume.pdf" style="color: var(--terminal-accent);" download>resume.pdf</a> - Download resume</div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">## STATS</div>
+                    <div style="margin-left: 20px;">
+                        <div>Total files: 4</div>
+                        <div>Directories: 2</div>
+                        <div>Disk usage: 2.75 KB</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="about-app">
+        <div class="terminal-content">
+            <div class="terminal-header">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat about.md
+            </div>
+            
+            <div class="terminal-output">
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent); font-size: 18px; margin-bottom: 10px;">
+                        ╔══════════════════════════════════════╗
+                        ║           EMANUEL LUGO               ║
+                        ║      Full-Stack Engineer             ║
+                        ║   Cybersecurity Specialist           ║
+                        ╚══════════════════════════════════════╝
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">## TECH_STACK</div>
+                    <div>Frontend: React, TypeScript, TailwindCSS, Vite</div>
+                    <div>Backend: Python, Node.js, Flask, Django</div>
+                    <div>Database: PostgreSQL, MongoDB</div>
+                    <div>Audio: Web Audio API, Real-time Visualization</div>
+                    <div>Security: Penetration Testing, Vulnerability Assessment</div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">## DESCRIPTION</div>
+                    <div>I design and ship modern UIs, web audio tools, and interactive</div>
+                    <div>data visualizations. Passionate about creating immersive user</div>
+                    <div>experiences that blend code, creativity, and innovation.</div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">## LINKS</div>
+                    <div>📄 <a href="assets/documents/elr_2025_resume.pdf" style="color: var(--terminal-accent);" download>Resume</a></div>
+                    <div>🐙 <a href="https://github.com/netteNz" style="color: var(--terminal-accent);" target="_blank">GitHub</a></div>
+                    <div>💼 <a href="https://www.linkedin.com/in/lugo-emanuel/" style="color: var(--terminal-accent);" target="_blank">LinkedIn</a></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="projects-app">
+        <div class="terminal-content">
+            <div style="margin-bottom: 12px;">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ ls
+            </div>
+            <div style="margin-bottom: 16px; color: var(--terminal-accent);">
+                web-audio-player/&nbsp;&nbsp;&nbsp;&nbsp;earthquake-visualization/&nbsp;&nbsp;&nbsp;&nbsp;door-dashboard/&nbsp;&nbsp;&nbsp;&nbsp;veto-system/
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ echo "Type 'help' for available commands"
+            </div>
+            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+                Type 'help' for available commands
+            </div>
+
+            <div class="terminal-input-line">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ 
+                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1" style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
+            </div>
+        </div>
+    </template>
+
+    <template id="terminal-app">
+        <div class="terminal-content">
+            <div style="margin-bottom: 12px;">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ whoami
+            </div>
+            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+                Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat ~/.skills
+            </div>
+            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+                Frontend: React, TypeScript, TailwindCSS, Vite<br>
+                Backend: Python, Node.js, Flask, Django<br>
+                Database: PostgreSQL, MongoDB<br>
+                Security: Penetration Testing, Vulnerability Assessment<br>
+                Audio: Web Audio API, Real-time Visualization
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ ls ~/projects
+            </div>
+            <div style="margin-bottom: 16px; color: var(--terminal-accent);">
+                web-audio-player/  earthquake-viz/  door-dashboard/  veto-system/
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ echo "Type 'help' for available commands"
+            </div>
+            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+                Type 'help' for available commands
+            </div>
+
+            <div class="terminal-input-line">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ 
+                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1" style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
+            </div>
+        </div>
+    </template>
+
+    <template id="contact-app">
+        <div class="terminal-content">
+            <div class="terminal-header">
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat contact.vcf
+            </div>
+            
+            <div class="terminal-output">
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent); font-size: 16px; margin-bottom: 10px;">
+                        ╔══════════════════════════════════════╗
+                        ║            CONTACT INFO              ║
+                        ╚══════════════════════════════════════╝
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">📧 EMAIL</div>
+                    <div style="margin-left: 20px;">
+                        <a href="mailto:lugo.emanuel@gmail.com" style="color: var(--terminal-accent);">lugo.emanuel@gmail.com</a>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">💼 LINKEDIN</div>
+                    <div style="margin-left: 20px;">
+                        <a href="https://www.linkedin.com/in/lugo-emanuel/" style="color: var(--terminal-accent);" target="_blank">linkedin.com/in/lugo-emanuel/</a>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">🐙 GITHUB</div>
+                    <div style="margin-left: 20px;">
+                        <a href="https://github.com/netteNz" style="color: var(--terminal-accent);" target="_blank">github.com/netteNz</a>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">📍 LOCATION</div>
+                    <div style="margin-left: 20px;">Puerto Rico, United States</div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">⚡ QUICK ACTIONS</div>
+                    <div style="margin-left: 20px;">
+                        <button onclick="window.open('mailto:lugo.emanuel@gmail.com?subject=Hello from nettenzOS', '_blank')" 
+                                style="background: var(--terminal-accent); color: var(--terminal-bg); border: none; padding: 8px 16px; border-radius: 4px; margin-right: 10px; cursor: pointer; font-family: inherit;">
+                            Send Email
+                        </button>
+                        <button onclick="window.open('https://calendly.com/your-link', '_blank')" 
+                                style="background: transparent; color: var(--terminal-accent); border: 1px solid var(--terminal-accent); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: inherit;">
+                            Schedule Call
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
 </body>
 
 </html>
