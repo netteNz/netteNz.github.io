@@ -167,10 +167,17 @@ class MacOSInterface {
         // Update window header with terminal styling
         const header = windowElement.querySelector('.window-header');
         header.className = 'window-header';
+        // Ensure header stays on top
+        header.style.position = 'sticky';
+        header.style.top = '0';
+        header.style.zIndex = '10';
+        header.style.backgroundColor = 'var(--terminal-header-bg, #1a1a1a)';
 
         // Update window controls
         const controls = header.querySelector('.window-controls');
         if (controls) {
+            controls.style.position = 'relative';
+            controls.style.zIndex = '11';
             const closeBtn = controls.children[0];
             const minimizeBtn = controls.children[1];
             const maximizeBtn = controls.children[2];
@@ -185,6 +192,9 @@ class MacOSInterface {
         if (contentTemplate) {
             const content = contentTemplate.content.cloneNode(true);
             const windowContent = windowElement.querySelector('.window-content');
+            // Ensure content is scrollable and doesn't overlap header
+            windowContent.style.overflowY = 'auto';
+            windowContent.style.position = 'relative';
             windowContent.appendChild(content);
 
             // Apply terminal styling to content
