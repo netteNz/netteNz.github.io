@@ -200,11 +200,18 @@ section {
 
 /* ===== Terminal-Style Content ===== */
 .terminal-content {
-    padding: 20px 20px 0 20px;
-    background: var(--terminal-bg);
+    padding: 16px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    line-height: 1.5;
     color: var(--terminal-text);
-    height: 100%;
+    background: var(--terminal-bg);
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    height: 100%;
+    scroll-behavior: smooth;
+    word-wrap: break-word; /* Enable word wrapping */
+    overflow-wrap: break-word; /* Modern alternative */
 }
 
 .terminal-header {
@@ -219,28 +226,23 @@ section {
 /* Terminal input line styling */
 .terminal-input-line {
     display: flex;
-    align-items: center;
-    gap: 4px;
+    align-items: baseline;
     margin-bottom: 0;
-    position: sticky;
-    bottom: 0;
-    background: var(--terminal-bg);
-    padding: 4px 0;
+    flex-wrap: wrap; /* Allow wrapping if needed */
+    word-break: break-word;
 }
 
 .terminal-input {
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    color: var(--terminal-accent) !important;
-    caret-color: var(--terminal-accent) !important;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace !important;
-    font-size: 14px !important;
-    line-height: 1.5 !important;
     flex: 1;
+    min-width: 0; /* Allow input to shrink */
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--terminal-accent);
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0;
     margin-left: 4px;
-    width: 100%;
-    min-width: 0;
 }
 
 .terminal-input:focus {
@@ -260,10 +262,10 @@ section {
 }
 
 .terminal-output {
-    color: var(--terminal-text-secondary);
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
     white-space: pre-wrap;
-    word-break: break-word;
-    margin-bottom: 0;
 }
 
 .terminal-output > div:last-child {
@@ -280,10 +282,10 @@ section {
 }
 
 .terminal-line {
-    margin-bottom: 8px;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
+    margin-bottom: 4px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap; /* Preserve spaces and wrap */
 }
 
 /* Enhanced Desktop Icons */

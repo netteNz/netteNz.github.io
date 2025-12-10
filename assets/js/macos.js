@@ -3,6 +3,7 @@ class MacOSInterface {
         this.windows = new Map();
         this.zIndex = 100;
         this.activeWindow = null;
+        this.terminalEngines = new Map(); // Store terminal instances per window
         this.performanceOptimizations();
         this.waitForGSAP();
     }
@@ -420,435 +421,41 @@ class MacOSInterface {
 
     setupAppSpecificEvents(windowElement, appName) {
         if (appName === 'terminal') {
-            this.setupTerminal(windowElement);
+            this.setupTerminalWithEngine(windowElement, '~');
         } else if (appName === 'projects') {
-            this.setupProjectsTerminal(windowElement);
+            this.setupTerminalWithEngine(windowElement, '~/projects');
         }
     }
 
-    setupProjectsTerminal(windowElement) {
+    setupTerminalWithEngine(windowElement, initialPath) {
         setTimeout(() => {
             const content = windowElement.querySelector('.terminal-content');
-            const input = windowElement.querySelector('#terminal-input');
+            const appName = windowElement.dataset.app;
 
-            if (input && content) {
-                // Clear any existing event listeners
-                const newInput = input.cloneNode(true);
-                input.replaceWith(newInput);
-
-                // Add keydown event listener
-                const handleKeydown = (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const command = newInput.value.trim();
-                        if (command) {
-                            this.executeProjectCommand(command, content);
-                            newInput.value = '';
-                        }
-                    }
-                };
-
-                newInput.addEventListener('keydown', handleKeydown);
+            if (content) {
+                // Create new terminal engine instance
+                const terminal = new TerminalEngine();
+                this.terminalEngines.set(appName, terminal);
+                
+                // Initialize terminal
+                terminal.createTerminal(content, initialPath);
 
                 // Focus input when clicking anywhere in the window
                 const focusInput = (e) => {
-                    // Don't focus if clicking on a link or button
                     if (e && (e.target.tagName === 'A' || e.target.tagName === 'BUTTON')) {
                         return;
                     }
-                    newInput.focus();
-                    newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+                    const input = content.querySelector('#terminal-input');
+                    if (input) {
+                        input.focus();
+                        input.setSelectionRange(input.value.length, input.value.length);
+                    }
                 };
 
                 windowElement.addEventListener('click', focusInput);
                 focusInput();
             }
         }, 100);
-    }
-
-    setupTerminal(windowElement) {
-        setTimeout(() => {
-            const content = windowElement.querySelector('.terminal-content');
-            const input = windowElement.querySelector('#terminal-input');
-
-            if (input && content) {
-                // Clear any existing event listeners
-                const newInput = input.cloneNode(true);
-                input.replaceWith(newInput);
-
-                // Add keydown event listener
-                const handleKeydown = (e) => {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const command = newInput.value.trim();
-                        if (command) {
-                            this.executeTerminalCommand(command, content);
-                            newInput.value = '';
-                        }
-                    }
-                };
-
-                newInput.addEventListener('keydown', handleKeydown);
-
-                // Focus input when clicking anywhere in the window
-                const focusInput = (e) => {
-                    // Don't focus if clicking on a link or button
-                    if (e && (e.target.tagName === 'A' || e.target.tagName === 'BUTTON')) {
-                        return;
-                    }
-                    newInput.focus();
-                    newInput.setSelectionRange(newInput.value.length, newInput.value.length);
-                };
-
-                windowElement.addEventListener('click', focusInput);
-                focusInput();
-            }
-        }, 100);
-    }
-
-    executeProjectCommand(command, terminalContent) {
-        const currentPathElement = terminalContent.querySelector('.terminal-path:last-of-type');
-        const currentPath = currentPathElement ? currentPathElement.textContent : '~/projects';
-
-        // Create command echo line
-        const commandLine = document.createElement('div');
-        commandLine.className = 'terminal-line';
-        commandLine.innerHTML = `<span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">${currentPath}</span>$ ${command}`;
-
-        // Create output container
-        const output = document.createElement('div');
-        output.className = 'terminal-output';
-        output.style.marginBottom = '16px';
-
-        // Handle cd commands
-        if (command.startsWith('cd ')) {
-            const targetDir = command.substring(3).trim();
-            this.handleProjectCd(targetDir, terminalContent, currentPath);
-            return;
-        }
-
-        // Handle commands
-        switch (command.toLowerCase()) {
-            case 'web-audio-player':
-            case 'web-audio':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Opening web audio player...</div>`;
-                setTimeout(() => {
-                    window.open('https://nettenz.github.io/web-audio-app', '_blank');
-                }, 500);
-                break;
-            case 'earthquake-visualization':
-            case 'earthquake':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Opening earthquake visualization...</div>`;
-                setTimeout(() => {
-                    window.open('https://nettenz.github.io/earthquakes_pr.html', '_blank');
-                }, 500);
-                break;
-            case 'door-dashboard':
-            case 'dashboard':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Opening DoorDash dashboard...</div>`;
-                setTimeout(() => {
-                    window.open('https://nettenz.github.io/DoorDashboard', '_blank');
-                }, 500);
-                break;
-            case 'veto-system':
-            case 'veto':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Opening veto system...</div>`;
-                setTimeout(() => {
-                    window.open('https://nettenz.github.io/veto-tsd/', '_blank');
-                }, 500);
-                break;
-            case 'ls':
-                if (currentPath === '~/projects') {
-                    output.innerHTML = `<div style="color: var(--terminal-accent);">web-audio-player/&nbsp;&nbsp;&nbsp;&nbsp;earthquake-visualization/&nbsp;&nbsp;&nbsp;&nbsp;door-dashboard/&nbsp;&nbsp;&nbsp;&nbsp;veto-system/</div>`;
-                } else {
-                    output.innerHTML = `<div style="color: var(--terminal-accent);">README.md&nbsp;&nbsp;&nbsp;&nbsp;src/&nbsp;&nbsp;&nbsp;&nbsp;package.json&nbsp;&nbsp;&nbsp;&nbsp;deploy.sh</div>`;
-                }
-                break;
-            case 'pwd':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">${currentPath === '~/projects' ? '/Users/emanuel/projects' : `/Users/emanuel/${currentPath.replace('~/', '')}`}</div>`;
-                break;
-            case 'help':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary); line-height: 1.6;">Available commands:
-- ls: List directory contents
-- cd [directory]: Change directory  
-- pwd: Show current directory
-- clear: Clear terminal
-- exit: Close window
-
-🚀 Project Commands (opens deployed apps):
-- web-audio-player: Real-time audio visualizer with LUFS meter
-- earthquake-visualization: Interactive Puerto Rico earthquake data
-- door-dashboard: DoorDash analytics dashboard  
-- veto-system: Team decision voting system
-
-💡 Short aliases: web-audio, earthquake, dashboard, veto</div>`;
-                break;
-            case 'cat readme':
-            case 'readme':
-                if (currentPath !== '~/projects') {
-                    const projectName = currentPath.split('/').pop();
-                    output.innerHTML = this.getProjectReadme(projectName);
-                } else {
-                    output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Navigate to a specific project directory first. Try: cd web-audio-player</div>`;
-                }
-                break;
-            case 'clear':
-                this.clearProjectsTerminal(terminalContent);
-                return;
-            case 'exit':
-                const appName = terminalContent.closest('.window').dataset.app;
-                this.closeWindow(appName);
-                return;
-            default:
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">zsh: command not found: ${command}. Type 'help' for available commands.</div>`;
-        }
-
-        // Insert command and output before input line
-        const inputContainer = terminalContent.querySelector('.terminal-input-line');
-        if (inputContainer && inputContainer.parentNode === terminalContent) {
-            // inputContainer is a direct child of terminalContent
-            terminalContent.insertBefore(commandLine, inputContainer);
-            terminalContent.insertBefore(output, inputContainer);
-        } else if (inputContainer) {
-            // inputContainer exists but has a different parent, insert before it in its parent
-            inputContainer.parentNode.insertBefore(commandLine, inputContainer);
-            inputContainer.parentNode.insertBefore(output, inputContainer);
-        } else {
-            // No inputContainer found, just append
-            terminalContent.appendChild(commandLine);
-            terminalContent.appendChild(output);
-        }
-
-        // Scroll to bottom and focus input
-        terminalContent.scrollTop = terminalContent.scrollHeight;
-        const input = terminalContent.querySelector('#terminal-input');
-        if (input) {
-            setTimeout(() => input.focus(), 10);
-        }
-    }
-
-    executeTerminalCommand(command, terminalContent) {
-        const commandLine = document.createElement('div');
-        commandLine.className = 'terminal-line';
-        commandLine.innerHTML = `<span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ ${command}`;
-
-        const output = document.createElement('div');
-        output.className = 'terminal-output';
-        output.style.marginBottom = '16px';
-
-        switch (command.toLowerCase()) {
-            case 'help':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary); line-height: 1.6;">Available commands:
-- help: Show this help message
-- whoami: Display user information
-- projects: Open projects directory
-- ls: List directory contents
-- clear: Clear terminal
-- exit: Close terminal</div>`;
-                break;
-            case 'whoami':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist</div>`;
-                break;
-            case 'ls':
-                output.innerHTML = `<div style="color: var(--terminal-accent);">projects/&nbsp;&nbsp;&nbsp;&nbsp;documents/&nbsp;&nbsp;&nbsp;&nbsp;about.md</div>`;
-                break;
-            case 'projects':
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Opening projects directory...</div>`;
-                setTimeout(() => this.openApp('projects'), 500);
-                break;
-            case 'clear':
-                this.clearTerminal(terminalContent);
-                return;
-            case 'exit':
-                const appName = terminalContent.closest('.window').dataset.app;
-                this.closeWindow(appName);
-                return;
-            default:
-                output.innerHTML = `<div style="color: var(--terminal-text-secondary);">Command not found: ${command}. Type 'help' for available commands.</div>`;
-        }
-
-        const inputContainer = terminalContent.querySelector('.terminal-input-line');
-        if (inputContainer && inputContainer.parentNode === terminalContent) {
-            // inputContainer is a direct child of terminalContent
-            terminalContent.insertBefore(commandLine, inputContainer);
-            terminalContent.insertBefore(output, inputContainer);
-        } else if (inputContainer) {
-            // inputContainer exists but has a different parent, insert before it in its parent
-            inputContainer.parentNode.insertBefore(commandLine, inputContainer);
-            inputContainer.parentNode.insertBefore(output, inputContainer);
-        } else {
-            // No inputContainer found, just append
-            terminalContent.appendChild(commandLine);
-            terminalContent.appendChild(output);
-        }
-
-        terminalContent.scrollTop = terminalContent.scrollHeight;
-        const input = terminalContent.querySelector('#terminal-input');
-        if (input) {
-            setTimeout(() => input.focus(), 10);
-        }
-    }
-
-    clearTerminal(terminalContent) {
-        terminalContent.innerHTML = `
-            <div class="terminal-input-line">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ 
-                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1" style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
-            </div>
-        `;
-        this.setupTerminal(terminalContent.closest('.window'));
-    }
-
-    clearProjectsTerminal(terminalContent) {
-        terminalContent.innerHTML = `
-            <div style="margin-bottom: 12px;">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ ls
-            </div>
-            <div style="margin-bottom: 16px; color: var(--terminal-accent);">
-                web-audio-player/&nbsp;&nbsp;&nbsp;&nbsp;earthquake-visualization/&nbsp;&nbsp;&nbsp;&nbsp;door-dashboard/&nbsp;&nbsp;&nbsp;&nbsp;veto-system/
-            </div>
-            <div class="terminal-input-line">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ 
-                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1" style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
-            </div>
-        `;
-        this.setupProjectsTerminal(terminalContent.closest('.window'));
-    }
-
-    handleProjectCd(targetDir, terminalContent, currentPath) {
-        const commandLine = document.createElement('div');
-        commandLine.className = 'terminal-line';
-        commandLine.innerHTML = `<span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">${currentPath}</span>$ cd ${targetDir}`;
-
-        let newPath = currentPath;
-        let output = '';
-
-        if (targetDir === '..') {
-            if (currentPath !== '~/projects') {
-                newPath = '~/projects';
-            }
-        } else if (['web-audio-player', 'earthquake-visualization', 'door-dashboard', 'veto-system'].includes(targetDir)) {
-            if (currentPath === '~/projects') {
-                newPath = `~/projects/${targetDir}`;
-            } else {
-                output = `<div style="color: var(--terminal-text-secondary);">cd: no such file or directory: ${targetDir}</div>`;
-            }
-        } else if (targetDir === '~' || targetDir === '') {
-            newPath = '~/projects';
-        } else {
-            output = `<div style="color: var(--terminal-text-secondary);">cd: no such file or directory: ${targetDir}</div>`;
-        }
-
-        // Insert command
-        const inputContainer = terminalContent.querySelector('.terminal-input-line');
-        if (inputContainer && inputContainer.parentNode === terminalContent) {
-            // inputContainer is a direct child of terminalContent
-            terminalContent.insertBefore(commandLine, inputContainer);
-
-            if (output) {
-                const outputDiv = document.createElement('div');
-                outputDiv.className = 'terminal-output';
-                outputDiv.style.marginBottom = '16px';
-                outputDiv.innerHTML = output;
-                terminalContent.insertBefore(outputDiv, inputContainer);
-            }
-
-            // Update the prompt path
-            const promptPath = inputContainer.querySelector('.terminal-path');
-            if (promptPath && newPath !== currentPath) {
-                promptPath.textContent = newPath;
-            }
-        } else if (inputContainer) {
-            // inputContainer exists but has a different parent
-            inputContainer.parentNode.insertBefore(commandLine, inputContainer);
-
-            if (output) {
-                const outputDiv = document.createElement('div');
-                outputDiv.className = 'terminal-output';
-                outputDiv.style.marginBottom = '16px';
-                outputDiv.innerHTML = output;
-                inputContainer.parentNode.insertBefore(outputDiv, inputContainer);
-            }
-
-            // Update the prompt path
-            const promptPath = inputContainer.querySelector('.terminal-path');
-            if (promptPath && newPath !== currentPath) {
-                promptPath.textContent = newPath;
-            }
-        }
-
-        // Scroll to bottom and focus input
-        terminalContent.scrollTop = terminalContent.scrollHeight;
-        const input = terminalContent.querySelector('#terminal-input');
-        if (input) {
-            setTimeout(() => input.focus(), 10);
-        }
-    }
-
-    getProjectReadme(projectName) {
-        const readmes = {
-            'web-audio-player': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🎵 Web Audio Player</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
-Real-time audio visualizer built with Web Audio API
-- Live frequency spectrum analysis
-- LUFS loudness metering
-- Waveform visualization
-- React + TypeScript architecture
-
-<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://nettenz.github.io/web-audio-app
-<span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/web-audio-app
-</div>`,
-            'earthquake-visualization': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🌍 Earthquake Visualization</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
-Interactive map showing Puerto Rico earthquake data
-- Real-time seismic data visualization
-- Time-based filtering and analysis
-- Geographic clustering of events
-- D3.js + Leaflet implementation
-
-<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://nettenz.github.io/earthquakes_pr.html
-<span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/earthquakes_pr
-</div>`,
-            'door-dashboard': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">📊 DoorDash Analytics Dashboard</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
-Comprehensive analytics dashboard for delivery metrics
-- Revenue and order tracking
-- Driver performance analytics
-- Customer satisfaction metrics
-- Interactive charts and KPIs
-
-<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://nettenz.github.io/DoorDashboard
-<span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/DoorDashboard
-</div>`,
-            'veto-system': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🗳️ Veto Voting System</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
-Team decision-making platform with veto capabilities
-- Democratic voting with veto power
-- Real-time decision tracking
-- Team consensus building tools
-- TypeScript + React implementation
-
-<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://nettenz.github.io/veto-tsd/
-<span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/veto-tsd
-</div>`
-        };
-        return readmes[projectName] || `<div style="color: var(--terminal-text-secondary);">README.md not found for this project.</div>`;
-    }
-
-    focusWindow(appName) {
-        if (!this.windows.has(appName)) return;
-
-        const windowElement = this.windows.get(appName);
-        windowElement.style.zIndex = ++this.zIndex;
-        this.activeWindow = appName;
-
-        // Focus the terminal input if it exists
-        const input = windowElement.querySelector('#terminal-input');
-        if (input) {
-            setTimeout(() => input.focus(), 10);
-        }
     }
 
     closeWindow(appName) {
@@ -859,6 +466,9 @@ Team decision-making platform with veto capabilities
         if (windowElement.parentNode) {
             windowElement.parentNode.removeChild(windowElement);
         }
+        
+        // Clean up terminal engine instance
+        this.terminalEngines.delete(appName);
         this.windows.delete(appName);
 
         if (this.activeWindow === appName) {
