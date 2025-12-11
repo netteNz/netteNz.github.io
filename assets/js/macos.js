@@ -519,6 +519,20 @@ class MacOSInterface {
         }
     }
 
+    focusWindow(appName) {
+        if (!this.windows.has(appName)) return;
+
+        const windowElement = this.windows.get(appName);
+        windowElement.style.zIndex = ++this.zIndex;
+        this.activeWindow = appName;
+
+        // Focus the terminal input if it exists
+        const input = windowElement.querySelector('#terminal-input');
+        if (input) {
+            setTimeout(() => input.focus(), 10);
+        }
+    }
+
     closeActiveWindow() {
         if (this.activeWindow) {
             this.closeWindow(this.activeWindow);
