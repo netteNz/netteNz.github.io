@@ -6,6 +6,7 @@ class TerminalEngine {
         this.commandHistory = [];
         this.historyIndex = -1;
         this.fileSystem = this.initializeFileSystem();
+        console.log('TerminalEngine initialized');
     }
 
     initializeFileSystem() {
@@ -62,9 +63,16 @@ class TerminalEngine {
     }
 
     setupInput(input, terminalContent) {
+        if (!input) {
+            console.error('No input element found');
+            return null;
+        }
+
         // Clone input to remove existing listeners
         const newInput = input.cloneNode(true);
         input.replaceWith(newInput);
+
+        console.log('Setting up input listeners for terminal');
 
         // Handle Enter key
         newInput.addEventListener('keydown', (e) => {
@@ -72,6 +80,7 @@ class TerminalEngine {
                 e.preventDefault();
                 e.stopPropagation();
                 const command = newInput.value.trim();
+                console.log('Command entered:', command);
                 if (command) {
                     this.commandHistory.push(command);
                     this.historyIndex = this.commandHistory.length;
@@ -94,6 +103,11 @@ class TerminalEngine {
                     newInput.value = '';
                 }
             }
+        });
+
+        // Add focus handler
+        newInput.addEventListener('focus', () => {
+            console.log('Terminal input focused');
         });
 
         return newInput;
@@ -585,6 +599,12 @@ Team decision-making platform with veto capabilities
         return readmes[projectName] || '';
     }
 }
+
+// Make TerminalEngine globally available
+window.TerminalEngine = TerminalEngine;
+
+// Log when script loads
+console.log('TerminalEngine class loaded');
 
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {

@@ -3,14 +3,19 @@ class MacOSInterface {
         this.windows = new Map();
         this.zIndex = 100;
         this.activeWindow = null;
-        this.terminalEngines = new Map(); // Store terminal instances per window
+        this.terminalEngines = new Map();
         this.performanceOptimizations();
-        this.waitForGSAP();
+        this.waitForDependencies();
     }
 
-    waitForGSAP() {
-        if (typeof gsap === 'undefined') {
-            setTimeout(() => this.waitForGSAP(), 50);
+    waitForDependencies() {
+        // Wait for both GSAP and TerminalEngine to be available
+        if (typeof gsap === 'undefined' || typeof TerminalEngine === 'undefined') {
+            console.log('Waiting for dependencies...', {
+                gsap: typeof gsap !== 'undefined',
+                TerminalEngine: typeof TerminalEngine !== 'undefined'
+            });
+            setTimeout(() => this.waitForDependencies(), 50);
             return;
         }
         
@@ -433,6 +438,13 @@ class MacOSInterface {
             const appName = windowElement.dataset.app;
 
             if (content) {
+                // Check if TerminalEngine is available
+                if (typeof TerminalEngine === 'undefined') {
+                    console.error('TerminalEngine not loaded!');
+                    content.innerHTML = '<div style="color: red; padding: 20px;">Error: Terminal engine not loaded. Please refresh the page.</div>';
+                    return;
+                }
+
                 // Create new terminal engine instance
                 const terminal = new TerminalEngine();
                 this.terminalEngines.set(appName, terminal);
@@ -453,7 +465,9 @@ class MacOSInterface {
                 };
 
                 windowElement.addEventListener('click', focusInput);
-                focusInput();
+                
+                // Delay initial focus to ensure DOM is ready
+                setTimeout(() => focusInput(), 200);
             }
         }, 100);
     }
@@ -542,5 +556,6 @@ class MacOSInterface {
 
 // Initialize the MacOS interface when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded - Initializing MacOS Interface');
     window.macOS = new MacOSInterface();
 });
