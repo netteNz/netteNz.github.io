@@ -130,6 +130,193 @@ class TerminalEngine {
         }
     }
 
+    runCommand(cmd, args, fullCommand) {
+        const commands = {
+            'help': () => this.helpCommand(),
+            'ls': () => this.lsCommand(args),
+            'cd': () => this.cdCommand(args),
+            'pwd': () => this.pwdCommand(),
+            'clear': () => this.clearCommand(),
+            'whoami': () => this.whoamiCommand(),
+            'cat': () => this.catCommand(args),
+            'readme': () => this.readmeCommand(),
+            'projects': () => this.projectsCommand(),
+            'exit': () => this.exitCommand(),
+            // Project shortcuts
+            'web-audio-player': () => this.openProject('web-audio-player'),
+            'web-audio': () => this.openProject('web-audio-player'),
+            'earthquake-visualization': () => this.openProject('earthquake-visualization'),
+            'earthquake': () => this.openProject('earthquake-visualization'),
+            'door-dashboard': () => this.openProject('door-dashboard'),
+            'dashboard': () => this.openProject('door-dashboard'),
+            'veto-system': () => this.openProject('veto-system'),
+            'veto': () => this.openProject('veto-system')
+        };
+
+        if (commands[cmd]) {
+            return commands[cmd]();
+        } else {
+            return `<div style="color: var(--terminal-text-secondary);">zsh: command not found: ${cmd}. Type 'help' for available commands.</div>`;
+        }
+    }
+
+    // Command implementations
+    helpCommand() {
+        const isProjectsDir = this.currentPath.startsWith('~/projects');
+        
+        if (isProjectsDir && this.currentPath !== '~/projects') {
+            return `<div style="color: var(--terminal-text-secondary); line-height: 1.6;">Project Commands:
+- cat readme: View project README
+- ls: List directory contents
+- cd ..: Go back to projects directory
+- clear: Clear terminal
+- exit: Close window
+
+💡 Tip: Use the project name as a command to open it in your browser</div>`;
+        }
+
+        return `<div style="color: var(--terminal-text-secondary); line-height: 1.6;">Available commands:
+- help: Show this help message
+- ls: List directory contents
+- cd [directory]: Change directory
+- pwd: Show current directory
+- whoami: Display user information
+- cat [file]: Display file contents
+- clear: Clear terminal
+- exit: Close terminal
+${this.currentPath === '~/projects' ? `
+🚀 Project Commands (opens deployed apps):
+- web-audio-player (web-audio): Real-time audio visualizer
+- earthquake-visualization (earthquake): Puerto Rico earthquake data
+- door-dashboard (dashboard): DoorDash analytics
+- veto-system (veto): Team decision voting platform` : ''}</div>`;
+    }
+
+    lsCommand(args) {
+        const pathParts = this.currentPath.split('/').filter(p => p);
+        let currentDir = this.fileSystem['~'];
+
+        // Navigate to current directory
+        for (const part of pathParts.slice(1)) {
+            if (currentDir.contents && currentDir.contents[part]) {
+                currentDir = currentDir.contents[part];
+            }
+        }
+
+        if (!currentDir.contents) {
+            return `<div style="color: var(--terminal-accent);">README.md&nbsp;&nbsp;&nbsp;&nbsp;src/&nbsp;&nbsp;&nbsp;&nbsp;package.json&nbsp;&nbsp;&nbsp;&nbsp;deploy.sh</div>`;
+        }
+
+        const items = Object.keys(currentDir.contents).map(name => {
+            const item = currentDir.contents[name];
+            return item.type === 'directory' ? `${name}/` : name;
+        });
+
+        return `<div style="color: var(--terminal-accent);">${items.join('&nbsp;&nbsp;&nbsp;&nbsp;')}</div>`;
+    }
+
+    cdCommand(args) {
+        if (args.length === 0 || args[0] === '~') {
+            this.currentPath = '~';
+            this.updatePromptPath();
+            return null;
+        }
+
+        const targetDir = args[0];
+
+        if (targetDir === '..') {
+            const parts = this.currentPath.split('/').filter(p => p);
+            if (parts.length > 1) {
+                parts.pop();
+                this.currentPath = parts.join('/');
+            } else {
+                this.currentPath = '~';
+            }
+            this.updatePromptPath();
+            return null;
+        }
+
+        // Try to navigate to directory
+        const newPath = this.currentPath === '~' ? `~/${targetDir}` : `${this.currentPath}/${targetDir}`;
+        
+        if (this.directoryExists(newPath)) {
+            this.currentPath = newPath;
+            this.updatePromptPath();
+            return null;
+        }
+
+        return `<div style="color: var(--terminal-text-secondary);">cd: no such file or directory: ${targetDir}</div>`;
+    }
+
+    pwdCommand() {
+        const fullPath = this.currentPath.replace('~', '/Users/emanuel');
+        return `<div style="color: var(--terminal-text-secondary);">${fullPath}</div>`;
+    }
+
+    whoamiCommand() {
+        return `<div style="color: var(--terminal-text-secondary);">Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist</div>`;
+    }
+
+    catCommand(args) {
+        if (args.length === 0) {
+            return `<div style="color: var(--terminal-text-secondary);">cat: missing file operand</div>`;
+        }
+
+        if (args[0] === 'readme' || args[0] === 'readme.md') {
+            return this.readmeCommand();
+        }
+
+        return `<div style="color: var(--terminal-text-secondary);">cat: ${args[0]}: No such file or directory</div>`;
+    }
+
+    readmeCommand() {
+        if (this.currentPath === '~/projects') {
+            return `<div style="color: var(--terminal-text-secondary);">Navigate to a specific project directory first. Try: cd web-audio-player</div>`;
+        }
+
+        const projectName = this.currentPath.split('/').pop();
+        const project = this.getProjectByName(projectName);
+
+        if (project && project.readme) {
+            return project.readme;
+        }
+
+        return `<div style="color: var(--terminal-text-secondary);">README.md not found for this project.</div>`;
+    }
+
+    projectsCommand() {
+        return {
+            type: 'action',
+            action: () => {
+                if (window.macOS) {
+                    window.macOS.openApp('projects');
+                }
+            },
+            message: `<div style="color: var(--terminal-text-secondary);">Opening projects directory...</div>`
+        };
+    }
+
+    openProject(projectName) {
+        const project = this.getProjectByName(projectName);
+        
+        if (project && project.url) {
+            setTimeout(() => {
+                window.open(project.url, '_blank');
+            }, 500);
+            return `<div style="color: var(--terminal-text-secondary);">Opening ${projectName}...</div>`;
+        }
+
+        return `<div style="color: var(--terminal-text-secondary);">Project not found: ${projectName}</div>`;
+    }
+
+    clearCommand() {
+        return { type: 'clear' };
+    }
+
+    exitCommand() {
+        return { type: 'exit' };
+    }
+
     scrollToBottom(terminalContent) {
         // Multiple scroll attempts for better reliability
         
