@@ -45,19 +45,17 @@
 
         gtag('config', 'G-0L5LLER0MH');
     </script>
-    
+
     <!-- Resource Hints for Performance -->
     <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    
     <!-- Performance-optimized Animation Libraries -->
     <!-- GSAP - Highly performant animation library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/terminal-engine.js" defer></script>
     <script src="assets/js/macos.js" defer></script>
@@ -281,7 +279,8 @@
 
 <body class="h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black font-['Lato']">
     <!-- macOS Menu Bar -->
-    <div class="fixed top-0 left-0 right-0 h-8 bg-black bg-opacity-50 backdrop-blur-md border-b border-gray-700 z-50 flex items-center px-4">
+    <div
+        class="fixed top-0 left-0 right-0 h-8 bg-black bg-opacity-50 backdrop-blur-md border-b border-gray-700 z-50 flex items-center px-4">
         <div class="flex items-center space-x-4">
             <div class="text-white text-sm font-medium">nettenzOS</div>
             <div class="flex space-x-4 text-sm text-gray-300">
@@ -295,24 +294,27 @@
             <div class="flex items-center space-x-2">
                 <!-- WiFi Icon -->
                 <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+                    <path
+                        d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
                 </svg>
-                
+
                 <!-- Bluetooth Icon -->
                 <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/>
+                    <path
+                        d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z" />
                 </svg>
-                
+
                 <!-- Battery Icon -->
                 <div class="flex items-center space-x-1">
                     <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M15.67 4H14V2c0-0.55-0.45-1-1-1h-2c-0.55 0-1 0.45-1 1v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c0.74 0 1.34-0.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/>
-                        <rect x="9" y="6" width="6" height="12" rx="1" fill="currentColor"/>
+                        <path
+                            d="M15.67 4H14V2c0-0.55-0.45-1-1-1h-2c-0.55 0-1 0.45-1 1v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c0.74 0 1.34-0.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z" />
+                        <rect x="9" y="6" width="6" height="12" rx="1" fill="currentColor" />
                     </svg>
                     <span class="text-xs">87%</span>
                 </div>
             </div>
-            
+
             <span id="current-time">3:01 PM</span>
         </div>
     </div>
@@ -321,7 +323,7 @@
     <div id="desktop" class="pt-8 h-full relative overflow-hidden">
         <!-- Desktop Background -->
         <div class="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black"></div>
-        
+
         <!-- Windows Container -->
         <div id="windows-container" class="absolute inset-0 pt-8"></div>
     </div>
@@ -331,35 +333,48 @@
         <div class="bg-gray-900 bg-opacity-80 backdrop-blur-md rounded-2xl p-3 shadow-2xl border border-gray-700">
             <div class="flex flex-col items-center space-y-3">
                 <div class="dock-item group relative" data-app="about">
-                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
+                    <div
+                        class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="currentColor" stroke-width="2"/>
-                            <path d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22" stroke="currentColor" stroke-width="2"/>
+                            <path
+                                d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z"
+                                stroke="currentColor" stroke-width="2" />
+                            <path d="M20.59 22C20.59 18.13 16.74 15 12 15C7.26 15 3.41 18.13 3.41 22"
+                                stroke="currentColor" stroke-width="2" />
                         </svg>
                     </div>
-                    <span class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">About</span>
+                    <span
+                        class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">About</span>
                 </div>
-                
+
                 <div class="dock-item group relative" data-app="projects">
-                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
+                    <div
+                        class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 8L3 12L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M17 8L21 12L17 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M14 4L10 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M7 8L3 12L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M17 8L21 12L17 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M14 4L10 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
                         </svg>
                     </div>
-                    <span class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">Projects</span>
+                    <span
+                        class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">Projects</span>
                 </div>
-                
+
                 <div class="dock-item group relative" data-app="terminal">
-                    <div class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
+                    <div
+                        class="w-12 h-12 bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-xl shadow-xl border border-gray-700 flex items-center justify-center text-white hover:bg-opacity-100 transition-all cursor-pointer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
-                            <path d="M7 10L10 13L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M13 16H17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2" />
+                            <path d="M7 10L10 13L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M13 16H17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                         </svg>
                     </div>
-                    <span class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">Terminal</span>
+                    <span
+                        class="absolute left-full ml-3 bg-gray-900 bg-opacity-90 text-white text-xs px-2 py-1 rounded opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity whitespace-nowrap">Terminal</span>
                 </div>
             </div>
         </div>
@@ -385,12 +400,14 @@
     <template id="about-app">
         <div class="terminal-content">
             <div class="terminal-header">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat about.md
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat
+                about.md
             </div>
-            
+
             <div class="terminal-output">
-                <div style="margin-bottom: 16px;">
-                    <pre style="color: var(--terminal-accent); font-size: 11px; line-height: 1.2; margin: 0; font-family: monospace;">
+                <div style="margin-bottom: 8px;">
+                    <pre
+                        style="color: var(--terminal-accent); font-size: 11px; line-height: 1.1; margin: 0; font-family: monospace;">
                      _   _            
  _ __   ___  | |_| |_ ___ _ __  ____| |  
 | '_ \ / _ \ | __| __/ _ \ '_ \|_  /| |  
@@ -398,12 +415,13 @@
 |_| |_|\___|  \__|\__\___|_| |_/___||_|  
                                            
     ╔══════════════════════════════════════════════════════════════╗
-    ║  EMANUEL LUGO :: Full-Stack Engineer & Security Specialist  ║
+    ║  EMANUEL LUGO :: Full-Stack Engineer & Security Specialist   ║
     ╚══════════════════════════════════════════════════════════════╝</pre>
                 </div>
 
-                <div style="margin-bottom: 14px;">
-                    <div style="color: var(--terminal-accent-blue); margin-bottom: 6px; font-weight: bold;">┌─[TECH_STACK]</div>
+                <div style="margin-bottom: 8px;">
+                    <div style="color: var(--terminal-accent-blue); font-weight: bold;">
+                        ┌─[TECH_STACK]</div>
                     <div style="margin-left: 8px;">
                         <div>├─ Frontend: React, TypeScript, TailwindCSS, Vite</div>
                         <div>├─ Backend: Python, Node.js, Flask, Django</div>
@@ -413,8 +431,9 @@
                     </div>
                 </div>
 
-                <div style="margin-bottom: 14px;">
-                    <div style="color: var(--terminal-accent-blue); margin-bottom: 6px; font-weight: bold;">┌─[DESCRIPTION]</div>
+                <div style="margin-bottom: 8px;">
+                    <div style="color: var(--terminal-accent-blue); font-weight: bold;">
+                        ┌─[DESCRIPTION]</div>
                     <div style="margin-left: 8px;">
                         <div>│ I design and ship modern UIs, web audio tools, and interactive</div>
                         <div>│ data visualizations. Passionate about creating immersive user</div>
@@ -422,12 +441,16 @@
                     </div>
                 </div>
 
-                <div style="margin-bottom: 14px;">
-                    <div style="color: var(--terminal-accent-blue); margin-bottom: 6px; font-weight: bold;">┌─[QUICK_ACCESS]</div>
+                <div style="margin-bottom: 8px;">
+                    <div style="color: var(--terminal-accent-blue); font-weight: bold;">
+                        ┌─[QUICK_ACCESS]</div>
                     <div style="margin-left: 8px;">
-                        <div>├─ 📄 <a href="assets/documents/elr_2025_resume.pdf" style="color: var(--terminal-accent);" download>Resume</a></div>
-                        <div>├─ 🐙 <a href="https://github.com/netteNz" style="color: var(--terminal-accent);" target="_blank">GitHub</a></div>
-                        <div>└─ 💼 <a href="https://www.linkedin.com/in/lugo-emanuel/" style="color: var(--terminal-accent);" target="_blank">LinkedIn</a></div>
+                        <div>├─ 📄 <a href="assets/documents/elr_2025_resume.pdf" style="color: var(--terminal-accent);"
+                                download>Resume</a></div>
+                        <div>├─ 🐙 <a href="https://github.com/netteNz" style="color: var(--terminal-accent);"
+                                target="_blank">GitHub</a></div>
+                        <div>└─ 💼 <a href="https://www.linkedin.com/in/lugo-emanuel/"
+                                style="color: var(--terminal-accent);" target="_blank">LinkedIn</a></div>
                     </div>
                 </div>
             </div>
@@ -436,40 +459,43 @@
 
     <template id="projects-app">
         <div class="terminal-content">
-            <div style="margin-bottom: 12px;">
+            <div>
                 <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ ls
             </div>
-            <div style="margin-bottom: 16px; color: var(--terminal-accent);">
+            <div style="margin-bottom: 4px; color: var(--terminal-accent);">
                 web-audio-player/&nbsp;&nbsp;&nbsp;&nbsp;earthquake-visualization/&nbsp;&nbsp;&nbsp;&nbsp;door-dashboard/&nbsp;&nbsp;&nbsp;&nbsp;veto-system/
             </div>
 
-            <div style="margin-bottom: 12px;">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ echo "Type 'help' for available commands"
+            <div>
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$
+                echo "Type 'help' for available commands"
             </div>
-            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+            <div style="margin-bottom: 4px; color: var(--terminal-text-secondary);">
                 Type 'help' for available commands
             </div>
 
             <div class="terminal-input-line">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$ 
-                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1" style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$
+                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1"
+                    style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
             </div>
         </div>
     </template>
 
     <template id="terminal-app">
         <div class="terminal-content">
-            <div style="margin-bottom: 12px;">
+            <div>
                 <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ whoami
             </div>
-            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+            <div style="margin-bottom: 4px; color: var(--terminal-text-secondary);">
                 Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist
             </div>
 
-            <div style="margin-bottom: 12px;">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat ~/.skills
+            <div>
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat
+                ~/.skills
             </div>
-            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+            <div style="margin-bottom: 4px; color: var(--terminal-text-secondary);">
                 Frontend: React, TypeScript, TailwindCSS, Vite<br>
                 Backend: Python, Node.js, Flask, Django<br>
                 Database: PostgreSQL, MongoDB<br>
@@ -477,23 +503,26 @@
                 Audio: Web Audio API, Real-time Visualization
             </div>
 
-            <div style="margin-bottom: 12px;">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ ls ~/projects
+            <div>
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ ls
+                ~/projects
             </div>
-            <div style="margin-bottom: 16px; color: var(--terminal-accent);">
-                web-audio-player/  earthquake-viz/  door-dashboard/  veto-system/
+            <div style="margin-bottom: 4px; color: var(--terminal-accent);">
+                web-audio-player/ earthquake-viz/ door-dashboard/ veto-system/
             </div>
 
-            <div style="margin-bottom: 12px;">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ echo "Type 'help' for available commands"
+            <div>
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ echo "Type
+                'help' for available commands"
             </div>
-            <div style="margin-bottom: 16px; color: var(--terminal-text-secondary);">
+            <div style="margin-bottom: 4px; color: var(--terminal-text-secondary);">
                 Type 'help' for available commands
             </div>
 
             <div class="terminal-input-line">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ 
-                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1" style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$
+                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1"
+                    style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
             </div>
         </div>
     </template>
@@ -501,53 +530,58 @@
     <template id="contact-app">
         <div class="terminal-content">
             <div class="terminal-header">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat contact.vcf
+                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat
+                contact.vcf
             </div>
-            
+
             <div class="terminal-output">
-                <div style="margin-bottom: 20px;">
-                    <div style="color: var(--terminal-accent); font-size: 16px; margin-bottom: 10px;">
+                <div style="margin-bottom: 10px;">
+                    <div style="color: var(--terminal-accent); font-size: 16px; margin-bottom: 4px;">
                         ╔══════════════════════════════════════╗
-                        ║            CONTACT INFO              ║
+                        ║ CONTACT INFO ║
                         ╚══════════════════════════════════════╝
                     </div>
                 </div>
 
-                <div style="margin-bottom: 20px;">
-                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">📧 EMAIL</div>
-                    <div style="margin-left: 20px;">
-                        <a href="mailto:lugo.emanuel@gmail.com" style="color: var(--terminal-accent);">lugo.emanuel@gmail.com</a>
-                    </div>
+                <div style="margin-bottom: 8px;">
+                    <span style="color: var(--terminal-accent-blue);">📧 EMAIL:</span>
+                    <span style="margin-left: 10px;">
+                        <a href="mailto:lugo.emanuel@gmail.com"
+                            style="color: var(--terminal-accent);">lugo.emanuel@gmail.com</a>
+                    </span>
                 </div>
 
-                <div style="margin-bottom: 20px;">
-                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">💼 LINKEDIN</div>
-                    <div style="margin-left: 20px;">
-                        <a href="https://www.linkedin.com/in/lugo-emanuel/" style="color: var(--terminal-accent);" target="_blank">linkedin.com/in/lugo-emanuel/</a>
-                    </div>
+                <div style="margin-bottom: 8px;">
+                    <span style="color: var(--terminal-accent-blue);">💼 LINKEDIN:</span>
+                    <span style="margin-left: 10px;">
+                        <a href="https://www.linkedin.com/in/lugo-emanuel/" style="color: var(--terminal-accent);"
+                            target="_blank">linkedin.com/in/lugo-emanuel/</a>
+                    </span>
                 </div>
 
-                <div style="margin-bottom: 20px;">
-                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">🐙 GITHUB</div>
-                    <div style="margin-left: 20px;">
-                        <a href="https://github.com/netteNz" style="color: var(--terminal-accent);" target="_blank">github.com/netteNz</a>
-                    </div>
+                <div style="margin-bottom: 8px;">
+                    <span style="color: var(--terminal-accent-blue);">🐙 GITHUB:</span>
+                    <span style="margin-left: 10px;">
+                        <a href="https://github.com/netteNz" style="color: var(--terminal-accent);"
+                            target="_blank">github.com/netteNz</a>
+                    </span>
                 </div>
 
-                <div style="margin-bottom: 20px;">
-                    <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">📍 LOCATION</div>
-                    <div style="margin-left: 20px;">Puerto Rico, United States</div>
+                <div style="margin-bottom: 8px;">
+                    <span style="color: var(--terminal-accent-blue);">📍 LOCATION:</span>
+                    <span style="margin-left: 10px;">Puerto Rico, United States</span>
                 </div>
 
-                <div style="margin-bottom: 20px;">
+                <div style="margin-top: 16px;">
                     <div style="color: var(--terminal-accent-blue); margin-bottom: 8px;">⚡ QUICK ACTIONS</div>
                     <div style="margin-left: 20px;">
-                        <button onclick="window.open('mailto:lugo.emanuel@gmail.com?subject=Hello from nettenzOS', '_blank')" 
-                                style="background: var(--terminal-accent); color: var(--terminal-bg); border: none; padding: 8px 16px; border-radius: 4px; margin-right: 10px; cursor: pointer; font-family: inherit;">
+                        <button
+                            onclick="window.open('mailto:lugo.emanuel@gmail.com?subject=Hello from nettenzOS', '_blank')"
+                            style="background: var(--terminal-accent); color: var(--terminal-bg); border: none; padding: 4px 12px; border-radius: 4px; margin-right: 10px; cursor: pointer; font-family: inherit;">
                             Send Email
                         </button>
-                        <button onclick="window.open('https://calendly.com/your-link', '_blank')" 
-                                style="background: transparent; color: var(--terminal-accent); border: 1px solid var(--terminal-accent); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-family: inherit;">
+                        <button onclick="window.open('https://calendly.com/your-link', '_blank')"
+                            style="background: transparent; color: var(--terminal-accent); border: 1px solid var(--terminal-accent); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-family: inherit;">
                             Schedule Call
                         </button>
                     </div>

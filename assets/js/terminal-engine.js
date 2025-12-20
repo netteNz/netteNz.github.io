@@ -54,7 +54,7 @@ class TerminalEngine {
     createTerminal(terminalContent, initialPath = '~') {
         this.currentPath = initialPath;
         this.terminalContent = terminalContent;
-        
+
         // Set up input event listener
         const input = terminalContent.querySelector('#terminal-input');
         if (input) {
@@ -74,7 +74,7 @@ class TerminalEngine {
 
         console.log('Setting up input listeners for terminal');
 
-        // Handle Enter key
+        // Handle Enter key and Tab key
         newInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -102,6 +102,9 @@ class TerminalEngine {
                     this.historyIndex = this.commandHistory.length;
                     newInput.value = '';
                 }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                this.handleTabCompletion(newInput);
             }
         });
 
@@ -113,15 +116,67 @@ class TerminalEngine {
         return newInput;
     }
 
+    handleTabCompletion(input) {
+        const currentInput = input.value;
+        const parts = currentInput.split(' ');
+        const lastPart = parts[parts.length - 1];
+
+        // Commands list for first word
+        const commands = [
+            'help', 'ls', 'cd', 'pwd', 'clear', 'whoami', 'cat', 'readme', 'projects', 'exit', 'neofetch', 'matrix'
+        ];
+
+        // Directories/files for arguments
+        let items = [];
+
+        // If we're typing the command itself (first part)
+        if (parts.length === 1) {
+            items = commands;
+        } else {
+            // We're typing an argument, look for files/folders
+            const pathParts = this.currentPath.split('/').filter(p => p);
+            let currentDir = this.fileSystem['~'];
+
+            // Navigate to current directory structure
+            for (const part of pathParts.slice(1)) {
+                if (currentDir.contents && currentDir.contents[part]) {
+                    currentDir = currentDir.contents[part];
+                }
+            }
+
+            if (currentDir && currentDir.contents) {
+                items = Object.keys(currentDir.contents).map(name => {
+                    const item = currentDir.contents[name];
+                    return item.type === 'directory' ? `${name}/` : name;
+                });
+
+                // Add project commands if applicable
+                if (this.currentPath === '~/projects') {
+                    items = items.concat(['web-audio-player', 'earthquake-visualization', 'door-dashboard', 'veto-system']);
+                }
+            }
+        }
+
+        // Find matches
+        const matches = items.filter(item => item.startsWith(lastPart));
+
+        if (matches.length === 1) {
+            // Auto-complete
+            parts[parts.length - 1] = matches[0];
+            input.value = parts.join(' ');
+        }
+    }
+
+
     executeCommand(command, terminalContent) {
         const [cmd, ...args] = command.toLowerCase().split(' ');
-        
+
         // Echo command
         this.echoCommand(command, terminalContent);
 
         // Execute command
         const output = this.runCommand(cmd, args, command);
-        
+
         // Display output
         if (output !== null) {
             this.displayOutput(output, terminalContent);
@@ -129,10 +184,10 @@ class TerminalEngine {
 
         // Create new prompt line instead of scrolling
         this.createNewPromptLine(terminalContent);
-        
+
         // Enhanced scroll to bottom - use multiple methods for reliability
         this.scrollToBottom(terminalContent);
-        
+
         // Focus the new input
         const input = terminalContent.querySelector('#terminal-input');
         if (input) {
@@ -164,7 +219,9 @@ class TerminalEngine {
             'door-dashboard': () => this.openProject('door-dashboard'),
             'dashboard': () => this.openProject('door-dashboard'),
             'veto-system': () => this.openProject('veto-system'),
-            'veto': () => this.openProject('veto-system')
+            'veto': () => this.openProject('veto-system'),
+            'neofetch': () => this.neofetchCommand(),
+            'matrix': () => this.matrixCommand()
         };
 
         if (commands[cmd]) {
@@ -177,9 +234,9 @@ class TerminalEngine {
     // Command implementations
     helpCommand() {
         const isProjectsDir = this.currentPath.startsWith('~/projects');
-        
+
         if (isProjectsDir && this.currentPath !== '~/projects') {
-            return `<div style="color: var(--terminal-text-secondary); line-height: 1.6;">Project Commands:
+            return `<div style="color: var(--terminal-text-secondary); line-height: 1.4;">Project Commands:
 - cat readme: View project README
 - ls: List directory contents
 - cd ..: Go back to projects directory
@@ -189,7 +246,7 @@ class TerminalEngine {
 💡 Tip: Use the project name as a command to open it in your browser</div>`;
         }
 
-        return `<div style="color: var(--terminal-text-secondary); line-height: 1.6;">Available commands:
+        return `<div style="color: var(--terminal-text-secondary); line-height: 1.4;">Available commands:
 - help: Show this help message
 - ls: List directory contents
 - cd [directory]: Change directory
@@ -198,6 +255,8 @@ class TerminalEngine {
 - cat [file]: Display file contents
 - clear: Clear terminal
 - exit: Close terminal
+- neofetch: Display system information
+- matrix: Enter the matrix
 ${this.currentPath === '~/projects' ? `
 🚀 Project Commands (opens deployed apps):
 - web-audio-player (web-audio): Real-time audio visualizer
@@ -252,7 +311,7 @@ ${this.currentPath === '~/projects' ? `
 
         // Try to navigate to directory
         const newPath = this.currentPath === '~' ? `~/${targetDir}` : `${this.currentPath}/${targetDir}`;
-        
+
         if (this.directoryExists(newPath)) {
             this.currentPath = newPath;
             this.updatePromptPath();
@@ -298,6 +357,125 @@ ${this.currentPath === '~/projects' ? `
         return `<div style="color: var(--terminal-text-secondary);">README.md not found for this project.</div>`;
     }
 
+    neofetchCommand() {
+        return `<div style="display: flex; gap: 20px; color: var(--terminal-text); font-family: monospace; line-height: 1.2; padding: 10px 0;">
+            <div style="color: var(--terminal-accent); white-space: pre; line-height: 1.1; font-weight: bold;">
+       /\\
+      /  \\
+     / /\\ \\
+    / /  \\ \\
+   / /    \\ \\
+  / /      \\ \\
+ / /        \\ \\
+/_/          \\_\\
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0;">
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">emanuel@nettenzOS</span></div>
+                <div style="margin: 0;">-----------------</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">OS</span>: nettenzOS (Web Based)</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Host</span>: GitHub Pages</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Kernel</span>: 5.15.0-generic</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Uptime</span>: ${this.getUptime()}</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Shell</span>: zsh 5.8</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Resolution</span>: ${window.innerWidth}x${window.innerHeight}</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Theme</span>: macOS Dark</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Terminal</span>: Custom WebTerm</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">CPU</span>: Neural Engine (Simulated)</div>
+                <div style="margin: 0;"><span style="color: var(--terminal-accent);">Memory</span>: 16GB / 32GB</div>
+                <div style="margin-top: 8px; line-height: 1;">
+                    <span style="background: #000; width: 20px; height: 12px; display: inline-block;"></span>
+                    <span style="background: red; width: 20px; height: 12px; display: inline-block;"></span>
+                    <span style="background: green; width: 20px; height: 12px; display: inline-block;"></span>
+                    <span style="background: yellow; width: 20px; height: 12px; display: inline-block;"></span>
+                    <span style="background: blue; width: 20px; height: 12px; display: inline-block;"></span>
+                    <span style="background: magenta; width: 20px; height: 12px; display: inline-block;"></span>
+                    <span style="background: cyan; width: 20px; height: 12px; display: inline-block;"></span>
+                    <span style="background: white; width: 20px; height: 12px; display: inline-block;"></span>
+                </div>
+            </div>
+        </div>`;
+    }
+
+    getUptime() {
+        const now = new Date();
+        const start = window.performance.timing.navigationStart;
+        const diff = now.getTime() - start;
+        const hours = Math.floor(diff / 3600000);
+        const minutes = Math.floor((diff % 3600000) / 60000);
+        return `${hours}h ${minutes}m`;
+    }
+
+    matrixCommand() {
+        return {
+            type: 'action',
+            action: () => {
+                this.startMatrixEffect();
+            },
+            message: '<div style="color: var(--terminal-accent);">Wake up, Neo...</div>'
+        };
+    }
+
+    startMatrixEffect() {
+        const terminalContent = this.terminalContent;
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = '1000';
+        canvas.style.pointerEvents = 'none'; // Click through
+        terminalContent.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = terminalContent.offsetWidth;
+        let height = canvas.height = terminalContent.offsetHeight;
+
+        const cols = Math.floor(width / 20) + 1;
+        const ypos = Array(cols).fill(0);
+
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, width, height);
+
+        const matrix = () => {
+            try {
+                // Fade effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                ctx.fillRect(0, 0, width, height);
+
+                const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--terminal-accent').trim() || '#0f0';
+                ctx.fillStyle = accentColor;
+                ctx.font = '15pt monospace';
+
+                ypos.forEach((y, ind) => {
+                    const text = String.fromCharCode(Math.random() * 128);
+                    const x = ind * 20;
+                    ctx.fillText(text, x, y);
+                    if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
+                    else ypos[ind] = y + 20;
+                });
+            } catch (e) {
+                // Handle resize/cleanup
+            }
+        };
+
+        const interval = setInterval(matrix, 50);
+
+        // Stop on keypress or click
+        const cleanup = () => {
+            clearInterval(interval);
+            canvas.remove();
+            document.removeEventListener('keydown', cleanup);
+            document.removeEventListener('click', cleanup);
+        };
+
+        // Delay attaching cleanup to avoid immediate trigger
+        setTimeout(() => {
+            document.addEventListener('keydown', cleanup);
+            document.addEventListener('click', cleanup);
+        }, 500);
+    }
+
     projectsCommand() {
         return {
             type: 'action',
@@ -312,7 +490,7 @@ ${this.currentPath === '~/projects' ? `
 
     openProject(projectName) {
         const project = this.getProjectByName(projectName);
-        
+
         if (project && project.url) {
             setTimeout(() => {
                 window.open(project.url, '_blank');
@@ -333,20 +511,20 @@ ${this.currentPath === '~/projects' ? `
 
     scrollToBottom(terminalContent) {
         // Multiple scroll attempts for better reliability
-        
+
         // Immediate scroll
         terminalContent.scrollTop = terminalContent.scrollHeight;
-        
+
         // Use requestAnimationFrame for smooth scrolling
         requestAnimationFrame(() => {
             terminalContent.scrollTop = terminalContent.scrollHeight;
-            
+
             // Double RAF for extra reliability
             requestAnimationFrame(() => {
                 terminalContent.scrollTop = terminalContent.scrollHeight;
             });
         });
-        
+
         // Backup scroll after a small delay
         setTimeout(() => {
             terminalContent.scrollTop = terminalContent.scrollHeight;
@@ -399,14 +577,14 @@ ${this.currentPath === '~/projects' ? `
                     outputDiv.className = 'terminal-output';
                     outputDiv.style.marginBottom = '8px';
                     outputDiv.innerHTML = output.message;
-                    
+
                     const inputContainer = terminalContent.querySelector('.terminal-input-line');
                     if (inputContainer) {
                         inputContainer.parentNode.insertBefore(outputDiv, inputContainer);
                     } else {
                         terminalContent.appendChild(outputDiv);
                     }
-                    
+
                     // Scroll after adding output
                     terminalContent.scrollTop = terminalContent.scrollHeight;
                 }
@@ -428,7 +606,7 @@ ${this.currentPath === '~/projects' ? `
         } else {
             terminalContent.appendChild(outputDiv);
         }
-        
+
         // Scroll after adding output
         terminalContent.scrollTop = terminalContent.scrollHeight;
     }
@@ -443,23 +621,23 @@ ${this.currentPath === '~/projects' ? `
         if (isProjectsDir) {
             // For projects terminal, show initial ls output
             const lsOutput = document.createElement('div');
-            lsOutput.style.marginBottom = '12px';
+            lsOutput.style.marginBottom = '4px';
             lsOutput.innerHTML = `<span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">${this.currentPath}</span>$ ls`;
             terminalContent.appendChild(lsOutput);
 
             const lsResult = document.createElement('div');
-            lsResult.style.marginBottom = '16px';
+            lsResult.style.marginBottom = '8px';
             lsResult.style.color = 'var(--terminal-accent)';
             lsResult.textContent = 'web-audio-player/    earthquake-visualization/    door-dashboard/    veto-system/';
             terminalContent.appendChild(lsResult);
 
             const helpHint = document.createElement('div');
-            helpHint.style.marginBottom = '12px';
+            helpHint.style.marginBottom = '4px';
             helpHint.innerHTML = `<span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">${this.currentPath}</span>$ echo "Type 'help' for available commands"`;
             terminalContent.appendChild(helpHint);
 
             const helpHintOutput = document.createElement('div');
-            helpHintOutput.style.marginBottom = '16px';
+            helpHintOutput.style.marginBottom = '8px';
             helpHintOutput.style.color = 'var(--terminal-text-secondary)';
             helpHintOutput.textContent = "Type 'help' for available commands";
             terminalContent.appendChild(helpHintOutput);
@@ -467,7 +645,8 @@ ${this.currentPath === '~/projects' ? `
             // For main terminal, show welcome commands
             const commands = [
                 { cmd: 'whoami', output: 'Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist' },
-                { cmd: 'cat ~/.skills', output: `Frontend: React, TypeScript, TailwindCSS, Vite
+                {
+                    cmd: 'cat ~/.skills', output: `Frontend: React, TypeScript, TailwindCSS, Vite
 Backend: Python, Node.js, Flask, Django
 Database: PostgreSQL, MongoDB
 Security: Penetration Testing, Vulnerability Assessment
@@ -478,12 +657,12 @@ Audio: Web Audio API, Real-time Visualization` },
 
             commands.forEach((item, index) => {
                 const cmdLine = document.createElement('div');
-                cmdLine.style.marginBottom = '12px';
+                cmdLine.style.marginBottom = '4px';
                 cmdLine.innerHTML = `<span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ ${item.cmd}`;
                 terminalContent.appendChild(cmdLine);
 
                 const outputLine = document.createElement('div');
-                outputLine.style.marginBottom = index === commands.length - 1 ? '16px' : '16px';
+                outputLine.style.marginBottom = index === commands.length - 1 ? '8px' : '8px';
                 outputLine.style.color = item.accent ? 'var(--terminal-accent)' : 'var(--terminal-text-secondary)';
                 outputLine.style.whiteSpace = 'pre-line';
                 outputLine.textContent = item.output;
@@ -493,7 +672,7 @@ Audio: Web Audio API, Real-time Visualization` },
 
         // Create fresh prompt line
         this.createNewPromptLine(terminalContent);
-        
+
         // Ensure scroll to bottom after clear
         this.scrollToBottom(terminalContent);
     }
@@ -552,7 +731,7 @@ Audio: Web Audio API, Real-time Visualization` },
     getProjectReadme(projectName) {
         const readmes = {
             'web-audio-player': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🎵 Web Audio Player</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
+<div style="color: var(--terminal-text-secondary); line-height: 1.4;">
 Real-time audio visualizer built with Web Audio API
 - Live frequency spectrum analysis
 - LUFS loudness metering
@@ -563,7 +742,7 @@ Real-time audio visualizer built with Web Audio API
 <span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/web-audio-app
 </div>`,
             'earthquake-visualization': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🌍 Earthquake Visualization</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
+<div style="color: var(--terminal-text-secondary); line-height: 1.4;">
 Interactive map showing Puerto Rico earthquake data
 - Real-time seismic data visualization
 - Time-based filtering and analysis
@@ -574,7 +753,7 @@ Interactive map showing Puerto Rico earthquake data
 <span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/earthquakes_pr
 </div>`,
             'door-dashboard': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">📊 DoorDash Analytics Dashboard</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
+<div style="color: var(--terminal-text-secondary); line-height: 1.4;">
 Comprehensive analytics dashboard for delivery metrics
 - Revenue and order tracking
 - Driver performance analytics
@@ -585,7 +764,7 @@ Comprehensive analytics dashboard for delivery metrics
 <span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/DoorDashboard
 </div>`,
             'veto-system': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🗳️ Veto Voting System</div>
-<div style="color: var(--terminal-text-secondary); line-height: 1.6;">
+<div style="color: var(--terminal-text-secondary); line-height: 1.4;">
 Team decision-making platform with veto capabilities
 - Democratic voting with veto power
 - Real-time decision tracking

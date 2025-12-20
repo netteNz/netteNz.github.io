@@ -203,7 +203,7 @@ section {
     padding: 16px;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.2;
     color: var(--terminal-text);
     background: var(--terminal-bg);
     overflow-y: auto;
