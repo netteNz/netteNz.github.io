@@ -29,7 +29,7 @@ class TerminalEngine {
                             },
                             'door-dashboard': {
                                 type: 'directory',
-                                url: 'https://nettenz.github.io/DoorDashboard',
+                                url: 'https://github.com/netteNz/DoorDashboard',
                                 readme: this.getProjectReadme('door-dashboard')
                             },
                             'veto-system': {
@@ -760,7 +760,7 @@ Comprehensive analytics dashboard for delivery metrics
 - Customer satisfaction metrics
 - Interactive charts and KPIs
 
-<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://nettenz.github.io/DoorDashboard
+<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://github.com/netteNz/DoorDashboard
 <span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/DoorDashboard
 </div>`,
             'veto-system': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🗳️ Veto Voting System</div>
