@@ -245,6 +245,15 @@ section {
     margin-left: 4px;
 }
 
+.terminal-ls-output {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    line-height: inherit;
+    color: var(--terminal-accent);
+}
+
 .terminal-input:focus {
     outline: none !important;
     border: none !important;
@@ -693,6 +702,11 @@ dialog::backdrop {
     50% {
         border-color: #6ee7b7
     }
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 @keyframes spin {

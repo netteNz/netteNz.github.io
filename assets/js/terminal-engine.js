@@ -45,7 +45,32 @@ class TerminalEngine {
                             'elr_2025_resume.pdf': { type: 'file' }
                         }
                     },
-                    'about.md': { type: 'file' }
+                    'about.md': {
+                        type: 'file',
+                        content: () => {
+                            const id = 'typing-' + Math.random().toString(36).substr(2, 9);
+                            return {
+                                type: 'action',
+                                message: `<div style="color: var(--terminal-text); line-height: 1.5; font-family: 'Fira Code', monospace;">
+<div style="margin-bottom: 12px;">
+    <span style="color: var(--terminal-accent); font-weight: bold;">Hi, I'm Emanuel!</span>
+</div>
+
+<div style="height: 1.5em; display: flex; align-items: center; margin-bottom: 20px;">
+    <span style="color: #fff; margin-right: 10px;">></span>
+    <span id="${id}" style="color: #fff; font-weight: bold;"></span><span class="typing-cursor" style="color: #fff; font-weight: bold; animation: blink 1s step-end infinite;">|</span>
+</div>
+
+<div style="color: var(--terminal-text-secondary); margin-bottom: 12px;">Type <span style="color: var(--terminal-accent);">ls projects</span> to see my work!</div>
+</div>`,
+                                action: () => this.runTypingEffect(id, [
+                                    "Computer Engineer | Cybersecurity Specialist | Full-Stack Developer",
+                                    "Building practical systems and tools",
+                                    "Focused on clean architecture and performance"
+                                ])
+                            };
+                        }
+                    }
                 }
             }
         };
@@ -134,15 +159,7 @@ class TerminalEngine {
             items = commands;
         } else {
             // We're typing an argument, look for files/folders
-            const pathParts = this.currentPath.split('/').filter(p => p);
-            let currentDir = this.fileSystem['~'];
-
-            // Navigate to current directory structure
-            for (const part of pathParts.slice(1)) {
-                if (currentDir.contents && currentDir.contents[part]) {
-                    currentDir = currentDir.contents[part];
-                }
-            }
+            let currentDir = this.resolvePath(this.currentPath);
 
             if (currentDir && currentDir.contents) {
                 items = Object.keys(currentDir.contents).map(name => {
@@ -265,18 +282,25 @@ ${this.currentPath === '~/projects' ? `
 - veto-system (veto): Team decision voting platform` : ''}</div>`;
     }
 
-    lsCommand(args) {
-        const pathParts = this.currentPath.split('/').filter(p => p);
+    resolvePath(pathStr) {
+        const pathParts = pathStr.split('/').filter(p => p);
         let currentDir = this.fileSystem['~'];
 
-        // Navigate to current directory
+        // Navigate to current directory structure
         for (const part of pathParts.slice(1)) {
             if (currentDir.contents && currentDir.contents[part]) {
                 currentDir = currentDir.contents[part];
+            } else {
+                return null;
             }
         }
+        return currentDir;
+    }
 
-        if (!currentDir.contents) {
+    lsCommand(args) {
+        const currentDir = this.resolvePath(this.currentPath);
+
+        if (!currentDir || !currentDir.contents) {
             return `<div style="color: var(--terminal-accent);">README.md&nbsp;&nbsp;&nbsp;&nbsp;src/&nbsp;&nbsp;&nbsp;&nbsp;package.json&nbsp;&nbsp;&nbsp;&nbsp;deploy.sh</div>`;
         }
 
@@ -285,7 +309,7 @@ ${this.currentPath === '~/projects' ? `
             return item.type === 'directory' ? `${name}/` : name;
         });
 
-        return `<div style="color: var(--terminal-accent);">${items.join('&nbsp;&nbsp;&nbsp;&nbsp;')}</div>`;
+        return `<div class="terminal-ls-output">${items.map(item => `<span>${item}</span>`).join('')}</div>`;
     }
 
     cdCommand(args) {
@@ -335,11 +359,29 @@ ${this.currentPath === '~/projects' ? `
             return `<div style="color: var(--terminal-text-secondary);">cat: missing file operand</div>`;
         }
 
-        if (args[0] === 'readme' || args[0] === 'readme.md') {
+        const fileName = args[0];
+
+        // Resolve path to find file
+        const currentDir = this.resolvePath(this.currentPath);
+
+        // Check if file exists in current directory
+        if (currentDir.contents && currentDir.contents[fileName]) {
+            const file = currentDir.contents[fileName];
+            if (file.type === 'file') {
+                if (typeof file.content === 'function') {
+                    return file.content();
+                }
+                if (file.content) {
+                    return file.content;
+                }
+            }
+        }
+
+        if (fileName === 'readme' || fileName === 'readme.md') {
             return this.readmeCommand();
         }
 
-        return `<div style="color: var(--terminal-text-secondary);">cat: ${args[0]}: No such file or directory</div>`;
+        return `<div style="color: var(--terminal-text-secondary);">cat: ${fileName}: No such file or directory</div>`;
     }
 
     readmeCommand() {
@@ -382,16 +424,16 @@ ${this.currentPath === '~/projects' ? `
                 <div style="margin: 0;"><span style="color: var(--terminal-accent);">Terminal</span>: Custom WebTerm</div>
                 <div style="margin: 0;"><span style="color: var(--terminal-accent);">CPU</span>: Neural Engine (Simulated)</div>
                 <div style="margin: 0;"><span style="color: var(--terminal-accent);">Memory</span>: 16GB / 32GB</div>
-                <div style="margin-top: 8px; line-height: 1;">
-                    <span style="background: #000; width: 20px; height: 12px; display: inline-block;"></span>
-                    <span style="background: red; width: 20px; height: 12px; display: inline-block;"></span>
-                    <span style="background: green; width: 20px; height: 12px; display: inline-block;"></span>
-                    <span style="background: yellow; width: 20px; height: 12px; display: inline-block;"></span>
-                    <span style="background: blue; width: 20px; height: 12px; display: inline-block;"></span>
-                    <span style="background: magenta; width: 20px; height: 12px; display: inline-block;"></span>
-                    <span style="background: cyan; width: 20px; height: 12px; display: inline-block;"></span>
-                    <span style="background: white; width: 20px; height: 12px; display: inline-block;"></span>
-                </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; margin-left: 10px;">
+                <span style="background: #000; width: 20px; height: 16px; display: inline-block;"></span>
+                <span style="background: red; width: 20px; height: 16px; display: inline-block;"></span>
+                <span style="background: green; width: 20px; height: 16px; display: inline-block;"></span>
+                <span style="background: yellow; width: 20px; height: 16px; display: inline-block;"></span>
+                <span style="background: blue; width: 20px; height: 16px; display: inline-block;"></span>
+                <span style="background: magenta; width: 20px; height: 16px; display: inline-block;"></span>
+                <span style="background: cyan; width: 20px; height: 16px; display: inline-block;"></span>
+                <span style="background: white; width: 20px; height: 16px; display: inline-block;"></span>
             </div>
         </div>`;
     }
@@ -476,6 +518,43 @@ ${this.currentPath === '~/projects' ? `
         }, 500);
     }
 
+    runTypingEffect(elementId, phrases) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        const type = () => {
+            const currentPhrase = phrases[phraseIndex % phrases.length];
+
+            if (isDeleting) {
+                element.innerText = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                element.innerText = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = 50;
+            if (isDeleting) typeSpeed /= 2;
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                typeSpeed = 2000; // Pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex++;
+                typeSpeed = 500; // Pause before next
+            }
+
+            setTimeout(type, typeSpeed);
+        };
+
+        type();
+    }
+
     projectsCommand() {
         return {
             type: 'action',
@@ -510,25 +589,13 @@ ${this.currentPath === '~/projects' ? `
     }
 
     scrollToBottom(terminalContent) {
-        // Multiple scroll attempts for better reliability
-
-        // Immediate scroll
-        terminalContent.scrollTop = terminalContent.scrollHeight;
-
-        // Use requestAnimationFrame for smooth scrolling
-        requestAnimationFrame(() => {
+        // Use scrollIntoView on the input line if it exists
+        const inputLine = terminalContent.querySelector('.terminal-input-line');
+        if (inputLine) {
+            inputLine.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        } else {
             terminalContent.scrollTop = terminalContent.scrollHeight;
-
-            // Double RAF for extra reliability
-            requestAnimationFrame(() => {
-                terminalContent.scrollTop = terminalContent.scrollHeight;
-            });
-        });
-
-        // Backup scroll after a small delay
-        setTimeout(() => {
-            terminalContent.scrollTop = terminalContent.scrollHeight;
-        }, 100);
+        }
     }
 
     createNewPromptLine(terminalContent) {
@@ -549,8 +616,11 @@ ${this.currentPath === '~/projects' ? `
         // Append to terminal content
         terminalContent.appendChild(newInputLine);
 
-        // Scroll immediately after appending
-        terminalContent.scrollTop = terminalContent.scrollHeight;
+        // Scroll immediately using scrollIntoView
+        // Use timeout to ensure DOM is updated and layout is calculated
+        setTimeout(() => {
+            newInputLine.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 10);
 
         // Setup input event listeners
         const input = newInputLine.querySelector('#terminal-input');
@@ -575,7 +645,6 @@ ${this.currentPath === '~/projects' ? `
                 if (output.message) {
                     const outputDiv = document.createElement('div');
                     outputDiv.className = 'terminal-output';
-                    outputDiv.style.marginBottom = '8px';
                     outputDiv.innerHTML = output.message;
 
                     const inputContainer = terminalContent.querySelector('.terminal-input-line');
@@ -586,7 +655,7 @@ ${this.currentPath === '~/projects' ? `
                     }
 
                     // Scroll after adding output
-                    terminalContent.scrollTop = terminalContent.scrollHeight;
+                    // terminalContent.scrollTop = terminalContent.scrollHeight; // Removed for standard scrollIntoView flow
                 }
                 if (output.action) {
                     output.action();
@@ -597,7 +666,6 @@ ${this.currentPath === '~/projects' ? `
 
         const outputDiv = document.createElement('div');
         outputDiv.className = 'terminal-output';
-        outputDiv.style.marginBottom = '8px';
         outputDiv.innerHTML = output;
 
         const inputContainer = terminalContent.querySelector('.terminal-input-line');
@@ -608,7 +676,7 @@ ${this.currentPath === '~/projects' ? `
         }
 
         // Scroll after adding output
-        terminalContent.scrollTop = terminalContent.scrollHeight;
+        // terminalContent.scrollTop = terminalContent.scrollHeight; // Removed for standard scrollIntoView flow
     }
 
     clearTerminalContent(terminalContent) {
@@ -621,12 +689,12 @@ ${this.currentPath === '~/projects' ? `
         if (isProjectsDir) {
             // For projects terminal, show initial ls output
             const lsOutput = document.createElement('div');
-            lsOutput.style.marginBottom = '4px';
+            lsOutput.className = 'terminal-line';
             lsOutput.innerHTML = `<span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">${this.currentPath}</span>$ ls`;
             terminalContent.appendChild(lsOutput);
 
             const lsResult = document.createElement('div');
-            lsResult.style.marginBottom = '8px';
+            lsResult.className = 'terminal-output';
             lsResult.style.color = 'var(--terminal-accent)';
             lsResult.textContent = 'web-audio-player/    earthquake-visualization/    door-dashboard/    veto-system/';
             terminalContent.appendChild(lsResult);
@@ -679,18 +747,8 @@ Audio: Web Audio API, Real-time Visualization` },
 
     // Helper methods
     directoryExists(path) {
-        const parts = path.split('/').filter(p => p);
-        let current = this.fileSystem['~'];
-
-        for (const part of parts.slice(1)) {
-            if (current.contents && current.contents[part] && current.contents[part].type === 'directory') {
-                current = current.contents[part];
-            } else {
-                return false;
-            }
-        }
-
-        return true;
+        const node = this.resolvePath(path);
+        return node && node.type === 'directory';
     }
 
     getProjectByName(name) {
@@ -710,7 +768,6 @@ Audio: Web Audio API, Real-time Visualization` },
     echoCommand(command, terminalContent) {
         const commandLine = document.createElement('div');
         commandLine.className = 'terminal-line';
-        commandLine.style.marginBottom = '4px';
         commandLine.innerHTML = `<span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">${this.currentPath}</span>$ ${this.escapeHtml(command)}`;
 
         // Insert before input line (which will be removed)
