@@ -18,12 +18,12 @@ class MacOSInterface {
             setTimeout(() => this.waitForDependencies(), 50);
             return;
         }
-        
+
         // Initialize GSAP plugins
         if (typeof ScrollTrigger !== 'undefined') {
             gsap.registerPlugin(ScrollTrigger);
         }
-        
+
         this.init();
         this.initGSAPAnimations();
     }
@@ -39,10 +39,10 @@ class MacOSInterface {
         // Enhanced dock hover animations with GSAP
         document.querySelectorAll('.dock-item').forEach(item => {
             const icon = item.querySelector('div');
-            
+
             // Set initial transform origin for better animations
             gsap.set(icon, { transformOrigin: 'center center' });
-            
+
             item.addEventListener('mouseenter', () => {
                 gsap.to(icon, {
                     scale: 1.2,
@@ -288,8 +288,12 @@ class MacOSInterface {
             windowContent.style.position = 'relative';
             windowContent.appendChild(content);
 
-            // Apply terminal styling to content
+            // Apply terminal styling to content (but NOT the terminal-content class)
             this.applyTerminalStyling(windowContent, appName);
+
+            // IMPORTANT: Explicitly remove terminal-content class from window-content
+            // to prevent double-nesting issues (the template already has this class)
+            windowContent.classList.remove('terminal-content');
         }
 
         return windowElement;
@@ -297,9 +301,10 @@ class MacOSInterface {
 
     applyTerminalStyling(contentElement, appName) {
         // Add terminal styling based on app type
-        if (appName === 'terminal' || appName === 'projects') {
-            contentElement.classList.add('terminal-content');
-        }
+        // Add terminal styling based on app type
+        // if (appName === 'terminal' || appName === 'projects') {
+        //    contentElement.classList.add('terminal-content');
+        // }
         // Apply general terminal styling for other apps
         contentElement.style.background = 'var(--terminal-bg)';
         contentElement.style.color = 'var(--terminal-text)';
@@ -434,7 +439,14 @@ class MacOSInterface {
 
     setupTerminalWithEngine(windowElement, initialPath) {
         setTimeout(() => {
-            const content = windowElement.querySelector('.terminal-content');
+            // Ensure .window-content doesn't have terminal-content class (prevent double-nesting)
+            const windowContent = windowElement.querySelector('.window-content');
+            if (windowContent) {
+                windowContent.classList.remove('terminal-content');
+            }
+
+            // Target the actual terminal content (the first .terminal-content child, not the window-content)
+            const content = windowContent ? windowContent.querySelector('.terminal-content') : windowElement.querySelector('.terminal-content');
             const appName = windowElement.dataset.app;
 
             if (content) {
@@ -448,7 +460,7 @@ class MacOSInterface {
                 // Create new terminal engine instance
                 const terminal = new TerminalEngine();
                 this.terminalEngines.set(appName, terminal);
-                
+
                 // Initialize terminal
                 terminal.createTerminal(content, initialPath);
 
@@ -465,7 +477,7 @@ class MacOSInterface {
                 };
 
                 windowElement.addEventListener('click', focusInput);
-                
+
                 // Delay initial focus to ensure DOM is ready
                 setTimeout(() => focusInput(), 200);
             }
@@ -480,7 +492,7 @@ class MacOSInterface {
         if (windowElement.parentNode) {
             windowElement.parentNode.removeChild(windowElement);
         }
-        
+
         // Clean up terminal engine instance
         this.terminalEngines.delete(appName);
         this.windows.delete(appName);

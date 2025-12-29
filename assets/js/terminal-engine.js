@@ -55,12 +55,10 @@ class TerminalEngine {
 <div style="margin-bottom: 12px;">
     <span style="color: var(--terminal-accent); font-weight: bold;">Hi, I'm Emanuel!</span>
 </div>
-
 <div style="height: 1.5em; display: flex; align-items: center; margin-bottom: 20px;">
     <span style="color: #fff; margin-right: 10px;">></span>
     <span id="${id}" style="color: #fff; font-weight: bold;"></span><span class="typing-cursor" style="color: #fff; font-weight: bold; animation: blink 1s step-end infinite;">|</span>
 </div>
-
 <div style="color: var(--terminal-text-secondary); margin-bottom: 12px;">Type <span style="color: var(--terminal-accent);">ls projects</span> to see my work!</div>
 </div>`,
                                 action: () => this.runTypingEffect(id, [
@@ -85,6 +83,31 @@ class TerminalEngine {
         if (input) {
             this.setupInput(input, terminalContent);
         }
+
+        // Setup interactive items (for initial content)
+        this.setupInteractiveItems(terminalContent);
+    }
+
+    setupInteractiveItems(container) {
+        if (!container) return;
+
+        container.querySelectorAll('.terminal-item').forEach(el => {
+            // Remove old listeners to avoid duplicates if called multiple times
+            const newEl = el.cloneNode(true);
+            el.parentNode.replaceChild(newEl, el);
+
+            newEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const name = newEl.dataset.name;
+                const type = newEl.dataset.type;
+
+                if (type === 'directory') {
+                    this.executeCommand(`cd ${name}`, this.terminalContent);
+                } else if (type === 'file') {
+                    this.executeCommand(`cat ${name}`, this.terminalContent);
+                }
+            });
+        });
     }
 
     setupInput(input, terminalContent) {
@@ -301,15 +324,55 @@ ${this.currentPath === '~/projects' ? `
         const currentDir = this.resolvePath(this.currentPath);
 
         if (!currentDir || !currentDir.contents) {
-            return `<div style="color: var(--terminal-accent);">README.md&nbsp;&nbsp;&nbsp;&nbsp;src/&nbsp;&nbsp;&nbsp;&nbsp;package.json&nbsp;&nbsp;&nbsp;&nbsp;deploy.sh</div>`;
+            return `<div class="terminal-ls-output">
+                <span class="terminal-item terminal-file">README.md</span>
+                <span class="terminal-item terminal-dir">src/</span>
+                <span class="terminal-item terminal-file">package.json</span>
+                <span class="terminal-item terminal-file">deploy.sh</span>
+            </div>`;
         }
 
         const items = Object.keys(currentDir.contents).map(name => {
             const item = currentDir.contents[name];
-            return item.type === 'directory' ? `${name}/` : name;
+            return {
+                name: name,
+                type: item.type,
+                display: item.type === 'directory' ? `${name}/` : name
+            };
         });
 
-        return `<div class="terminal-ls-output">${items.map(item => `<span>${item}</span>`).join('')}</div>`;
+        const id = 'ls-' + Math.random().toString(36).substr(2, 9);
+        const itemsHtml = items.map(item => {
+            let className = 'terminal-item';
+            if (item.type === 'directory') className += ' terminal-dir';
+            else if (item.type === 'file') className += ' terminal-file';
+            else if (item.type === 'executable') className += ' terminal-exe';
+
+            return `<span class="${className}" data-name="${item.name}" data-type="${item.type}">${item.display}</span>`;
+        }).join('');
+
+        return {
+            type: 'action',
+            message: `<div id="${id}" class="terminal-ls-output">${itemsHtml}</div>`,
+            action: () => {
+                const container = document.getElementById(id);
+                if (!container) return;
+
+                container.querySelectorAll('.terminal-item').forEach(el => {
+                    el.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Prevent focusing input immediately if that's bound to container click
+                        const name = el.dataset.name;
+                        const type = el.dataset.type;
+
+                        if (type === 'directory') {
+                            this.executeCommand(`cd ${name}`, this.terminalContent);
+                        } else {
+                            this.executeCommand(`cat ${name}`, this.terminalContent);
+                        }
+                    });
+                });
+            }
+        };
     }
 
     cdCommand(args) {
@@ -339,6 +402,16 @@ ${this.currentPath === '~/projects' ? `
         if (this.directoryExists(newPath)) {
             this.currentPath = newPath;
             this.updatePromptPath();
+
+            // Check if directory has a URL (is a project) and launch it
+            const dirNode = this.resolvePath(newPath);
+            if (dirNode && dirNode.url) {
+                setTimeout(() => {
+                    window.open(dirNode.url, '_blank');
+                }, 500);
+                return `<div style="color: var(--terminal-text-secondary);">Opening project...</div>`;
+            }
+
             return null;
         }
 
@@ -694,10 +767,19 @@ ${this.currentPath === '~/projects' ? `
             terminalContent.appendChild(lsOutput);
 
             const lsResult = document.createElement('div');
-            lsResult.className = 'terminal-output';
-            lsResult.style.color = 'var(--terminal-accent)';
-            lsResult.textContent = 'web-audio-player/    earthquake-visualization/    door-dashboard/    veto-system/';
+            // Remove margin-bottom to rely on flex gap or handle it via CSS if needed
+            // lsResult.className = 'terminal-output'; 
+            // Using terminal-ls-output class directly which is a flex container
+            lsResult.innerHTML = `<div class="terminal-ls-output">
+                <span class="terminal-item terminal-dir" data-name="web-audio-player" data-type="directory">web-audio-player/</span>
+                <span class="terminal-item terminal-dir" data-name="earthquake-visualization" data-type="directory">earthquake-visualization/</span>
+                <span class="terminal-item terminal-dir" data-name="door-dashboard" data-type="directory">door-dashboard/</span>
+                <span class="terminal-item terminal-dir" data-name="veto-system" data-type="directory">veto-system/</span>
+            </div>`;
             terminalContent.appendChild(lsResult);
+
+            // Re-attach listeners for the new items
+            this.setupInteractiveItems(lsResult);
 
             const helpHint = document.createElement('div');
             helpHint.style.marginBottom = '4px';
@@ -711,31 +793,38 @@ ${this.currentPath === '~/projects' ? `
             terminalContent.appendChild(helpHintOutput);
         } else if (isTerminal) {
             // For main terminal, show welcome commands
-            const commands = [
-                { cmd: 'whoami', output: 'Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist' },
-                {
-                    cmd: 'cat ~/.skills', output: `Frontend: React, TypeScript, TailwindCSS, Vite
+
+            // 1. whoami
+            const cmd1 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ whoami</div>`;
+            const out1 = `<div style="margin-bottom: 8px; color: var(--terminal-text-secondary);">Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist</div>`;
+
+            // 2. cat ~/.skills
+            const cmd2 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ cat ~/.skills</div>`;
+            const out2 = `<div style="margin-bottom: 8px; color: var(--terminal-text-secondary); white-space: pre-line;">Frontend: React, TypeScript, TailwindCSS, Vite
 Backend: Python, Node.js, Flask, Django
 Database: PostgreSQL, MongoDB
 Security: Penetration Testing, Vulnerability Assessment
-Audio: Web Audio API, Real-time Visualization` },
-                { cmd: 'ls ~/projects', output: 'web-audio-player/  earthquake-viz/  door-dashboard/  veto-system/', accent: true },
-                { cmd: 'echo "Type \'help\' for available commands"', output: "Type 'help' for available commands" }
-            ];
+Audio: Web Audio API, Real-time Visualization</div>`;
 
-            commands.forEach((item, index) => {
-                const cmdLine = document.createElement('div');
-                cmdLine.style.marginBottom = '4px';
-                cmdLine.innerHTML = `<span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ ${item.cmd}`;
-                terminalContent.appendChild(cmdLine);
+            // 3. ls ~/projects
+            const cmd3 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ ls ~/projects</div>`;
+            const out3 = `<div style="margin-bottom: 8px;">
+                <div class="terminal-ls-output">
+                    <span class="terminal-item terminal-dir" data-name="web-audio-player" data-type="directory">web-audio-player/</span>
+                    <span class="terminal-item terminal-dir" data-name="earthquake-viz" data-type="directory">earthquake-viz/</span>
+                    <span class="terminal-item terminal-dir" data-name="door-dashboard" data-type="directory">door-dashboard/</span>
+                    <span class="terminal-item terminal-dir" data-name="veto-system" data-type="directory">veto-system/</span>
+                </div>
+            </div>`;
 
-                const outputLine = document.createElement('div');
-                outputLine.style.marginBottom = index === commands.length - 1 ? '8px' : '8px';
-                outputLine.style.color = item.accent ? 'var(--terminal-accent)' : 'var(--terminal-text-secondary)';
-                outputLine.style.whiteSpace = 'pre-line';
-                outputLine.textContent = item.output;
-                terminalContent.appendChild(outputLine);
-            });
+            // 4. echo help
+            const cmd4 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ echo "Type 'help' for available commands"</div>`;
+            const out4 = `<div style="margin-bottom: 8px; color: var(--terminal-text-secondary);">Type 'help' for available commands</div>`;
+
+            terminalContent.innerHTML = cmd1 + out1 + cmd2 + out2 + cmd3 + out3 + cmd4 + out4;
+
+            // Setup interactivity for the new items
+            this.setupInteractiveItems(terminalContent);
         }
 
         // Create fresh prompt line

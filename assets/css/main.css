@@ -254,6 +254,38 @@ section {
     color: var(--terminal-accent);
 }
 
+.terminal-item {
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.terminal-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+}
+
+.terminal-dir {
+    color: var(--terminal-accent-blue);
+    font-weight: bold;
+}
+
+.terminal-file {
+    color: var(--terminal-text);
+}
+
+.terminal-exe {
+    color: var(--terminal-accent);
+    font-weight: bold;
+}
+
+.terminal-symlink {
+    color: var(--terminal-accent-yellow);
+    font-style: italic;
+}
+
 .terminal-input:focus {
     outline: none !important;
     border: none !important;
@@ -271,7 +303,7 @@ section {
 }
 
 .terminal-output {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap;
@@ -291,7 +323,7 @@ section {
 }
 
 .terminal-line {
-    margin-bottom: 4px;
+    margin-bottom: 0px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: pre-wrap; /* Preserve spaces and wrap */
@@ -832,7 +864,7 @@ dialog::backdrop {
 }
 
 .desktop-icon:hover>div {
-    background-opacity: 1;
+    /* bg-opacity is handled by rgba in background definition */
     border-color: rgba(255, 255, 255, 0.3);
 }
 
