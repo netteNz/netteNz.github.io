@@ -792,11 +792,23 @@ ${this.currentPath === '~/projects' ? `
             helpHintOutput.textContent = "Type 'help' for available commands";
             terminalContent.appendChild(helpHintOutput);
         } else if (isTerminal) {
-            // For main terminal, show welcome commands
+            // For main terminal, show welcome commands with cat about.md first
 
-            // 1. whoami
-            const cmd1 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ whoami</div>`;
-            const out1 = `<div style="margin-bottom: 8px; color: var(--terminal-text-secondary);">Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist</div>`;
+            // 1. cat about.md (first)
+            const typingId = 'typing-clear-' + Math.random().toString(36).substr(2, 9);
+            const cmd1 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ cat about.md</div>`;
+            const out1 = `<div style="margin-bottom: 12px;">
+                <div style="color: var(--terminal-text); line-height: 1.5; font-family: 'Fira Code', monospace;">
+                    <div style="margin-top: 12px; margin-bottom: 12px;">
+                        <span style="color: var(--terminal-accent); font-weight: bold;">Hi, I'm Emanuel!</span>
+                    </div>
+                    <div style="height: 1.5em; display: flex; align-items: center; margin-bottom: 20px;">
+                        <span style="color: #fff; margin-right: 10px;">&gt;</span>
+                        <span id="${typingId}" style="color: #fff; font-weight: bold;"></span><span class="typing-cursor" style="color: #fff; font-weight: bold; animation: blink 1s step-end infinite;">|</span>
+                    </div>
+                    <div style="color: var(--terminal-text-secondary); margin-bottom: 12px;">Type <span style="color: var(--terminal-accent);">ls projects</span> to see my work!</div>
+                </div>
+            </div>`;
 
             // 2. cat ~/.skills
             const cmd2 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ cat ~/.skills</div>`;
@@ -806,25 +818,18 @@ Database: PostgreSQL, MongoDB
 Security: Penetration Testing, Vulnerability Assessment
 Audio: Web Audio API, Real-time Visualization</div>`;
 
-            // 3. ls ~/projects
-            const cmd3 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ ls ~/projects</div>`;
-            const out3 = `<div style="margin-bottom: 8px;">
-                <div class="terminal-ls-output">
-                    <span class="terminal-item terminal-dir" data-name="web-audio-player" data-type="directory">web-audio-player/</span>
-                    <span class="terminal-item terminal-dir" data-name="earthquake-viz" data-type="directory">earthquake-viz/</span>
-                    <span class="terminal-item terminal-dir" data-name="door-dashboard" data-type="directory">door-dashboard/</span>
-                    <span class="terminal-item terminal-dir" data-name="veto-system" data-type="directory">veto-system/</span>
-                </div>
-            </div>`;
+            // 3. echo help
+            const cmd3 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ echo "Type 'help' for available commands"</div>`;
+            const out3 = `<div style="margin-bottom: 8px; color: var(--terminal-text-secondary);">Type 'help' for available commands</div>`;
 
-            // 4. echo help
-            const cmd4 = `<div style="margin-bottom: 4px;"><span class="terminal-prompt">${this.username}@${this.hostname}</span>:<span class="terminal-path">~</span>$ echo "Type 'help' for available commands"</div>`;
-            const out4 = `<div style="margin-bottom: 8px; color: var(--terminal-text-secondary);">Type 'help' for available commands</div>`;
+            terminalContent.innerHTML = cmd1 + out1 + cmd2 + out2 + cmd3 + out3;
 
-            terminalContent.innerHTML = cmd1 + out1 + cmd2 + out2 + cmd3 + out3 + cmd4 + out4;
-
-            // Setup interactivity for the new items
-            this.setupInteractiveItems(terminalContent);
+            // Start typing effect for about.md
+            this.runTypingEffect(typingId, [
+                "Computer Engineer | Cybersecurity Specialist | Full-Stack Developer",
+                "Building practical systems and tools",
+                "Focused on clean architecture and performance"
+            ]);
         }
 
         // Create fresh prompt line

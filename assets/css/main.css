@@ -65,6 +65,7 @@ section {
     --terminal-accent-blue: #00aaff;
     --terminal-accent-red: #ff4444;
     --terminal-accent-yellow: #ffaa00;
+    --desktop-bg: linear-gradient(135deg, #0d0d0d 0%, #141420 50%, #0d1117 100%);
 }
 
 /* ===== Enhanced Window System ===== */
@@ -1261,4 +1262,307 @@ dialog::backdrop {
 
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Styled About Window ===== */
+.about-content {
+    padding: 32px;
+    background: linear-gradient(135deg, #0a0a0a 0%, #0d0d12 50%, #0a0c10 100%);
+    min-height: 100%;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 15px;
+    color: #e0e0e0;
+    overflow-y: auto;
+}
+
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.about-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.about-header-text {
+    flex: 1;
+}
+
+.about-name {
+    font-size: 26px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+    color: #ffffff;
+}
+
+.about-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+}
+
+.about-tagline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.tagline-arrow {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+}
+
+.tagline-text {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.about-tagline .typing-cursor {
+    color: rgba(255, 255, 255, 0.7);
+    animation: blink 1s step-end infinite;
+}
+
+.about-section {
+    margin-bottom: 28px;
+}
+
+.about-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 16px 0;
+}
+
+.about-description {
+    line-height: 1.9;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.about-description p {
+    margin: 0 0 18px 0;
+}
+
+.about-description p:last-child {
+    margin-bottom: 0;
+}
+
+.about-description strong {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.about-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 28px 0;
+}
+
+.about-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.about-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--terminal-accent-blue);
+}
+
+.about-link-btn svg {
+    color: rgba(255, 255, 255, 0.6);
+    fill: rgba(255, 255, 255, 0.6);
+}
+
+.about-link-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.about-link-btn.primary {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
+.about-link-btn.primary:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.about-link-btn svg {
+    flex-shrink: 0;
+}
+
+/* Responsive About Window */
+@media (max-width: 600px) {
+    .about-content {
+        padding: 20px;
+    }
+    
+    .about-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .about-name {
+        font-size: 24px;
+    }
+    
+    .about-tagline {
+        justify-content: center;
+    }
+    
+    .about-links {
+        justify-content: center;
+    }
+}
+
+/* ===== Desktop Icons ===== */
+.desktop-icons {
+    position: absolute;
+    top: 48px;
+    left: 20px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.desktop-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px;
+    cursor: pointer;
+    width: 72px;
+}
+
+.desktop-icon-image {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.desktop-icon-image svg {
+    width: 48px;
+    height: 48px;
+}
+
+.desktop-icon-label {
+    font-size: 11px;
+    color: #fff;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.2;
+    max-width: 68px;
+    word-wrap: break-word;
+}
+
+/* ===== Bottom Dock (macOS Style) ===== */
+.dock-container {
+    position: fixed;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+}
+
+.dock {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: rgba(20, 20, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.dock-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(145deg, rgba(60, 60, 70, 0.9), rgba(35, 35, 45, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.9);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-decoration: none;
+}
+
+.dock-item:hover {
+    transform: scale(1.15) translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.dock-item:active {
+    transform: scale(1.0) translateY(0);
+}
+
+.dock-item svg {
+    width: 26px;
+    height: 26px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.dock-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 0 4px;
+}
+
+/* Dock responsive */
+@media (max-width: 480px) {
+    .dock {
+        padding: 4px 6px;
+        gap: 4px;
+    }
+    
+    .dock-item {
+        width: 44px;
+        height: 44px;
+    }
+    
+    .dock-item svg {
+        width: 24px;
+        height: 24px;
+    }
 }

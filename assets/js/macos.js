@@ -300,11 +300,11 @@ class MacOSInterface {
     }
 
     applyTerminalStyling(contentElement, appName) {
-        // Add terminal styling based on app type
-        // Add terminal styling based on app type
-        // if (appName === 'terminal' || appName === 'projects') {
-        //    contentElement.classList.add('terminal-content');
-        // }
+        // Skip terminal styling for about app (it has its own styled design)
+        if (appName === 'about') {
+            return;
+        }
+
         // Apply general terminal styling for other apps
         contentElement.style.background = 'var(--terminal-bg)';
         contentElement.style.color = 'var(--terminal-text)';
@@ -434,7 +434,24 @@ class MacOSInterface {
             this.setupTerminalWithEngine(windowElement, '~');
         } else if (appName === 'projects') {
             this.setupTerminalWithEngine(windowElement, '~/projects');
+        } else if (appName === 'about') {
+            this.setupAboutTypingEffect(windowElement);
         }
+    }
+
+    setupAboutTypingEffect(windowElement) {
+        // Start the typing effect for the About window tagline
+        setTimeout(() => {
+            const typingElement = windowElement.querySelector('#about-typing');
+            if (typingElement && typeof TerminalEngine !== 'undefined') {
+                const terminal = new TerminalEngine();
+                terminal.runTypingEffect('about-typing', [
+                    "Full-Stack Engineer | Cybersecurity Specialist",
+                    "DJ & Audio Technology Enthusiast",
+                    "Building immersive web experiences"
+                ]);
+            }
+        }, 100);
     }
 
     setupTerminalWithEngine(windowElement, initialPath) {
@@ -463,6 +480,16 @@ class MacOSInterface {
 
                 // Initialize terminal
                 terminal.createTerminal(content, initialPath);
+
+                // Start typing effect for initial terminal content (about.md display)
+                const typingElement = content.querySelector('#terminal-typing');
+                if (typingElement && appName === 'terminal') {
+                    terminal.runTypingEffect('terminal-typing', [
+                        "Computer Engineer | Cybersecurity Specialist | Full-Stack Developer",
+                        "Building practical systems and tools",
+                        "Focused on clean architecture and performance"
+                    ]);
+                }
 
                 // Focus input when clicking anywhere in the window
                 const focusInput = (e) => {
