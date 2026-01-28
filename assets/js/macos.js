@@ -71,8 +71,55 @@ class MacOSInterface {
         this.animationQueue = [];
         this.isAnimating = false;
 
+        // Detect hardware/software rendering mode
+        this.detectRenderingMode();
+
         // Preload templates
         this.preloadTemplates();
+    }
+
+    detectRenderingMode() {
+        // WebGL-based GPU detection
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+        let isSoftwareRendering = false;
+
+        if (!gl) {
+            // No WebGL support - likely software rendering
+            isSoftwareRendering = true;
+        } else {
+            // Check for software renderer indicators
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL).toLowerCase();
+                isSoftwareRendering = renderer.includes('swiftshader')
+                    || renderer.includes('software')
+                    || renderer.includes('llvmpipe')
+                    || renderer.includes('virtualbox');
+            }
+        }
+
+        // Also check for reduced motion preference
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (isSoftwareRendering || prefersReducedMotion) {
+            document.documentElement.classList.add('software-rendering');
+            console.log('🖥️ Software rendering mode enabled for better performance');
+        }
+
+        // Store for other components to check
+        this.isSoftwareRendering = isSoftwareRendering;
+        this.prefersReducedMotion = prefersReducedMotion;
+
+        // Listen for reduced motion preference changes
+        window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+            if (e.matches) {
+                document.documentElement.classList.add('software-rendering');
+            } else if (!this.isSoftwareRendering) {
+                document.documentElement.classList.remove('software-rendering');
+            }
+        });
     }
 
     debounce(func, wait) {
@@ -243,6 +290,10 @@ class MacOSInterface {
 
         // Setup window-specific functionality
         this.setupWindowEvents(windowElement, appName);
+
+        // Mark dock item as active
+        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
+        if (dockItem) dockItem.classList.add('active');
     }
 
     createWindow(appName) {
@@ -527,6 +578,10 @@ class MacOSInterface {
         if (this.activeWindow === appName) {
             this.activeWindow = null;
         }
+
+        // Remove active indicator from dock
+        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
+        if (dockItem) dockItem.classList.remove('active');
     }
 
     toggleMaximizeWindow(appName) {
