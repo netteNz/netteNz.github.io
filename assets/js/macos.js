@@ -9,11 +9,19 @@ class MacOSInterface {
     }
 
     waitForDependencies() {
-        // Wait for both GSAP and TerminalEngine to be available
-        if (typeof gsap === 'undefined' || typeof TerminalEngine === 'undefined') {
+        // Wait for GSAP, TerminalEngine, AND critical DOM elements
+        const desktop = document.getElementById('desktop');
+        const dockItems = document.querySelectorAll('.dock-item');
+        
+        if (typeof gsap === 'undefined' || 
+            typeof TerminalEngine === 'undefined' ||
+            !desktop ||
+            dockItems.length === 0) {
             console.log('Waiting for dependencies...', {
                 gsap: typeof gsap !== 'undefined',
-                TerminalEngine: typeof TerminalEngine !== 'undefined'
+                TerminalEngine: typeof TerminalEngine !== 'undefined',
+                desktop: !!desktop,
+                dockItems: dockItems.length
             });
             setTimeout(() => this.waitForDependencies(), 50);
             return;
@@ -29,16 +37,20 @@ class MacOSInterface {
     }
 
     initGSAPAnimations() {
+        const desktop = document.getElementById('desktop');
+        if (!desktop) return;
+
         // Animate page load
-        gsap.from('#desktop', {
+        gsap.from(desktop, {
             opacity: 0,
             duration: 0.8,
             ease: 'power2.out'
         });
 
-        // Enhanced dock hover animations with GSAP
+        // Enhanced dock hover animations with null checks
         document.querySelectorAll('.dock-item').forEach(item => {
             const icon = item.querySelector('div');
+            if (!icon) return; // Skip if icon doesn't exist
 
             // Set initial transform origin for better animations
             gsap.set(icon, { transformOrigin: 'center center' });
