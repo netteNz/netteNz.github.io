@@ -534,7 +534,6 @@ section {
     background: rgba(156, 163, 175, 0.5);
 }
 
-/* Dark scrollbar for terminal */
 .terminal-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(34, 197, 94, 0.3);
 }
@@ -549,7 +548,7 @@ section {
         width: 95vw !important;
         height: 85vh !important;
         left: 2.5vw !important;
-        top: 2rem !important;
+        top: 2.5rem !important;
     }
 
     .dock-item {
@@ -567,11 +566,20 @@ section {
 
     .menu-bar-icons {
         gap: 0.25rem;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .status-icon {
         width: 0.875rem;
         height: 0.875rem;
+    }
+
+    #current-time {
+        max-width: 4.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.8rem;
     }
 
     .battery-level-text {
@@ -594,7 +602,26 @@ section {
         width: 98vw !important;
         height: 90vh !important;
         left: 1vw !important;
-        top: 1rem !important;
+        top: 2.25rem !important;
+    }
+
+    /* Hide WiFi and Bluetooth icons on very small screens */
+    .menu-bar-icons svg:nth-child(1),
+    .menu-bar-icons svg:nth-child(2) {
+        display: none;
+    }
+
+    .menu-bar-icons {
+        gap: 0.5rem;
+    }
+
+    #current-time {
+        max-width: 4rem;
+        font-size: 0.75rem;
+    }
+
+    .battery-level-text {
+        display: none;
     }
 }
 
@@ -1151,7 +1178,7 @@ dialog::backdrop {
         width: 95vw !important;
         height: 85vh !important;
         left: 2.5vw !important;
-        top: 2rem !important;
+        top: 2.5rem !important;
     }
 
     .dock-item {
@@ -1169,11 +1196,20 @@ dialog::backdrop {
 
     .menu-bar-icons {
         gap: 0.25rem;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     .status-icon {
         width: 0.875rem;
         height: 0.875rem;
+    }
+
+    #current-time {
+        max-width: 4.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.8rem;
     }
 
     .battery-level-text {
@@ -1196,7 +1232,26 @@ dialog::backdrop {
         width: 98vw !important;
         height: 90vh !important;
         left: 1vw !important;
-        top: 1rem !important;
+        top: 2.25rem !important;
+    }
+
+    /* Hide WiFi and Bluetooth icons on very small screens */
+    .menu-bar-icons svg:nth-child(1),
+    .menu-bar-icons svg:nth-child(2) {
+        display: none;
+    }
+
+    .menu-bar-icons {
+        gap: 0.5rem;
+    }
+
+    #current-time {
+        max-width: 4rem;
+        font-size: 0.75rem;
+    }
+
+    .battery-level-text {
+        display: none;
     }
 }
 
