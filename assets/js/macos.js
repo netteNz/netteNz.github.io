@@ -149,9 +149,9 @@ class MacOSInterface {
     preloadTemplates() {
         // Cache template elements for better performance
         this.templates = {
-            window: document.getElementById('window-template'),
-            finder: document.getElementById('finder-app'),
-            about: document.getElementById('about-app'),
+            window:   document.getElementById('window-template'),
+            finder:   document.getElementById('finder-app'),
+            about:    document.getElementById('about-app'),
             projects: document.getElementById('projects-app'),
             terminal: document.getElementById('terminal-app')
         };
@@ -325,7 +325,7 @@ class MacOSInterface {
         header.style.position = 'sticky';
         header.style.top = '0';
         header.style.zIndex = '10';
-        header.style.backgroundColor = 'var(--terminal-header-bg, #1a1a1a)';
+        // header background controlled via CSS per-app rules ([data-app] .window-header)
 
         // Update window controls
         const controls = header.querySelector('.window-controls');
@@ -363,7 +363,7 @@ class MacOSInterface {
     }
 
     applyTerminalStyling(contentElement, appName) {
-        // Skip terminal styling for about app (it has its own styled design)
+        // Skip terminal styling for apps with their own design
         if (appName === 'about') {
             return;
         }
@@ -376,11 +376,10 @@ class MacOSInterface {
 
     getAppTitle(appName) {
         const titles = {
-            'finder': 'Finder',
-            'about': 'about.md ~ Emanuel Lugo',
+            'finder':   'Finder',
+            'about':    'about.md ~ Emanuel Lugo',
             'projects': 'projects/ ~ Portfolio',
             'terminal': 'Terminal ~ nettenzOS'
-            // Removed contact title
         };
         return titles[appName] || `${appName}.app`;
     }
