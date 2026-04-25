@@ -544,30 +544,40 @@ section {
 /* ===== Dock — M3 Navigation Bar ===== */
 .dock-container {
     position: fixed;
-    bottom: 10px;
+    bottom: 14px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
+    /* Lift the whole dock with a soft ambient glow */
+    filter: drop-shadow(0 20px 48px rgba(0, 0, 0, 0.55));
 }
 
 .dock {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(18, 18, 22, 0.88);
-    border-top:    1px solid rgba(120, 239, 157, 0.14);
-    border-left:   1px solid rgba(120, 239, 157, 0.06);
-    border-right:  1px solid rgba(120, 239, 157, 0.06);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.45);
+    gap: 10px;
+    padding: 10px 16px;
+    /* Gradient glass: lighter face at top, heavier base at bottom */
+    background: linear-gradient(
+        180deg,
+        rgba(30, 30, 40, 0.72) 0%,
+        rgba(10, 10, 16, 0.88) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--shape-full);
-    backdrop-filter: blur(32px) saturate(240%);
-    -webkit-backdrop-filter: blur(32px) saturate(240%);
+    backdrop-filter: blur(40px) saturate(180%) brightness(0.9);
+    -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(0.9);
     box-shadow:
-        inset 0 0 0 1px rgba(120, 239, 157, 0.04),
-        0 4px 12px rgba(0, 0, 0, 0.35),
-        0 12px 32px rgba(0, 0, 0, 0.48),
-        0 24px 64px rgba(0, 0, 0, 0.28);
+        /* top glass-edge highlight */
+        inset 0 1px 0 rgba(255, 255, 255, 0.10),
+        /* bottom inner shadow for depth */
+        inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+        /* tight contact shadow */
+        0 2px 8px rgba(0, 0, 0, 0.40),
+        /* mid diffuse shadow */
+        0 8px 24px rgba(0, 0, 0, 0.50),
+        /* far ambient shadow */
+        0 24px 56px rgba(0, 0, 0, 0.35);
 }
 
 .dock-item {
