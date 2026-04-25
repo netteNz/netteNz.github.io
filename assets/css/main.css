@@ -115,6 +115,103 @@ section {
         linear-gradient(160deg, #06060a 0%, #08090f 50%, #060a0a 100%);
 }
 
+/* ===== Animated Wallpaper ===== */
+.wallpaper {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #06060a 0%, #08090f 50%, #060a0a 100%);
+    overflow: hidden;
+    z-index: 0;
+    isolation: isolate;
+}
+
+.wallpaper-blob {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+    pointer-events: none;
+}
+
+.wallpaper-blob--green {
+    width: 680px;
+    height: 680px;
+    background: radial-gradient(ellipse at center,
+        rgba(0, 82, 41, 0.72) 0%,
+        rgba(0, 82, 41, 0.38) 35%,
+        rgba(0, 82, 41, 0.10) 65%,
+        transparent 100%
+    );
+    filter: blur(90px);
+    top: -180px;
+    left: -160px;
+    animation: blob-float-green 20s ease-in-out infinite;
+}
+
+.wallpaper-blob--blue {
+    width: 620px;
+    height: 620px;
+    background: radial-gradient(ellipse at center,
+        rgba(0, 77, 104, 0.68) 0%,
+        rgba(0, 77, 104, 0.34) 35%,
+        rgba(0, 77, 104, 0.09) 65%,
+        transparent 100%
+    );
+    filter: blur(100px);
+    bottom: -150px;
+    right: -140px;
+    animation: blob-float-blue 17s ease-in-out infinite;
+    animation-delay: -6s;
+}
+
+.wallpaper-blob--purple {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(ellipse at center,
+        rgba(87, 43, 138, 0.52) 0%,
+        rgba(87, 43, 138, 0.24) 38%,
+        rgba(87, 43, 138, 0.06) 65%,
+        transparent 100%
+    );
+    filter: blur(80px);
+    top: 30%;
+    left: 35%;
+    animation: blob-float-purple 22s ease-in-out infinite;
+    animation-delay: -11s;
+}
+
+.wallpaper-scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 6, 10, 0.62);
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes blob-float-green {
+    0%   { transform: translate(  0px,   0px) scale(1.00); }
+    25%  { transform: translate(140px,  80px) scale(1.04); }
+    50%  { transform: translate( 90px, 160px) scale(0.97); }
+    75%  { transform: translate(-60px,  70px) scale(1.02); }
+    100% { transform: translate(  0px,   0px) scale(1.00); }
+}
+
+@keyframes blob-float-blue {
+    0%   { transform: translate(   0px,   0px) scale(1.00); }
+    30%  { transform: translate(-120px, -90px) scale(1.05); }
+    55%  { transform: translate(-170px,  40px) scale(0.96); }
+    80%  { transform: translate( -50px, -60px) scale(1.03); }
+    100% { transform: translate(   0px,   0px) scale(1.00); }
+}
+
+@keyframes blob-float-purple {
+    0%   { transform: translate( 0px,    0px) scale(1.00); }
+    20%  { transform: translate(80px, -100px) scale(1.06); }
+    45%  { transform: translate(-70px, -60px) scale(0.95); }
+    70%  { transform: translate(40px,  110px) scale(1.03); }
+    90%  { transform: translate(-30px,  30px) scale(0.98); }
+    100% { transform: translate( 0px,    0px) scale(1.00); }
+}
+
 /* ===== Window System ===== */
 .window {
     background: var(--md-surface-container-high);
@@ -1386,6 +1483,10 @@ dialog::backdrop {
     }
 
     .typing-cursor { animation: none !important; opacity: 1 !important; }
+
+    .wallpaper-blob--green,
+    .wallpaper-blob--blue,
+    .wallpaper-blob--purple { animation: none; }
 }
 
 /* ===== Software Rendering Mode ===== */
@@ -1440,3 +1541,13 @@ dialog::backdrop {
     contain: strict;
     image-rendering: pixelated;
 }
+
+.software-rendering .wallpaper {
+    background: var(--desktop-bg);
+    isolation: auto;
+}
+
+.software-rendering .wallpaper-blob--green,
+.software-rendering .wallpaper-blob--blue,
+.software-rendering .wallpaper-blob--purple,
+.software-rendering .wallpaper-scrim { display: none; }
