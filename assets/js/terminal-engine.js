@@ -27,10 +27,20 @@ class TerminalEngine {
                                 url: 'https://nettenz.github.io/earthquakes_pr.html',
                                 readme: this.getProjectReadme('earthquake-visualization')
                             },
-                            'door-dashboard': {
+                            'rl-trading-bot': {
                                 type: 'directory',
-                                url: 'https://github.com/netteNz/DoorDashboard',
-                                readme: this.getProjectReadme('door-dashboard')
+                                url: 'https://github.com/netteNz/reinforcement-learning-stocks',
+                                readme: this.getProjectReadme('rl-trading-bot')
+                            },
+                            'cli-agent': {
+                                type: 'directory',
+                                url: 'https://github.com/netteNz/cli-agent',
+                                readme: this.getProjectReadme('cli-agent')
+                            },
+                            'audio-visualizer': {
+                                type: 'directory',
+                                url: 'https://github.com/netteNz/audio-visualizer',
+                                readme: this.getProjectReadme('audio-visualizer')
                             },
                             'veto-system': {
                                 type: 'directory',
@@ -192,7 +202,7 @@ class TerminalEngine {
 
                 // Add project commands if applicable
                 if (this.currentPath === '~/projects') {
-                    items = items.concat(['web-audio-player', 'earthquake-visualization', 'door-dashboard', 'veto-system']);
+                    items = items.concat(['web-audio-player', 'earthquake-visualization', 'rl-trading-bot', 'veto-system']);
                 }
             }
         }
@@ -256,8 +266,10 @@ class TerminalEngine {
             'web-audio': () => this.openProject('web-audio-player'),
             'earthquake-visualization': () => this.openProject('earthquake-visualization'),
             'earthquake': () => this.openProject('earthquake-visualization'),
-            'door-dashboard': () => this.openProject('door-dashboard'),
-            'dashboard': () => this.openProject('door-dashboard'),
+            'rl-trading-bot': () => this.openProject('rl-trading-bot'),
+            'rl-trading': () => this.openProject('rl-trading-bot'),
+            'cli-agent': () => this.openProject('cli-agent'),
+            'audio-visualizer': () => this.openProject('audio-visualizer'),
             'veto-system': () => this.openProject('veto-system'),
             'veto': () => this.openProject('veto-system'),
             'neofetch': () => this.neofetchCommand(),
@@ -301,16 +313,24 @@ ${this.currentPath === '~/projects' ? `
 🚀 Project Commands (opens deployed apps):
 - web-audio-player (web-audio): Real-time audio visualizer
 - earthquake-visualization (earthquake): Puerto Rico earthquake data
-- door-dashboard (dashboard): DoorDash analytics
+- rl-trading-bot (rl-trading): RL Stock Trading Bot
+- cli-agent: Gemini-powered terminal assistant
 - veto-system (veto): Team decision voting platform` : ''}</div>`;
     }
 
     resolvePath(pathStr) {
+        if (!pathStr) return null;
+        
         const pathParts = pathStr.split('/').filter(p => p);
+        if (pathParts.length === 0) return this.fileSystem['~'];
+        
         let currentDir = this.fileSystem['~'];
+        
+        // Skip '~' if it's the first part, as we already start there
+        const startIndex = pathParts[0] === '~' ? 1 : 0;
 
-        // Navigate to current directory structure
-        for (const part of pathParts.slice(1)) {
+        for (let i = startIndex; i < pathParts.length; i++) {
+            const part = pathParts[i];
             if (currentDir.contents && currentDir.contents[part]) {
                 currentDir = currentDir.contents[part];
             } else {
@@ -400,18 +420,19 @@ ${this.currentPath === '~/projects' ? `
         const newPath = this.currentPath === '~' ? `~/${targetDir}` : `${this.currentPath}/${targetDir}`;
 
         if (this.directoryExists(newPath)) {
-            this.currentPath = newPath;
-            this.updatePromptPath();
-
             // Check if directory has a URL (is a project) and launch it
             const dirNode = this.resolvePath(newPath);
             if (dirNode && dirNode.url) {
+                // Don't update currentPath — stay at ~/projects so subsequent
+                // project clicks resolve correctly from the same base path.
                 setTimeout(() => {
                     window.open(dirNode.url, '_blank');
                 }, 500);
                 return `<div style="color: var(--terminal-text-secondary);">Opening project...</div>`;
             }
 
+            this.currentPath = newPath;
+            this.updatePromptPath();
             return null;
         }
 
@@ -773,7 +794,9 @@ ${this.currentPath === '~/projects' ? `
             lsResult.innerHTML = `<div class="terminal-ls-output">
                 <span class="terminal-item terminal-dir" data-name="web-audio-player" data-type="directory">web-audio-player/</span>
                 <span class="terminal-item terminal-dir" data-name="earthquake-visualization" data-type="directory">earthquake-visualization/</span>
-                <span class="terminal-item terminal-dir" data-name="door-dashboard" data-type="directory">door-dashboard/</span>
+                <span class="terminal-item terminal-dir" data-name="rl-trading-bot" data-type="directory">rl-trading-bot/</span>
+                <span class="terminal-item terminal-dir" data-name="cli-agent" data-type="directory">cli-agent/</span>
+                <span class="terminal-item terminal-dir" data-name="audio-visualizer" data-type="directory">audio-visualizer/</span>
                 <span class="terminal-item terminal-dir" data-name="veto-system" data-type="directory">veto-system/</span>
             </div>`;
             terminalContent.appendChild(lsResult);
@@ -903,16 +926,16 @@ Interactive map showing Puerto Rico earthquake data
 <span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://nettenz.github.io/earthquakes_pr.html
 <span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/earthquakes_pr
 </div>`,
-            'door-dashboard': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">📊 DoorDash Analytics Dashboard</div>
+            'rl-trading-bot': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🤖 RL Trading Bot</div>
 <div style="color: var(--terminal-text-secondary); line-height: 1.4;">
-Comprehensive analytics dashboard for delivery metrics
-- Revenue and order tracking
-- Driver performance analytics
-- Customer satisfaction metrics
-- Interactive charts and KPIs
+Reinforcement Learning agent trained for stock trading
+- Deep Q-Network (DQN) implementation
+- Custom trading environment
+- Historical market data backtesting
+- Performance evaluation metrics
 
-<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://github.com/netteNz/DoorDashboard
-<span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/DoorDashboard
+<span style="color: var(--terminal-accent);">🔗 Live Demo:</span> https://github.com/netteNz/reinforcement-learning-stocks
+<span style="color: var(--terminal-accent);">📂 Repository:</span> https://github.com/netteNz/reinforcement-learning-stocks
 </div>`,
             'veto-system': `<div style="color: var(--terminal-accent); font-weight: bold; margin-bottom: 12px;">🗳️ Veto Voting System</div>
 <div style="color: var(--terminal-text-secondary); line-height: 1.4;">

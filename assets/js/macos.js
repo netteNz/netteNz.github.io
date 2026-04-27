@@ -197,11 +197,11 @@ class MacOSInterface {
                 const batteryIcon = document.querySelector('.battery-icon svg');
                 if (batteryIcon) {
                     if (percentage <= 20) {
-                        batteryIcon.className = 'w-4 h-4 battery-level-low';
+                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-low');
                     } else if (percentage <= 50) {
-                        batteryIcon.className = 'w-4 h-4 battery-level-medium';
+                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-medium');
                     } else {
-                        batteryIcon.className = 'w-4 h-4 battery-level-high';
+                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-high');
                     }
                 }
             });

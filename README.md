@@ -46,13 +46,13 @@ python -m http.server 8000
 | `clear` | Clear terminal |
 | `exit` | Close terminal |
 
-**Project shortcuts:** `web-audio-player` · `earthquake-visualization` · `door-dashboard` · `veto-system`
+**Project shortcuts:** `web-audio-player` · `earthquake-visualization` · `rl-trading-bot` · `veto-system`
 
 ## Projects
 
 - **Web Audio Player** — Real-time audio visualizer with frequency spectrum and LUFS metering
 - **Earthquake Visualization** — Interactive seismic data map for Puerto Rico
-- **DoorDash Analytics** — Delivery metrics dashboard
+- **RL Trading Bot** — Reinforcement learning agent trained for stock trading
 - **Veto Voting System** — Team decision-making platform
 
 ## License

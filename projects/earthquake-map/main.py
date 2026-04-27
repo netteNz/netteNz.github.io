@@ -87,6 +87,10 @@ try:
                             ).add_to(pr)
     
     map_html = pr._repr_html_()
+    # Remove Folium's default aspect-ratio padding to allow full-viewport height on mobile
+    map_html = map_html.replace('style="width:100%;"', 'style="width:100%; height:100%;"')
+    map_html = map_html.replace('height:0;padding-bottom:60%;', 'height:100%;')
+    
     element = document.getElementById("folium")
     if element:
         element.innerHTML = map_html
