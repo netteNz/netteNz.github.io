@@ -1,5 +1,10 @@
 # VSCode settings
 .vscode/
+CLAUDE.md
+
+# Crawler/bot control
+robots.txt
+sitemap.xml
 
 # Logs
 logs
@@ -8,7 +13,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 CLAUDE.md*
-
+.skills/
 # Dependency directories
 node_modules/
 jspm_packages/
