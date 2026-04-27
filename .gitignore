@@ -12,9 +12,12 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Markdown and Agent Files
 CLAUDE.md
 DESIGN_PRINCIPLES.md
 .skills/
+
 # Dependency directories
 node_modules/
 jspm_packages/
