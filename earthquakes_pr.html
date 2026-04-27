@@ -4,191 +4,335 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Interactive visualization of earthquake data in Puerto Rico using PyScript and Folium">
+    <meta name="description" content="Interactive visualization of earthquake data in Puerto Rico using PyScript and Folium">
     <meta name="keywords" content="earthquake visualization, data visualization, folium, pyscript, interactive map">
-    <title>Earthquake Visualization</title>
-    <!-- Google tag (gtag.js) -->
+    <title>Earthquake Visualization — nettenzOS</title>
+
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0L5LLER0MH"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-
         gtag('config', 'G-0L5LLER0MH');
     </script>
 
+    <!-- Fonts & Tailwind -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&display=swap">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
-    <!-- Relative path (correct) -->
+
+    <!-- Main design system — M3 vars, wallpaper, glass, dock, etc. -->
     <link rel="stylesheet" href="./assets/css/main.css">
+
+    <!-- PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
+
     <style>
-        /* Master layout fix that works at all viewport widths */
         html, body {
-            font-family: 'JetBrains Mono', monospace;
-            height: 100%;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Lato', sans-serif;
+            background: var(--md-surface);
         }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            padding-top: 64px; /* Account for fixed navbar */
+
+        /* Wallpaper sits behind everything */
+        .page-wallpaper {
+            position: fixed;
+            inset: 0;
+            top: 32px;
+            background: linear-gradient(160deg, #06060a 0%, #08090f 50%, #060a0a 100%);
+            overflow: hidden;
+            z-index: 0;
+            isolation: isolate;
         }
-        
-        /* Force proper layout container for map */
-        .pyscript {
-            flex: 1 0 auto;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            width: 100%;
-            min-height: calc(100vh - 64px); /* Full height minus navbar */
-        }
-        
-        /* Force Leaflet container to respect parent dimensions */
-        #folium {
-            flex: 1 0 auto;
-            width: 100% !important; 
-            height: 100% !important;
-            min-height: calc(100vh - 64px) !important; /* Full height minus navbar */
-            position: relative;
+
+        /* Dim blobs so Leaflet tiles remain readable */
+        .page-wallpaper .wallpaper-blob { opacity: 0.4; }
+        .page-wallpaper .wallpaper-scrim { background: rgba(6, 6, 10, 0.45); }
+
+        /* Map fills everything below the 32px menu bar */
+        #map-area {
+            position: fixed;
+            top: 32px;
+            left: 0;
+            right: 0;
+            bottom: 0;
             z-index: 1;
         }
-        
-        /* Make sure Leaflet's internal elements behave */
-        .leaflet-container {
-            height: 100% !important; 
+
+        /* PyScript auto-inserts a wrapper; force it to fill */
+        .pyscript {
             width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
         }
-        
-        /* Increase specificity for legend positioning */
-        .legend.legend {
-            position: fixed !important;
-            bottom: 20px !important; /* Moved up since no footer */
-            right: 25px !important;
-            z-index: 9999 !important;
+
+        #folium {
+            width: 100% !important;
+            height: 100% !important;
+            flex: 1 1 auto !important;
         }
-        
-        /* Handle large screens specifically */
-        @media (min-width: 1200px) {
-            #folium {
-                height: calc(100vh - 124px) !important; /* Fixed height on large screens */
-            }
+
+        .leaflet-container {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* ─── Legend panel (dock / glass aesthetic) ─── */
+        .eq-legend {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+        }
+
+        .eq-legend-inner {
+            background: linear-gradient(
+                180deg,
+                rgba(30, 30, 40, 0.78) 0%,
+                rgba(10, 10, 16, 0.92) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--shape-lg);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.10),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.35),
+                0 8px 24px rgba(0, 0, 0, 0.55),
+                0 24px 56px rgba(0, 0, 0, 0.35);
+            padding: 14px 18px;
+            min-width: 168px;
+        }
+
+        .eq-legend-title {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--md-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 11px;
+            padding-bottom: 9px;
+            border-bottom: 1px solid var(--md-outline-variant);
+        }
+
+        .eq-legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .eq-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 12px;
+            color: var(--md-on-surface-variant);
+        }
+
+        .eq-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .eq-dot-minor    { background: #4ade80; box-shadow: 0 0 6px rgba(74, 222, 128, 0.6); }
+        .eq-dot-light    { background: #facc15; box-shadow: 0 0 6px rgba(250, 204, 21, 0.6); }
+        .eq-dot-moderate { background: #f97316; box-shadow: 0 0 6px rgba(249, 115, 22, 0.6); }
+        .eq-dot-strong   { background: #f87171; box-shadow: 0 0 6px rgba(248, 113, 113, 0.6); }
+
+        /* ─── Loading dialog ─── */
+        #loading {
+            outline: none;
+            border: none;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Back nav pill inside menu bar */
+        .nav-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: var(--md-on-surface-variant);
+            text-decoration: none;
+            padding: 2px 10px;
+            border-radius: var(--shape-full);
+            transition:
+                color var(--dur-2) var(--ease-standard),
+                background var(--dur-2) var(--ease-standard);
+        }
+
+        .nav-back-btn:hover {
+            color: var(--md-on-surface);
+            background: rgba(120, 239, 157, 0.08);
+        }
+
+        .nav-page-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--md-primary);
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            letter-spacing: 0.01em;
         }
     </style>
 </head>
 
-<body class="text-white bg-[#0d1117]">
-    <!-- Navigation -->
-    <nav class="w-full p-4 bg-opacity-100 bg-gray-900 shadow-md fixed top-0 left-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div class="text-xl font-mono font-bold"><a href="index.html" class="hover:text-[#6ee7b7] transition-colors">Earthquakes Visualization</a></div>
-            <ul class="flex space-x-6">
-                <li><a href="index.html" class="hover:text-[#6ee7b7] transition-colors">Home</a></li>
-                <li><a href="index.html#projects" class="hover:text-[#6ee7b7] transition-colors">Projects</a></li>
-                <li><a href="index.html#contact" class="hover:text-[#6ee7b7] transition-colors">Contact</a></li>
-            </ul>
+<body>
+    <!-- ─── macOS Menu Bar ─── -->
+    <div class="menu-bar fixed top-0 left-0 right-0 h-8 backdrop-blur-md z-50 flex items-center px-4">
+        <div class="flex items-center space-x-3">
+            <span class="text-white text-sm font-medium">nettenzOS</span>
+            <span class="text-gray-600 text-xs">›</span>
+            <span class="nav-page-label">earthquakes-pr</span>
         </div>
-    </nav>
 
-    <main class="pt-16 min-h-screen" style="
-    padding-top: 0px;">
-        <!-- Loading Dialog -->
-        <dialog id="loading" class="bg-transparent outline-none border-none">
-            <div class="flex flex-col items-center justify-center p-8 text-white">
+        <div class="flex items-center space-x-2 ml-6">
+            <a href="index.html" class="nav-back-btn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"/>
+                </svg>
+                Home
+            </a>
+        </div>
+
+        <div class="ml-auto flex items-center space-x-3 text-white text-sm">
+            <div class="flex items-center space-x-2">
+                <!-- WiFi -->
+                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
+                </svg>
+                <!-- Bluetooth -->
+                <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/>
+                </svg>
+                <!-- Battery -->
+                <div class="flex items-center space-x-1">
+                    <svg class="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.67 4H14V2c0-0.55-0.45-1-1-1h-2c-0.55 0-1 0.45-1 1v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c0.74 0 1.34-0.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/>
+                        <rect x="9" y="6" width="6" height="12" rx="1" fill="currentColor"/>
+                    </svg>
+                    <span class="text-xs">87%</span>
+                </div>
+            </div>
+            <span id="current-time" class="text-sm"></span>
+        </div>
+    </div>
+
+    <!-- ─── Animated wallpaper (ambient, behind map) ─── -->
+    <div class="page-wallpaper" aria-hidden="true">
+        <div class="wallpaper-blob wallpaper-blob--green"></div>
+        <div class="wallpaper-blob wallpaper-blob--blue"></div>
+        <div class="wallpaper-blob wallpaper-blob--purple"></div>
+        <div class="wallpaper-scrim"></div>
+    </div>
+
+    <!-- ─── Map area ─── -->
+    <div id="map-area">
+        <!-- Loading dialog -->
+        <dialog id="loading">
+            <div class="flex flex-col items-center justify-center p-8">
                 <div class="spinner"></div>
-                <div class="loading-text mt-4">Loading visualization...</div>
+                <div class="loading-text">Loading visualization...</div>
             </div>
         </dialog>
 
-        <!-- Map Container -->
-        <div id="folium" class="w-full h-screen"></div>
-    </main>
+        <!-- Folium renders into this -->
+        <div id="folium"></div>
+    </div>
 
-    <!-- Map Legends -->
-    <div class="fixed bottom-4 right-4 bg-gray-900 bg-opacity-75 rounded-lg p-3 z-10 shadow-lg">
-        <h4 class="text-sm font-bold mb-2">Earthquake Magnitude</h4>
-        <div class="grid grid-cols-2 gap-x-3 gap-y-1">
-            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span> &lt; 3.0</div>
-            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span> 3.0 - 4.0</div>
-            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-orange-500 mr-2"></span> 4.1 - 5.0</div>
-            <div class="flex items-center"><span class="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span> &gt; 5.0</div>
+    <!-- ─── Magnitude legend ─── -->
+    <div class="eq-legend">
+        <div class="eq-legend-inner">
+            <div class="eq-legend-title">Magnitude</div>
+            <div class="eq-legend-items">
+                <div class="eq-legend-item">
+                    <span class="eq-dot eq-dot-minor"></span>
+                    <span>&lt; 3.0</span>
+                </div>
+                <div class="eq-legend-item">
+                    <span class="eq-dot eq-dot-light"></span>
+                    <span>3.0 – 4.0</span>
+                </div>
+                <div class="eq-legend-item">
+                    <span class="eq-dot eq-dot-moderate"></span>
+                    <span>4.1 – 5.0</span>
+                </div>
+                <div class="eq-legend-item">
+                    <span class="eq-dot eq-dot-strong"></span>
+                    <span>&gt; 5.0</span>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <!-- PyScript configuration -->
+
+    <!-- PyScript -->
     <py-config>
         packages = ["folium", "pandas"]
     </py-config>
-    
     <py-script src="./projects/earthquake-map/main.py"></py-script>
-    
+
     <script>
-        // Get loading dialog
+        // Live clock matching index.html
+        function updateTime() {
+            const el = document.getElementById('current-time');
+            if (el) {
+                el.textContent = new Date().toLocaleTimeString('en-US', {
+                    hour: 'numeric', minute: '2-digit', hour12: true
+                });
+            }
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+
+        // Loading dialog management
         const loading = document.getElementById('loading');
-        
-        // Show the loading dialog immediately
+
         document.addEventListener('DOMContentLoaded', () => {
             loading.showModal();
-            console.log("Loading dialog opened");
         });
-        
-        // Multiple approaches to detect map loading
-        
-        // 1. Listen for our custom event
+
         document.addEventListener('map:loaded', () => {
-            console.log("Map loaded event received");
-            setTimeout(() => {
-                loading.close();
-                console.log("Loading dialog closed");
-            }, 500); // Small delay to ensure map is rendered
+            setTimeout(() => { if (loading.open) loading.close(); }, 500);
         });
-        
-        // 2. Timer-based fallback
-        setTimeout(() => {
-            if (loading.open) {
-                console.log("Fallback timer closing loading dialog");
-                loading.close();
-            }
-        }, 20000); // 20 second timeout
-        
-        // 3. DOM-based detection
+
+        // 20s hard timeout
+        setTimeout(() => { if (loading.open) loading.close(); }, 20000);
+
+        // Poll for Leaflet tiles
         const checkMapInterval = setInterval(() => {
-            if (document.querySelector('.leaflet-container') && 
+            if (document.querySelector('.leaflet-container') &&
                 document.querySelector('.leaflet-tile-loaded')) {
-                console.log("Leaflet map detected in DOM");
                 if (loading.open) {
                     loading.close();
                     clearInterval(checkMapInterval);
                 }
             }
         }, 1000);
-        
-        // 4. Observe the folium container for changes
-        const foliumObserver = new MutationObserver((mutations) => {
-            for (const mutation of mutations) {
-                if (mutation.type === 'childList' && 
-                    document.querySelector('.leaflet-container')) {
-                    console.log("Map container detected via MutationObserver");
-                    setTimeout(() => {
-                        if (loading.open) loading.close();
-                        foliumObserver.disconnect();
-                    }, 1000);
+
+        // MutationObserver fallback
+        const foliumEl = document.getElementById('folium');
+        if (foliumEl) {
+            const obs = new MutationObserver(() => {
+                if (document.querySelector('.leaflet-container')) {
+                    setTimeout(() => { if (loading.open) loading.close(); obs.disconnect(); }, 1000);
                 }
-            }
-        });
-        
-        // Start observing the folium element
-        const foliumElement = document.getElementById('folium');
-        if (foliumElement) {
-            foliumObserver.observe(foliumElement, { childList: true, subtree: true });
+            });
+            obs.observe(foliumEl, { childList: true, subtree: true });
         }
     </script>
 </body>

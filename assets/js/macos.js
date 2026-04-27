@@ -663,4 +663,9 @@ class MacOSInterface {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded - Initializing MacOS Interface');
     window.macOS = new MacOSInterface();
+
+    const openParam = new URLSearchParams(window.location.search).get('open');
+    if (openParam) {
+        window.macOS.openApp(openParam);
+    }
 });
