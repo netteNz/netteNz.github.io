@@ -153,7 +153,8 @@ class MacOSInterface {
             finder:   document.getElementById('finder-app'),
             about:    document.getElementById('about-app'),
             projects: document.getElementById('projects-app'),
-            terminal: document.getElementById('terminal-app')
+            terminal: document.getElementById('terminal-app'),
+            welcome:  document.getElementById('welcome-app')
         };
     }
 
@@ -162,7 +163,28 @@ class MacOSInterface {
         this.setupEventListeners();
         setInterval(() => this.updateTime(), 1000);
         this.updateBatteryStatus();
-        setInterval(() => this.updateBatteryStatus(), 30000); // Update every 30 seconds
+        setInterval(() => this.updateBatteryStatus(), 30000);
+        this.initSplash();
+    }
+
+    initSplash() {
+        const splash = document.getElementById('splash-screen');
+        if (!splash) return;
+
+        // Skip on deep links or reduced motion — jump straight to desktop
+        const hasDeepLink = new URLSearchParams(window.location.search).get('open');
+        if (hasDeepLink || this.prefersReducedMotion) {
+            splash.remove();
+            return;
+        }
+
+        setTimeout(() => {
+            splash.classList.add('splash-exit');
+            setTimeout(() => {
+                splash.remove();
+                this.openApp('welcome');
+            }, 500);
+        }, 2000);
     }
 
     updateTime() {
@@ -268,10 +290,21 @@ class MacOSInterface {
         }
 
         const windowElement = this.createWindow(appName);
+
+        // Override dimensions for specific apps
+        if (appName === 'welcome') {
+            windowElement.style.width = '480px';
+            windowElement.style.height = '370px';
+        }
+
         this.windows.set(appName, windowElement);
 
         // Position window
-        this.positionWindow(windowElement);
+        if (appName === 'welcome') {
+            this.centerWindow(windowElement);
+        } else {
+            this.positionWindow(windowElement);
+        }
 
         // Add to DOM
         const container = document.getElementById('windows-container') || document.body;
@@ -364,7 +397,7 @@ class MacOSInterface {
 
     applyTerminalStyling(contentElement, appName) {
         // Skip terminal styling for apps with their own design
-        if (appName === 'about') {
+        if (appName === 'about' || appName === 'welcome') {
             return;
         }
 
@@ -379,7 +412,8 @@ class MacOSInterface {
             'finder':   'Finder',
             'about':    'about.md ~ Emanuel Lugo',
             'projects': 'projects/ ~ Portfolio',
-            'terminal': 'Terminal ~ nettenzOS'
+            'terminal': 'Terminal ~ nettenzOS',
+            'welcome':  'welcome.sh ~ Get Started'
         };
         return titles[appName] || `${appName}.app`;
     }
@@ -391,6 +425,14 @@ class MacOSInterface {
 
         windowElement.style.left = `${100 + actualOffset}px`;
         windowElement.style.top = `${100 + actualOffset}px`;
+        windowElement.style.zIndex = ++this.zIndex;
+    }
+
+    centerWindow(windowElement) {
+        const w = parseInt(windowElement.style.width) || 480;
+        const h = parseInt(windowElement.style.height) || 370;
+        windowElement.style.left = `${Math.max(0, (window.innerWidth - w) / 2)}px`;
+        windowElement.style.top  = `${Math.max(40, (window.innerHeight - h) / 2)}px`;
         windowElement.style.zIndex = ++this.zIndex;
     }
 
@@ -498,7 +540,21 @@ class MacOSInterface {
             this.setupTerminalWithEngine(windowElement, '~/projects');
         } else if (appName === 'about') {
             this.setupAboutTypingEffect(windowElement);
+        } else if (appName === 'welcome') {
+            this.setupWelcomeEvents(windowElement);
         }
+    }
+
+    setupWelcomeEvents(windowElement) {
+        windowElement.querySelectorAll('.welcome-nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.open;
+                if (target) {
+                    this.closeWindow('welcome');
+                    this.openApp(target);
+                }
+            });
+        });
     }
 
     setupAboutTypingEffect(windowElement) {

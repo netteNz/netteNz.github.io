@@ -322,6 +322,19 @@
 </head>
 
 <body class="h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black font-['Lato']">
+    <!-- Boot splash -->
+    <div id="splash-screen" aria-hidden="true">
+        <div class="splash-inner">
+            <div class="splash-wordmark">nettenzOS</div>
+            <div class="splash-spinner" role="status" aria-label="Loading">
+                <div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div>
+            </div>
+            <div class="splash-status">Booting...</div>
+        </div>
+    </div>
+
     <!-- SEO fallback: visible to crawlers, hidden visually -->
     <noscript>
         <main>
@@ -605,6 +618,54 @@
                 <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$
                 <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1"
                     style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
+            </div>
+        </div>
+    </template>
+
+    <template id="welcome-app">
+        <div class="welcome-content">
+            <div class="welcome-boot-log" aria-live="polite">
+                <div class="wbl-line"><span class="wbl-tag wbl-tag--ok">OK</span>nettenzOS kernel loaded</div>
+                <div class="wbl-line"><span class="wbl-tag wbl-tag--ok">OK</span>~/projects mounted</div>
+                <div class="wbl-line"><span class="wbl-tag wbl-tag--ok">OK</span>Window manager ready</div>
+                <div class="wbl-line wbl-line--ready"><span class="wbl-tag wbl-tag--go">→</span>System ready. Welcome.</div>
+            </div>
+            <div class="welcome-divider"></div>
+            <div class="welcome-guide">
+                <p class="welcome-guide-title">Where would you like to go?</p>
+                <div class="welcome-nav">
+                    <button class="welcome-nav-btn" data-open="about">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+                        </svg>
+                        <div class="wnb-text">
+                            <span class="wnb-label">About</span>
+                            <span class="wnb-desc">Who I am &amp; my stack</span>
+                        </div>
+                        <svg class="wnb-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                    <button class="welcome-nav-btn" data-open="projects">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                        </svg>
+                        <div class="wnb-text">
+                            <span class="wnb-label">Projects</span>
+                            <span class="wnb-desc">Browse my work</span>
+                        </div>
+                        <svg class="wnb-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                    <button class="welcome-nav-btn" data-open="terminal">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                            <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3"/><path d="M13 15h4"/>
+                        </svg>
+                        <div class="wnb-text">
+                            <span class="wnb-label">Terminal</span>
+                            <span class="wnb-desc">Explore via CLI — type <code>help</code></span>
+                        </div>
+                        <svg class="wnb-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <p class="welcome-hint">Or drag this window &mdash; it&rsquo;s a real desktop.</p>
             </div>
         </div>
     </template>
