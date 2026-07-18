@@ -72,7 +72,7 @@ class TerminalEngine {
 <div style="color: var(--terminal-text-secondary); margin-bottom: 12px;">Type <span style="color: var(--terminal-accent);">ls projects</span> to see my work!</div>
 </div>`,
                                 action: () => this.runTypingEffect(id, [
-                                    "Computer Engineer | Cybersecurity Specialist | Full-Stack Developer",
+                                    "Computer Engineer | AI Software Engineer | Cybersecurity",
                                     "Building practical systems and tools",
                                     "Focused on clean architecture and performance"
                                 ])
@@ -445,7 +445,7 @@ ${this.currentPath === '~/projects' ? `
     }
 
     whoamiCommand() {
-        return `<div style="color: var(--terminal-text-secondary);">Emanuel Lugo Rivera - Full-Stack Engineer & Cybersecurity Specialist</div>`;
+        return `<div style="color: var(--terminal-text-secondary);">Emanuel Lugo Rivera - AI Software Development Engineer & Cybersecurity Specialist</div>`;
     }
 
     catCommand(args) {
@@ -849,7 +849,7 @@ Audio: Web Audio API, Real-time Visualization</div>`;
 
             // Start typing effect for about.md
             this.runTypingEffect(typingId, [
-                "Computer Engineer | Cybersecurity Specialist | Full-Stack Developer",
+                "Computer Engineer | AI Software Engineer | Cybersecurity",
                 "Building practical systems and tools",
                 "Focused on clean architecture and performance"
             ]);

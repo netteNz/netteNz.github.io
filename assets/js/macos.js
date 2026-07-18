@@ -564,7 +564,7 @@ class MacOSInterface {
             if (typingElement && typeof TerminalEngine !== 'undefined') {
                 const terminal = new TerminalEngine();
                 terminal.runTypingEffect('about-typing', [
-                    "Full-Stack Engineer | Cybersecurity Specialist",
+                    "AI Software Engineer | Cybersecurity Specialist",
                     "DJ & Audio Technology Enthusiast",
                     "Building immersive web experiences"
                 ]);
@@ -603,7 +603,7 @@ class MacOSInterface {
                 const typingElement = content.querySelector('#terminal-typing');
                 if (typingElement && appName === 'terminal') {
                     terminal.runTypingEffect('terminal-typing', [
-                        "Computer Engineer | Cybersecurity Specialist | Full-Stack Developer",
+                        "Computer Engineer | AI Software Engineer | Cybersecurity",
                         "Building practical systems and tools",
                         "Focused on clean architecture and performance"
                     ]);
