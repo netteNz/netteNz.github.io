@@ -8,14 +8,14 @@
     <title>nettenzOS | AI Software Development Engineer, DJ, Cybersecurity Specialist.</title>
     <meta name="title" content="nettenzOS | AI Software Development Engineer, DJ, Cybersecurity Specialist.">
     <meta name="description"
-        content="Portfolio of an AI Software Development Engineer: AI-powered products, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
+        content="Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ &mdash; building AI-powered products, real-time web audio visualizers, and DJ streaming tools.">
     <meta name="keywords"
         content="nettenz, AI software engineer, web audio visualizer, React audio player, DJ streaming tools, LUFS meter, creative tech, GitHub Pages, portfolio">
     <meta name="author" content="nettenz">
     <meta name="robots" content="index, follow">
     <meta name="language" content="en">
     <meta http-equiv="Content-Language" content="en">
-    <meta name="theme-color" content="#0d1117">
+    <meta name="theme-color" content="#0c0c0f">
     <link rel="canonical" href="https://nettenz.github.io/">
 
 
@@ -24,7 +24,7 @@
     <meta property="og:url" content="https://nettenz.github.io/">
     <meta property="og:title" content="nettenzOS | AI Software Development Engineer, DJ, Cybersecurity Specialist.">
     <meta property="og:description"
-        content="Portfolio of an AI Software Development Engineer: AI-powered products, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
+        content="Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ &mdash; building AI-powered products, real-time web audio visualizers, and DJ streaming tools.">
     <meta property="og:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
 
     <!-- Twitter -->
@@ -32,7 +32,7 @@
     <meta name="twitter:url" content="https://nettenz.github.io/">
     <meta name="twitter:title" content="nettenzOS | AI Software Development Engineer, DJ, Cybersecurity Specialist.">
     <meta name="twitter:description"
-        content="Portfolio of an AI Software Development Engineer: AI-powered products, real-time web audio visualizers, and DJ streaming tools; blending code, creativity, and sound to deliver immersive user experiences.">
+        content="Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ &mdash; building AI-powered products, real-time web audio visualizers, and DJ streaming tools.">
     <meta name="twitter:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
 
 
@@ -60,7 +60,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="assets/js/terminal-engine.js?v=2" defer></script>
     <script src="assets/js/macos.js" defer></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&family=Ubuntu+Mono:wght@400;700&display=swap">
     <link rel="stylesheet" href="assets/css/main.css?v=2">
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
     <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
@@ -70,12 +71,12 @@
     <style>
         body {
             font-family: 'Lato', sans-serif;
-            background: rgb(13, 17, 23);
+            background: var(--md-surface);
         }
 
 
         pre[class*="language-"] {
-            background-color: #0d1117 !important;
+            background-color: var(--md-surface-container-low) !important;
             padding: 1.5rem;
             border-radius: 1rem;
             overflow-x: hidden;
@@ -84,70 +85,71 @@
             max-width: 900px;
             margin: 2rem auto;
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-            border: 1px solid #30363d;
+            border: 1px solid var(--md-outline-variant);
         }
 
         code[class*="language-"] {
-            font-family: 'JetBrains Mono', monospace;
-            color: #c9d1d9;
+            font-family: 'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            color: var(--md-on-surface);
             background: transparent;
         }
 
-        /* Syntax colors */
+        /* Syntax colors — mapped onto the site's M3 token roles so code blocks
+           read as part of the same system instead of a separate GitHub-Dark theme */
         .token.comment,
         .token.prolog,
         .token.doctype,
         .token.cdata {
-            color: #8b949e;
+            color: var(--md-on-surface-variant);
             font-style: italic;
         }
 
         .token.punctuation {
-            color: #c9d1d9;
+            color: var(--md-on-surface);
         }
 
         .token.property,
         .token.constant,
         .token.symbol,
         .token.deleted {
-            color: #ffa198;
+            color: var(--md-error);
         }
 
         .token.boolean,
         .token.number {
-            color: #f2cc60;
+            color: var(--terminal-accent-yellow);
         }
 
         .token.string,
         .token.char {
-            color: #a5d6ff;
+            color: var(--md-secondary);
         }
 
         .token.selector,
         .token.inserted,
         .token.attr-name {
-            color: #7ee787;
+            color: var(--md-primary);
         }
 
         .token.function,
         .token.class-name {
-            color: #79c0ff;
+            color: var(--terminal-accent-blue);
         }
 
         .token.keyword,
         .token.atrule {
-            color: #ff7b72;
+            color: var(--terminal-accent-red);
         }
 
         .token.operator,
         .token.entity,
         .token.url {
-            color: #d2a8ff;
+            color: var(--md-tertiary);
         }
 
         .token.regex,
         .token.variable {
-            color: #d2a8ff;
+            color: var(--md-tertiary);
         }
 
         /* Responsive adjustments for the contact section */
@@ -196,12 +198,6 @@
         }
 
         /* Keyframes for chart animation */
-        @keyframes chart-grow {
-            to {
-                height: var(--final-height);
-            }
-        }
-
         @keyframes chart-grow {
             from {
                 height: 0%;
@@ -286,7 +282,7 @@
           "@id": "https://nettenz.github.io/#website",
           "url": "https://nettenz.github.io/",
           "name": "nettenzOS",
-          "description": "Portfolio of nettenz — AI software development engineer, cybersecurity specialist, and DJ.",
+          "description": "Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ — building AI-powered products, real-time web audio visualizers, and DJ streaming tools.",
           "inLanguage": "en"
         },
         {
@@ -344,7 +340,7 @@
     <noscript>
         <main>
             <h1>nettenzOS &mdash; Portfolio of nettenz</h1>
-            <p>AI Software Development Engineer, Cybersecurity Specialist, and DJ. Building AI-powered products, audio tools, and web experiences.</p>
+            <p>Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ &mdash; building AI-powered products, real-time web audio visualizers, and DJ streaming tools.</p>
             <section>
                 <h2>About</h2>
                 <p>B.S. Computer Engineering. Day-to-day: React, Python, TypeScript. Currently exploring agentic AI, RAG pipelines, and making LLMs produce deterministic outputs.</p>
@@ -413,13 +409,8 @@
 
     <!-- Desktop Area -->
     <div id="desktop" class="pt-8 h-full relative overflow-hidden">
-        <!-- Animated wallpaper -->
-        <div class="wallpaper" aria-hidden="true">
-            <div class="wallpaper-blob wallpaper-blob--green"></div>
-            <div class="wallpaper-blob wallpaper-blob--blue"></div>
-            <div class="wallpaper-blob wallpaper-blob--purple"></div>
-            <div class="wallpaper-scrim"></div>
-        </div>
+        <!-- Ambient wallpaper -->
+        <div class="wallpaper" aria-hidden="true"></div>
 
         <!-- Desktop Icons -->
         <div class="desktop-icons">
@@ -461,6 +452,15 @@
                 <span class="dock-label">Terminal</span>
             </div>
 
+            <!-- Contact -->
+            <div class="dock-item" data-app="contact">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="M3 7l9 6 9-6" />
+                </svg>
+                <span class="dock-label">Contact</span>
+            </div>
+
         </div>
     </div>
 
@@ -496,11 +496,13 @@
                     <div class="md-avatar" aria-hidden="true">EL</div>
                     <div class="md-hero-text">
                         <h2 class="md-heading md-heading--name">Emanuel Lugo Rivera</h2>
-                        <div class="md-chip-row">
-                            <span class="md-chip md-chip--primary">AI Software Engineer</span>
-                            <span class="md-chip md-chip--secondary">Cybersecurity</span>
-                            <span class="md-chip md-chip--tertiary">DJ &amp; Audio</span>
-                        </div>
+                        <p class="md-role-line">
+                            <span class="md-role--primary">ai software engineer</span>
+                            <span class="md-role-sep">&middot;</span>
+                            <span class="md-role--secondary">cybersecurity</span>
+                            <span class="md-role-sep">&middot;</span>
+                            <span class="md-role--tertiary">dj &amp; audio</span>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -519,8 +521,8 @@
             <div class="md-section">
                 <h2 class="md-heading"><span class="md-hash">##</span> Currently</h2>
                 <ul class="md-list">
-                    <li>Exploring <span class="md-chip md-chip--primary">Agentic AI</span> development</li>
-                    <li>Working with <span class="md-chip md-chip--secondary">RAG pipelines</span></li>
+                    <li>Exploring <code class="md-code md-code--primary">agentic AI</code> development</li>
+                    <li>Working with <code class="md-code md-code--secondary">RAG pipelines</code></li>
                     <li>Making LLMs useful with deterministic outputs</li>
                     <li>Building audio tools and streaming setups</li>
                 </ul>
@@ -530,27 +532,27 @@
             <div class="md-section">
                 <h2 class="md-heading"><span class="md-hash">##</span> Tech Stack</h2>
                 <div class="md-stack-group">
-                    <span class="md-stack-label">Frontend</span>
-                    <div class="md-chip-row">
-                        <span class="md-chip md-chip--primary">React</span>
-                        <span class="md-chip md-chip--primary">TypeScript</span>
-                        <span class="md-chip md-chip--primary">Next.js</span>
+                    <span class="md-stack-label">frontend</span>
+                    <div class="md-token-row">
+                        <code class="md-code md-code--primary">react</code>
+                        <code class="md-code md-code--primary">typescript</code>
+                        <code class="md-code md-code--primary">next.js</code>
                     </div>
                 </div>
                 <div class="md-stack-group">
-                    <span class="md-stack-label">Backend</span>
-                    <div class="md-chip-row">
-                        <span class="md-chip md-chip--secondary">Python</span>
-                        <span class="md-chip md-chip--secondary">Node.js</span>
-                        <span class="md-chip md-chip--secondary">FastAPI</span>
+                    <span class="md-stack-label">backend</span>
+                    <div class="md-token-row">
+                        <code class="md-code md-code--secondary">python</code>
+                        <code class="md-code md-code--secondary">node.js</code>
+                        <code class="md-code md-code--secondary">fastapi</code>
                     </div>
                 </div>
                 <div class="md-stack-group">
-                    <span class="md-stack-label">Tools</span>
-                    <div class="md-chip-row">
-                        <span class="md-chip">Docker</span>
-                        <span class="md-chip">Git</span>
-                        <span class="md-chip">Linux</span>
+                    <span class="md-stack-label">tools</span>
+                    <div class="md-token-row">
+                        <code class="md-code">docker</code>
+                        <code class="md-code">git</code>
+                        <code class="md-code">linux</code>
                     </div>
                 </div>
             </div>
@@ -565,19 +567,19 @@
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                 <polyline points="14 2 14 8 20 8" />
                             </svg>
-                            <span class="md-chip md-chip--primary">resume.pdf</span>
+                            <span class="md-link-text">resume.pdf</span>
                         </a>
                     </li>
                     <li>
                         <a href="https://github.com/netteNz" target="_blank" rel="noopener noreferrer" class="md-link">
                             <img src="assets/icons/github.svg" width="14" height="14" alt="GitHub" style="filter:invert(1);opacity:0.85;">
-                            <span class="md-chip">github.com/netteNz</span>
+                            <span class="md-link-text">github.com/netteNz</span>
                         </a>
                     </li>
                     <li>
                         <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer" class="md-link">
                             <img src="assets/icons/linkedin.svg" width="14" height="14" alt="LinkedIn" style="filter:invert(1);opacity:0.85;">
-                            <span class="md-chip md-chip--secondary">linkedin.com/in/lugo-emanuel</span>
+                            <span class="md-link-text">linkedin.com/in/lugo-emanuel</span>
                         </a>
                     </li>
                 </ul>
@@ -585,6 +587,44 @@
         </div>
     </template>
 
+
+    <template id="contact-app">
+        <div class="contact-content">
+            <div class="contact-hero">
+                <div class="contact-avatar" aria-hidden="true">EL</div>
+                <div class="contact-hero-text">
+                    <span class="contact-name">Emanuel Lugo Rivera</span>
+                    <span class="contact-subtitle">Let's connect</span>
+                </div>
+            </div>
+
+            <ul class="contact-list">
+                <li class="contact-list-row">
+                    <div class="contact-list-icon contact-icon-linkedin">
+                        <img src="assets/icons/linkedin.svg" width="18" height="18" alt="" style="filter:invert(1);opacity:0.9;">
+                    </div>
+                    <div class="contact-list-body">
+                        <span class="contact-list-label">LinkedIn</span>
+                        <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer" class="contact-list-value">linkedin.com/in/lugo-emanuel</a>
+                    </div>
+                </li>
+                <li class="contact-list-row">
+                    <div class="contact-list-icon contact-icon-github">
+                        <img src="assets/icons/github.svg" width="18" height="18" alt="" style="filter:invert(1);opacity:0.9;">
+                    </div>
+                    <div class="contact-list-body">
+                        <span class="contact-list-label">GitHub</span>
+                        <a href="https://github.com/netteNz" target="_blank" rel="noopener noreferrer" class="contact-list-value">github.com/netteNz</a>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="contact-actions">
+                <a href="assets/documents/elr_2025_resume.pdf" download class="md-btn-filled">Download resume</a>
+                <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer" class="md-btn-outlined">Message on LinkedIn</a>
+            </div>
+        </div>
+    </template>
 
     <template id="projects-app">
         <div class="terminal-content">

@@ -45,15 +45,9 @@
             position: fixed;
             inset: 0;
             top: 32px;
-            background: linear-gradient(160deg, #06060a 0%, #08090f 50%, #060a0a 100%);
-            overflow: hidden;
+            background: var(--desktop-bg);
             z-index: 0;
-            isolation: isolate;
         }
-
-        /* Dim blobs so Leaflet tiles remain readable */
-        .page-wallpaper .wallpaper-blob { opacity: 0.4; }
-        .page-wallpaper .wallpaper-scrim { background: rgba(6, 6, 10, 0.45); }
 
         /* Map fills everything below the 32px menu bar */
         #map-area {
@@ -145,10 +139,14 @@
             flex-shrink: 0;
         }
 
-        .eq-dot-minor    { background: #4ade80; box-shadow: 0 0 6px rgba(74, 222, 128, 0.6); }
-        .eq-dot-light    { background: #facc15; box-shadow: 0 0 6px rgba(250, 204, 21, 0.6); }
-        .eq-dot-moderate { background: #f97316; box-shadow: 0 0 6px rgba(249, 115, 22, 0.6); }
-        .eq-dot-strong   { background: #f87171; box-shadow: 0 0 6px rgba(248, 113, 113, 0.6); }
+        /* Magnitude severity scale: reuses site accent tokens where the hue already
+           matches (green/yellow/red); --eq-accent-orange is a page-local addition
+           since the token system has no orange role, kept between the yellow and
+           red accents to preserve the USGS-style green→yellow→orange→red convention. */
+        .eq-dot-minor    { background: var(--md-primary); box-shadow: 0 0 6px rgba(120, 239, 157, 0.6); }
+        .eq-dot-light    { background: var(--terminal-accent-yellow); box-shadow: 0 0 6px rgba(251, 191, 36, 0.6); }
+        .eq-dot-moderate { background: var(--eq-accent-orange, #f97316); box-shadow: 0 0 6px rgba(249, 115, 22, 0.6); }
+        .eq-dot-strong   { background: var(--terminal-accent-red); box-shadow: 0 0 6px rgba(248, 113, 113, 0.6); }
 
         /* ─── Loading dialog ─── */
         #loading {
@@ -233,13 +231,8 @@
         </div>
     </div>
 
-    <!-- ─── Animated wallpaper (ambient, behind map) ─── -->
-    <div class="page-wallpaper" aria-hidden="true">
-        <div class="wallpaper-blob wallpaper-blob--green"></div>
-        <div class="wallpaper-blob wallpaper-blob--blue"></div>
-        <div class="wallpaper-blob wallpaper-blob--purple"></div>
-        <div class="wallpaper-scrim"></div>
-    </div>
+    <!-- ─── Ambient wallpaper (behind map) ─── -->
+    <div class="page-wallpaper" aria-hidden="true"></div>
 
     <!-- ─── Map area ─── -->
     <div id="map-area">

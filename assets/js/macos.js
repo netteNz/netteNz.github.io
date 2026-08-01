@@ -154,7 +154,8 @@ class MacOSInterface {
             about:    document.getElementById('about-app'),
             projects: document.getElementById('projects-app'),
             terminal: document.getElementById('terminal-app'),
-            welcome:  document.getElementById('welcome-app')
+            welcome:  document.getElementById('welcome-app'),
+            contact:  document.getElementById('contact-app')
         };
     }
 
@@ -397,7 +398,7 @@ class MacOSInterface {
 
     applyTerminalStyling(contentElement, appName) {
         // Skip terminal styling for apps with their own design
-        if (appName === 'about' || appName === 'welcome') {
+        if (appName === 'about' || appName === 'welcome' || appName === 'contact') {
             return;
         }
 
@@ -413,7 +414,8 @@ class MacOSInterface {
             'about':    'about.md ~ Emanuel Lugo',
             'projects': 'projects/ ~ Portfolio',
             'terminal': 'Terminal ~ nettenzOS',
-            'welcome':  'welcome.sh ~ Get Started'
+            'welcome':  'welcome.sh ~ Get Started',
+            'contact':  'contact.md ~ Let\'s Connect'
         };
         return titles[appName] || `${appName}.app`;
     }
