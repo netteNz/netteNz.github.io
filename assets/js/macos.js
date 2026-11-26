@@ -1,93 +1,36 @@
+// Window manager for the nettenzOS desktop: windows, dock, menu bar, level meter.
+// Load order (all `defer`): gsap -> projects-data.js -> terminal-engine.js -> macos.js.
+
+const MOBILE_QUERY = '(max-width: 768px)';
+
+// Default window sizes per app (clamped to the viewport in positionWindow)
+const APP_SIZES = {
+    welcome:  [560, 370],
+    about:    [760, 640],
+    projects: [820, 640],
+    terminal: [820, 520],
+    contact:  [520, 470]
+};
+
 class MacOSInterface {
     constructor() {
         this.windows = new Map();
         this.zIndex = 100;
         this.activeWindow = null;
         this.terminalEngines = new Map();
-        this.performanceOptimizations();
-        this.waitForDependencies();
-    }
+        this.mobile = window.matchMedia(MOBILE_QUERY);
 
-    waitForDependencies() {
-        // Wait for GSAP, TerminalEngine, AND critical DOM elements
-        const desktop = document.getElementById('desktop');
-        const dockItems = document.querySelectorAll('.dock-item');
-        
-        if (typeof gsap === 'undefined' || 
-            typeof TerminalEngine === 'undefined' ||
-            !desktop ||
-            dockItems.length === 0) {
-            console.log('Waiting for dependencies...', {
-                gsap: typeof gsap !== 'undefined',
-                TerminalEngine: typeof TerminalEngine !== 'undefined',
-                desktop: !!desktop,
-                dockItems: dockItems.length
-            });
-            setTimeout(() => this.waitForDependencies(), 50);
-            return;
-        }
-
-        // Initialize GSAP plugins
-        if (typeof ScrollTrigger !== 'undefined') {
-            gsap.registerPlugin(ScrollTrigger);
-        }
+        this.detectRenderingMode();
+        this.templates = {
+            window:   document.getElementById('window-template'),
+            about:    document.getElementById('about-app'),
+            projects: document.getElementById('projects-app'),
+            terminal: document.getElementById('terminal-app'),
+            welcome:  document.getElementById('welcome-app'),
+            contact:  document.getElementById('contact-app')
+        };
 
         this.init();
-        this.initGSAPAnimations();
-    }
-
-    initGSAPAnimations() {
-        const desktop = document.getElementById('desktop');
-        if (!desktop) return;
-
-        // Animate page load
-        gsap.from(desktop, {
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power2.out'
-        });
-
-        // Enhanced dock hover animations with null checks
-        document.querySelectorAll('.dock-item').forEach(item => {
-            const icon = item.querySelector('div');
-            if (!icon) return; // Skip if icon doesn't exist
-
-            // Set initial transform origin for better animations
-            gsap.set(icon, { transformOrigin: 'center center' });
-
-            item.addEventListener('mouseenter', () => {
-                gsap.to(icon, {
-                    scale: 1.2,
-                    y: -8,
-                    duration: 0.3,
-                    ease: 'back.out(1.7)'
-                });
-            });
-
-            item.addEventListener('mouseleave', () => {
-                gsap.to(icon, {
-                    scale: 1,
-                    y: 0,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-        });
-    }
-
-    performanceOptimizations() {
-        // Debounce window updates
-        this.debouncedUpdateTime = this.debounce(() => this.updateTime(), 1000);
-
-        // Use requestAnimationFrame for smooth animations
-        this.animationQueue = [];
-        this.isAnimating = false;
-
-        // Detect hardware/software rendering mode
-        this.detectRenderingMode();
-
-        // Preload templates
-        this.preloadTemplates();
     }
 
     detectRenderingMode() {
@@ -117,12 +60,9 @@ class MacOSInterface {
 
         if (isSoftwareRendering || prefersReducedMotion) {
             document.documentElement.classList.add('software-rendering');
-            console.log('🖥️ Software rendering mode enabled for better performance');
         }
 
-        // Store for other components to check
         this.isSoftwareRendering = isSoftwareRendering;
-        this.prefersReducedMotion = prefersReducedMotion;
 
         // Listen for reduced motion preference changes
         window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
@@ -134,58 +74,72 @@ class MacOSInterface {
         });
     }
 
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    preloadTemplates() {
-        // Cache template elements for better performance
-        this.templates = {
-            window:   document.getElementById('window-template'),
-            finder:   document.getElementById('finder-app'),
-            about:    document.getElementById('about-app'),
-            projects: document.getElementById('projects-app'),
-            terminal: document.getElementById('terminal-app'),
-            welcome:  document.getElementById('welcome-app'),
-            contact:  document.getElementById('contact-app')
-        };
-    }
-
     init() {
         this.updateTime();
-        this.setupEventListeners();
         setInterval(() => this.updateTime(), 1000);
-        this.updateBatteryStatus();
-        setInterval(() => this.updateBatteryStatus(), 30000);
+        this.setupEventListeners();
+        this.meterRest = 3;
+        this.meterLevel = this.meterRest;
+        this.setMeter(this.meterRest);
         this.initSplash();
     }
 
     initSplash() {
         const splash = document.getElementById('splash-screen');
-        if (!splash) return;
-
-        // Skip on deep links or reduced motion — jump straight to desktop
         const hasDeepLink = new URLSearchParams(window.location.search).get('open');
-        if (hasDeepLink || this.prefersReducedMotion) {
-            splash.remove();
+
+        let seen = false;
+        try { seen = sessionStorage.getItem('seenSplash') === '1'; } catch { /* storage blocked */ }
+
+        // Skip on deep links, reduced motion / software rendering, or after the first view this session
+        if (!splash || hasDeepLink || seen || !this.motionOK()) {
+            if (splash) splash.remove();
+            if (!hasDeepLink) this.openApp('welcome');
             return;
         }
 
+        try { sessionStorage.setItem('seenSplash', '1'); } catch { /* storage blocked */ }
+
+        // ~0.9s meter fill + boot log, short hold, 0.3s fade = ~1.4s total
         setTimeout(() => {
             splash.classList.add('splash-exit');
             setTimeout(() => {
                 splash.remove();
                 this.openApp('welcome');
-            }, 500);
-        }, 2000);
+            }, 300);
+        }, 1100);
+    }
+
+    motionOK() {
+        return !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            && !document.documentElement.classList.contains('software-rendering');
+    }
+
+    // ---- Level meter (signature element) ----
+    // Static at rest; bumps in response to input and decays back one segment per tick.
+    setMeter(level) {
+        document.querySelectorAll('.level-meter').forEach(meter => {
+            Array.from(meter.children).forEach((seg, i) => seg.classList.toggle('is-lit', i < level));
+        });
+    }
+
+    bumpMeter(level = 5) {
+        if (!this.motionOK()) return;
+        const target = Math.max(this.meterRest, Math.min(8, Math.round(level)));
+        if (target <= this.meterLevel && this.meterTimer) return;
+        this.meterLevel = target;
+        this.setMeter(target);
+
+        clearInterval(this.meterTimer);
+        this.meterTimer = setInterval(() => {
+            if (this.meterLevel <= this.meterRest) {
+                clearInterval(this.meterTimer);
+                this.meterTimer = null;
+                return;
+            }
+            this.meterLevel -= 1;
+            this.setMeter(this.meterLevel);
+        }, 70);
     }
 
     updateTime() {
@@ -197,358 +151,260 @@ class MacOSInterface {
         });
         const timeElement = document.getElementById('current-time');
         if (timeElement && timeElement.textContent !== timeString) {
-            if (typeof gsap !== 'undefined') {
-                gsap.fromTo(timeElement,
-                    { opacity: 0.7 },
-                    { opacity: 1, duration: 0.3, ease: 'power1.out' }
-                );
-            }
             timeElement.textContent = timeString;
         }
     }
 
-    updateBatteryStatus() {
-        if ('getBattery' in navigator) {
-            navigator.getBattery().then((battery) => {
-                const percentage = Math.round(battery.level * 100);
-                const batteryText = document.querySelector('.battery-level-text');
-                if (batteryText) {
-                    batteryText.textContent = `${percentage}%`;
-                }
-
-                // Update battery icon color based on level
-                const batteryIcon = document.querySelector('.battery-icon svg');
-                if (batteryIcon) {
-                    if (percentage <= 20) {
-                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-low');
-                    } else if (percentage <= 50) {
-                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-medium');
-                    } else {
-                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-high');
-                    }
-                }
-            });
-        }
-    }
-
     setupEventListeners() {
-        // Dock item clicks
-        document.querySelectorAll('.dock-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const appName = item.dataset.app;
-                this.openApp(appName);
-            });
+        // Dock, menu bar and desktop icons are all <button data-app>
+        document.querySelectorAll('.dock-item, .menu-item, .desktop-icon').forEach(item => {
+            item.addEventListener('click', () => this.openApp(item.dataset.app));
         });
 
-        // Navbar item clicks
-        document.querySelectorAll('[data-app]').forEach(item => {
-            if (!item.classList.contains('dock-item')) {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const appName = item.dataset.app;
-                    this.openApp(appName);
-                });
-            }
+        // Meter reacts to link hover (throttled)
+        let lastHover = 0;
+        document.addEventListener('pointerover', (e) => {
+            if (!e.target.closest || !e.target.closest('a, .btn')) return;
+            const now = performance.now();
+            if (now - lastHover < 150) return;
+            lastHover = now;
+            this.bumpMeter(5);
         });
 
-        // Global keyboard shortcuts
+        // Esc closes the active window, except while typing in the terminal
         document.addEventListener('keydown', (e) => {
-            if (e.metaKey || e.ctrlKey) {
-                switch (e.key) {
-                    case 'w':
-                        e.preventDefault();
-                        this.closeActiveWindow();
-                        break;
-                    case 'Escape':
-                        e.preventDefault();
-                        this.closeActiveWindow();
-                        break;
-                }
-            }
+            if (e.key !== 'Escape' || e.defaultPrevented) return;
+            if (e.target.closest && e.target.closest('.terminal-input')) return;
+            if (!this.activeWindow) return;
+            e.preventDefault();
+            this.requestClose(this.activeWindow, { restoreFocus: true });
         });
     }
 
     openApp(appName) {
-        // Check if app is already open
+        if (appName === 'work') appName = 'projects';
+        if (!this.templates[appName]) return;
+        this.bumpMeter(6);
+
+        // Already open: restore if minimized, then just focus it
         if (this.windows.has(appName)) {
+            const existing = this.windows.get(appName);
+            if (existing.classList.contains('minimized')) this.restoreWindow(appName);
             this.focusWindow(appName);
-            // Shake animation for existing window with GSAP
-            const windowElement = this.windows.get(appName);
-            if (typeof gsap !== 'undefined') {
-                gsap.to(windowElement, {
-                    x: -10,
-                    duration: 0.05,
-                    repeat: 5,
-                    yoyo: true,
-                    ease: 'power1.inOut',
-                    onComplete: () => {
-                        gsap.set(windowElement, { x: 0 });
-                    }
-                });
-            }
             return;
         }
 
         const windowElement = this.createWindow(appName);
-
-        // Override dimensions for specific apps
-        if (appName === 'welcome') {
-            windowElement.style.width = '480px';
-            windowElement.style.height = '370px';
-        }
-
+        if (!windowElement) return;
         this.windows.set(appName, windowElement);
 
-        // Position window
+        const [w, h] = APP_SIZES[appName] || [820, 600];
+        windowElement.style.width = `${w}px`;
+        windowElement.style.height = `${h}px`;
         if (appName === 'welcome') {
             this.centerWindow(windowElement);
         } else {
             this.positionWindow(windowElement);
         }
 
-        // Add to DOM
-        const container = document.getElementById('windows-container') || document.body;
-        container.appendChild(windowElement);
+        document.getElementById('windows-container').appendChild(windowElement);
 
-        // Animate with GSAP
-        if (typeof gsap !== 'undefined') {
-            gsap.set(windowElement, {
-                scale: 0.8,
-                opacity: 0,
-                y: 50
-            });
-
-            gsap.to(windowElement, {
-                scale: 1,
-                opacity: 1,
-                y: 0,
-                duration: 0.4,
-                ease: 'back.out(1.4)'
-            });
-        } else {
-            // Fallback CSS animation
-            windowElement.classList.add('window-enter');
+        if (typeof gsap !== 'undefined' && this.motionOK()) {
+            gsap.fromTo(windowElement,
+                { scale: 0.96, opacity: 0, y: 12 },
+                { scale: 1, opacity: 1, y: 0, duration: 0.25, ease: 'power2.out', clearProps: 'transform,opacity' });
         }
 
-        // Focus the new window
-        this.focusWindow(appName);
-
-        // Setup window-specific functionality
         this.setupWindowEvents(windowElement, appName);
-
-        // Mark dock item as active
-        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
-        if (dockItem) dockItem.classList.add('active');
+        this.focusWindow(appName);
+        this.setDockState(appName, true);
     }
 
     createWindow(appName) {
         const template = this.templates.window;
-        if (!template) return null;
+        const contentTemplate = this.templates[appName];
+        if (!template || !contentTemplate) return null;
 
         const windowElement = template.content.cloneNode(true).querySelector('.window');
-
-        // Set window properties
+        const title = windowElement.querySelector('.window-title');
         windowElement.dataset.app = appName;
-        windowElement.querySelector('.window-title').textContent = this.getAppTitle(appName);
+        title.textContent = this.getAppTitle(appName);
+        title.id = `window-title-${appName}`;
+        windowElement.setAttribute('aria-labelledby', title.id);
 
-        // Update window header with terminal styling
-        const header = windowElement.querySelector('.window-header');
-        header.className = 'window-header';
-        // Ensure header stays on top
-        header.style.position = 'sticky';
-        header.style.top = '0';
-        header.style.zIndex = '10';
-        // header background controlled via CSS per-app rules ([data-app] .window-header)
-
-        // Update window controls
-        const controls = header.querySelector('.window-controls');
-        if (controls) {
-            controls.style.position = 'relative';
-            controls.style.zIndex = '11';
-            const closeBtn = controls.children[0];
-            const minimizeBtn = controls.children[1];
-            const maximizeBtn = controls.children[2];
-
-            if (closeBtn) closeBtn.className = 'window-control window-close';
-            if (minimizeBtn) minimizeBtn.className = 'window-control window-minimize';
-            if (maximizeBtn) maximizeBtn.className = 'window-control window-maximize';
-        }
-
-        // Load app content
-        const contentTemplate = this.templates[appName];
-        if (contentTemplate) {
-            const content = contentTemplate.content.cloneNode(true);
-            const windowContent = windowElement.querySelector('.window-content');
-            // Ensure content is scrollable and doesn't overlap header
-            windowContent.style.overflowY = 'auto';
-            windowContent.style.position = 'relative';
-            windowContent.appendChild(content);
-
-            // Apply terminal styling to content (but NOT the terminal-content class)
-            this.applyTerminalStyling(windowContent, appName);
-
-            // IMPORTANT: Explicitly remove terminal-content class from window-content
-            // to prevent double-nesting issues (the template already has this class)
-            windowContent.classList.remove('terminal-content');
-        }
-
+        windowElement.querySelector('.window-content').appendChild(contentTemplate.content.cloneNode(true));
         return windowElement;
-    }
-
-    applyTerminalStyling(contentElement, appName) {
-        // Skip terminal styling for apps with their own design
-        if (appName === 'about' || appName === 'welcome' || appName === 'contact') {
-            return;
-        }
-
-        // Apply general terminal styling for other apps
-        contentElement.style.background = 'var(--terminal-bg)';
-        contentElement.style.color = 'var(--terminal-text)';
-        contentElement.style.fontFamily = "'Monaco', 'Menlo', 'Ubuntu Mono', monospace";
     }
 
     getAppTitle(appName) {
         const titles = {
-            'finder':   'Finder',
-            'about':    'about.md ~ Emanuel Lugo',
-            'projects': 'projects/ ~ Portfolio',
-            'terminal': 'Terminal ~ nettenzOS',
-            'welcome':  'welcome.sh ~ Get Started',
-            'contact':  'contact.md ~ Let\'s Connect'
+            about:    'about.md',
+            projects: 'Work',
+            terminal: 'Terminal',
+            welcome:  'Welcome',
+            contact:  'Contact'
         };
-        return titles[appName] || `${appName}.app`;
+        return titles[appName] || appName;
     }
 
+    // Cascade new windows and keep them inside the viewport (above the dock)
     positionWindow(windowElement) {
-        const offset = this.windows.size * 30;
-        const maxOffset = 200;
-        const actualOffset = Math.min(offset, maxOffset);
+        const menuH = 32;
+        const dockSpace = 88;
+        const maxW = window.innerWidth - 32;
+        const maxH = window.innerHeight - menuH - dockSpace - 16;
+        const w = Math.min(parseInt(windowElement.style.width, 10) || 820, maxW);
+        const h = Math.min(parseInt(windowElement.style.height, 10) || 600, maxH);
+        windowElement.style.width = `${w}px`;
+        windowElement.style.height = `${h}px`;
 
-        windowElement.style.left = `${100 + actualOffset}px`;
-        windowElement.style.top = `${100 + actualOffset}px`;
-        windowElement.style.zIndex = ++this.zIndex;
+        const offset = Math.min(this.windows.size * 28, 168);
+        const left = Math.min(120 + offset, Math.max(16, window.innerWidth - w - 16));
+        const top = Math.min(menuH + 24 + offset, Math.max(menuH + 8, window.innerHeight - dockSpace - h));
+        windowElement.style.left = `${left}px`;
+        windowElement.style.top = `${top}px`;
     }
 
     centerWindow(windowElement) {
-        const w = parseInt(windowElement.style.width) || 480;
-        const h = parseInt(windowElement.style.height) || 370;
-        windowElement.style.left = `${Math.max(0, (window.innerWidth - w) / 2)}px`;
-        windowElement.style.top  = `${Math.max(40, (window.innerHeight - h) / 2)}px`;
-        windowElement.style.zIndex = ++this.zIndex;
+        const w = Math.min(parseInt(windowElement.style.width, 10) || 560, window.innerWidth - 32);
+        const h = parseInt(windowElement.style.height, 10) || 330;
+        windowElement.style.width = `${w}px`;
+        windowElement.style.left = `${Math.max(16, (window.innerWidth - w) / 2)}px`;
+        windowElement.style.top = `${Math.max(40, (window.innerHeight - h) / 2 - 24)}px`;
     }
 
     setupWindowEvents(windowElement, appName) {
         const header = windowElement.querySelector('.window-header');
-        const closeBtn = windowElement.querySelector('.window-close');
-        const minimizeBtn = windowElement.querySelector('.window-minimize');
-        const maximizeBtn = windowElement.querySelector('.window-maximize');
 
-        // Window dragging
         this.makeDraggable(windowElement, header);
 
-        // Window controls with GSAP
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (typeof gsap !== 'undefined') {
-                    gsap.to(windowElement, {
-                        scale: 0.8,
-                        opacity: 0,
-                        y: 50,
-                        duration: 0.3,
-                        ease: 'back.in(1.4)',
-                        onComplete: () => {
-                            this.closeWindow(appName);
-                        }
-                    });
-                } else {
-                    this.closeWindow(appName);
-                }
-            });
-        }
-
-        if (minimizeBtn) {
-            // Disable minimize functionality
-            minimizeBtn.style.opacity = '0.3';
-            minimizeBtn.style.cursor = 'not-allowed';
-            minimizeBtn.disabled = true;
-        }
-
-        if (maximizeBtn) {
-            maximizeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.toggleMaximizeWindow(appName);
-            });
-        }
-
-        // Window focus
-        windowElement.addEventListener('mousedown', () => this.focusWindow(appName));
-
-        // App-specific setup
-        this.setupAppSpecificEvents(windowElement, appName);
-    }
-
-    makeDraggable(windowElement, handle) {
-        let isDragging = false;
-        let currentX, currentY, initialX, initialY;
-
-        handle.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('window-control')) return;
-
-            isDragging = true;
-            initialX = e.clientX - windowElement.offsetLeft;
-            initialY = e.clientY - windowElement.offsetTop;
-
-            windowElement.style.cursor = 'grabbing';
+        windowElement.querySelector('.window-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.requestClose(appName);
+        });
+        windowElement.querySelector('.window-minimize').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.minimizeWindow(appName);
+        });
+        windowElement.querySelector('.window-maximize').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMaximizeWindow(appName);
         });
 
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                e.preventDefault();
-                currentX = e.clientX - initialX;
-                currentY = e.clientY - initialY;
+        windowElement.addEventListener('pointerdown', () => this.focusWindow(appName, { keepFocus: true }));
 
-                // Constrain to viewport
-                const maxX = window.innerWidth - windowElement.offsetWidth;
-                const maxY = window.innerHeight - windowElement.offsetHeight;
-
-                currentX = Math.max(0, Math.min(currentX, maxX));
-                currentY = Math.max(32, Math.min(currentY, maxY));
-
-                // Use GSAP for smooth dragging
-                if (typeof gsap !== 'undefined') {
-                    gsap.set(windowElement, {
-                        left: currentX + 'px',
-                        top: currentY + 'px'
-                    });
-                } else {
-                    windowElement.style.left = `${currentX}px`;
-                    windowElement.style.top = `${currentY}px`;
-                }
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            windowElement.style.cursor = '';
-        });
-    }
-
-    setupAppSpecificEvents(windowElement, appName) {
         if (appName === 'terminal') {
             this.setupTerminalWithEngine(windowElement, '~');
         } else if (appName === 'projects') {
-            this.setupTerminalWithEngine(windowElement, '~/projects');
-        } else if (appName === 'about') {
-            this.setupAboutTypingEffect(windowElement);
+            this.renderWork(windowElement);
         } else if (appName === 'welcome') {
             this.setupWelcomeEvents(windowElement);
         }
     }
 
+    // Pointer Events + pointer capture: works for mouse, pen and touch, and
+    // attaches no document-level listeners. Disabled on the mobile sheet layout.
+    makeDraggable(windowElement, handle) {
+        let startX = 0, startY = 0, originLeft = 0, originTop = 0, dragging = false;
+
+        handle.addEventListener('pointerdown', (e) => {
+            if (e.button !== 0 || e.target.closest('.window-control')) return;
+            if (this.mobile.matches || windowElement.classList.contains('maximized')) return;
+            dragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            originLeft = windowElement.offsetLeft;
+            originTop = windowElement.offsetTop;
+            handle.setPointerCapture(e.pointerId);
+            windowElement.classList.add('dragging');
+        });
+
+        handle.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            const maxX = window.innerWidth - windowElement.offsetWidth;
+            const maxY = window.innerHeight - 40; // keep the header reachable
+            const x = Math.max(0, Math.min(originLeft + e.clientX - startX, maxX));
+            const y = Math.max(32, Math.min(originTop + e.clientY - startY, maxY));
+            windowElement.style.left = `${x}px`;
+            windowElement.style.top = `${y}px`;
+        });
+
+        const end = (e) => {
+            if (!dragging) return;
+            dragging = false;
+            windowElement.classList.remove('dragging');
+            if (handle.hasPointerCapture(e.pointerId)) handle.releasePointerCapture(e.pointerId);
+        };
+        handle.addEventListener('pointerup', end);
+        handle.addEventListener('pointercancel', end);
+    }
+
+    renderWork(windowElement) {
+        const list = windowElement.querySelector('.work-list');
+        if (!list) return;
+        const projects = Array.isArray(window.PROJECTS) ? window.PROJECTS : [];
+        const el = (tag, className, text) => {
+            const node = document.createElement(tag);
+            if (className) node.className = className;
+            if (text !== undefined) node.textContent = text;
+            return node;
+        };
+        const safeUrl = (url) => {
+            // new URL(undefined, base) resolves to ".../undefined"; reject non-strings first.
+            if (typeof url !== 'string' || !url) return '';
+            try {
+                const u = new URL(url, window.location.href);
+                return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : '';
+            } catch { return ''; }
+        };
+        const link = (label, url, projectName) => {
+            const a = el('a', 'work-link', label);
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.setAttribute('aria-label', `${label}: ${projectName}`);
+            return a;
+        };
+
+        list.replaceChildren();
+        projects.forEach(project => {
+            const row = el('li', 'work-row');
+
+            const main = el('div', 'work-row-main');
+            main.append(el('h2', 'work-name', project.name));
+            main.append(el('p', 'work-summary', project.summary));
+            if (project.stack && project.stack.length) {
+                const tags = el('ul', 'tag-row work-stack');
+                tags.setAttribute('aria-label', 'Stack');
+                project.stack.forEach(t => tags.append(el('li', 'tag', t)));
+                main.append(tags);
+            }
+
+            const links = el('div', 'work-links');
+            const live = safeUrl(project.live);
+            const repo = safeUrl(project.repo);
+            if (live) links.append(link('Live demo', live, project.name));
+            if (repo) links.append(link('Source', repo, project.name));
+            const term = el('button', 'work-link work-link--action', 'Open in terminal');
+            term.type = 'button';
+            term.setAttribute('aria-label', `Open ${project.name} in terminal`);
+            term.addEventListener('click', () => this.openProjectInTerminal(project.slug));
+            links.append(term);
+
+            row.append(main, links);
+            list.append(row);
+        });
+    }
+
+    openProjectInTerminal(slug) {
+        this.openApp('terminal');
+        const engine = this.terminalEngines.get('terminal');
+        if (!engine || !engine.terminalContent) return;
+        engine.executeCommand(`cd ~/projects/${slug} && cat README.md`, engine.terminalContent);
+    }
+
     setupWelcomeEvents(windowElement) {
-        windowElement.querySelectorAll('.welcome-nav-btn').forEach(btn => {
+        windowElement.querySelectorAll('[data-open]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const target = btn.dataset.open;
                 if (target) {
@@ -559,171 +415,155 @@ class MacOSInterface {
         });
     }
 
-    setupAboutTypingEffect(windowElement) {
-        // Start the typing effect for the About window tagline
-        setTimeout(() => {
-            const typingElement = windowElement.querySelector('#about-typing');
-            if (typingElement && typeof TerminalEngine !== 'undefined') {
-                const terminal = new TerminalEngine();
-                terminal.runTypingEffect('about-typing', [
-                    "AI Software Engineer | Cybersecurity Specialist",
-                    "DJ & Audio Technology Enthusiast",
-                    "Building immersive web experiences"
-                ]);
+    // Synchronous: the window is already in the DOM, and callers such as
+    // openProjectInTerminal() need the engine immediately.
+    setupTerminalWithEngine(windowElement, initialPath) {
+        const content = windowElement.querySelector('.window-content .terminal-content');
+        if (!content || typeof TerminalEngine === 'undefined') return;
+
+        const appName = windowElement.dataset.app;
+        const terminal = new TerminalEngine();
+        this.terminalEngines.set(appName, terminal);
+        terminal.createTerminal(content, initialPath);
+
+        if (content.querySelector('#terminal-typing')) {
+            terminal.runTypingEffect('terminal-typing', window.TERMINAL_ABOUT_PHRASES);
+        }
+
+        // Clicking anywhere in the terminal (except links/buttons) focuses the prompt
+        const focusInput = (e) => {
+            if (e && e.target.closest && e.target.closest('a, button')) return;
+            const input = content.querySelector('.terminal-input');
+            if (input) {
+                input.focus({ preventScroll: true });
+                input.setSelectionRange(input.value.length, input.value.length);
             }
-        }, 100);
+        };
+        windowElement.addEventListener('click', focusInput);
+        setTimeout(() => focusInput(), 50);
     }
 
-    setupTerminalWithEngine(windowElement, initialPath) {
-        setTimeout(() => {
-            // Ensure .window-content doesn't have terminal-content class (prevent double-nesting)
-            const windowContent = windowElement.querySelector('.window-content');
-            if (windowContent) {
-                windowContent.classList.remove('terminal-content');
-            }
-
-            // Target the actual terminal content (the first .terminal-content child, not the window-content)
-            const content = windowContent ? windowContent.querySelector('.terminal-content') : windowElement.querySelector('.terminal-content');
-            const appName = windowElement.dataset.app;
-
-            if (content) {
-                // Check if TerminalEngine is available
-                if (typeof TerminalEngine === 'undefined') {
-                    console.error('TerminalEngine not loaded!');
-                    content.innerHTML = '<div style="color: red; padding: 20px;">Error: Terminal engine not loaded. Please refresh the page.</div>';
-                    return;
-                }
-
-                // Create new terminal engine instance
-                const terminal = new TerminalEngine();
-                this.terminalEngines.set(appName, terminal);
-
-                // Initialize terminal
-                terminal.createTerminal(content, initialPath);
-
-                // Start typing effect for initial terminal content (about.md display)
-                const typingElement = content.querySelector('#terminal-typing');
-                if (typingElement && appName === 'terminal') {
-                    terminal.runTypingEffect('terminal-typing', [
-                        "Computer Engineer | AI Software Engineer | Cybersecurity",
-                        "Building practical systems and tools",
-                        "Focused on clean architecture and performance"
-                    ]);
-                }
-
-                // Focus input when clicking anywhere in the window
-                const focusInput = (e) => {
-                    if (e && (e.target.tagName === 'A' || e.target.tagName === 'BUTTON')) {
-                        return;
-                    }
-                    const input = content.querySelector('#terminal-input');
-                    if (input) {
-                        input.focus();
-                        input.setSelectionRange(input.value.length, input.value.length);
-                    }
-                };
-
-                windowElement.addEventListener('click', focusInput);
-
-                // Delay initial focus to ensure DOM is ready
-                setTimeout(() => focusInput(), 200);
-            }
-        }, 100);
+    requestClose(appName, { restoreFocus = false } = {}) {
+        const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+        const done = () => {
+            this.closeWindow(appName);
+            if (restoreFocus) this.focusDockItem(appName);
+        };
+        if (typeof gsap !== 'undefined' && this.motionOK()) {
+            gsap.to(windowElement, { scale: 0.96, opacity: 0, y: 12, duration: 0.18, ease: 'power2.in', onComplete: done });
+        } else {
+            done();
+        }
     }
 
     closeWindow(appName) {
-        if (!this.windows.has(appName)) return;
-
         const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
 
-        if (windowElement.parentNode) {
-            windowElement.parentNode.removeChild(windowElement);
-        }
-
-        // Clean up terminal engine instance
+        windowElement.remove();
         this.terminalEngines.delete(appName);
         this.windows.delete(appName);
+        this.setDockState(appName, false);
+        if (this.activeWindow === appName) this.focusTopWindow();
+    }
 
-        if (this.activeWindow === appName) {
-            this.activeWindow = null;
+    // Minimize hides the window; the dock keeps its running dot and restores it.
+    minimizeWindow(appName) {
+        const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+        windowElement.classList.add('minimized');
+        if (this.activeWindow === appName) this.focusTopWindow();
+        this.focusDockItem(appName);
+    }
+
+    restoreWindow(appName) {
+        const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+        windowElement.classList.remove('minimized');
+        if (typeof gsap !== 'undefined' && this.motionOK()) {
+            gsap.fromTo(windowElement, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out', clearProps: 'transform,opacity' });
         }
-
-        // Remove active indicator from dock
-        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
-        if (dockItem) dockItem.classList.remove('active');
     }
 
     toggleMaximizeWindow(appName) {
-        if (!this.windows.has(appName)) return;
-
         const windowElement = this.windows.get(appName);
+        if (!windowElement || this.mobile.matches) return;
+
         const isMaximized = windowElement.classList.contains('maximized');
+        const duration = this.motionOK() ? 0.3 : 0;
+        let target;
 
-        if (typeof gsap !== 'undefined') {
-            if (!isMaximized) {
-                // Store original dimensions
-                windowElement.dataset.originalLeft = windowElement.style.left;
-                windowElement.dataset.originalTop = windowElement.style.top;
-                windowElement.dataset.originalWidth = windowElement.style.width;
-                windowElement.dataset.originalHeight = windowElement.style.height;
-
-                // Maximize animation
-                gsap.to(windowElement, {
-                    left: '20px',
-                    top: '40px',
-                    width: 'calc(100vw - 120px)',
-                    height: 'calc(100vh - 60px)',
-                    duration: 0.4,
-                    ease: 'power2.out'
-                });
-
-                windowElement.classList.add('maximized');
-            } else {
-                // Restore animation
-                gsap.to(windowElement, {
-                    left: windowElement.dataset.originalLeft,
-                    top: windowElement.dataset.originalTop,
-                    width: windowElement.dataset.originalWidth,
-                    height: windowElement.dataset.originalHeight,
-                    duration: 0.4,
-                    ease: 'power2.out'
-                });
-
-                windowElement.classList.remove('maximized');
-            }
+        if (!isMaximized) {
+            windowElement.dataset.originalLeft = windowElement.style.left;
+            windowElement.dataset.originalTop = windowElement.style.top;
+            windowElement.dataset.originalWidth = windowElement.style.width;
+            windowElement.dataset.originalHeight = windowElement.style.height;
+            // Fill the desktop between the menu bar and the dock
+            target = { left: '8px', top: '40px', width: `${window.innerWidth - 16}px`, height: `${window.innerHeight - 40 - 88}px` };
         } else {
-            windowElement.classList.toggle('maximized');
+            target = {
+                left: windowElement.dataset.originalLeft,
+                top: windowElement.dataset.originalTop,
+                width: windowElement.dataset.originalWidth,
+                height: windowElement.dataset.originalHeight
+            };
+        }
+
+        windowElement.classList.toggle('maximized', !isMaximized);
+        if (typeof gsap !== 'undefined' && duration) {
+            gsap.to(windowElement, { ...target, duration, ease: 'power2.out' });
+        } else {
+            Object.assign(windowElement.style, target);
         }
     }
 
-    focusWindow(appName) {
-        if (!this.windows.has(appName)) return;
-
+    focusWindow(appName, { keepFocus = false } = {}) {
         const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+
         windowElement.style.zIndex = ++this.zIndex;
         this.activeWindow = appName;
+        this.windows.forEach((el, name) => el.classList.toggle('is-active', name === appName));
 
-        // Focus the terminal input if it exists
-        const input = windowElement.querySelector('#terminal-input');
-        if (input) {
-            setTimeout(() => input.focus(), 10);
+        if (keepFocus) return;
+        const input = windowElement.querySelector('.terminal-input');
+        setTimeout(() => (input || windowElement).focus({ preventScroll: true }), 10);
+    }
+
+    // After a close/minimize, the highest visible window becomes active
+    focusTopWindow() {
+        let top = null;
+        let topZ = -1;
+        this.windows.forEach((el, name) => {
+            const z = parseInt(el.style.zIndex, 10) || 0;
+            if (!el.classList.contains('minimized') && z > topZ) {
+                top = name;
+                topZ = z;
+            }
+        });
+        this.activeWindow = null;
+        this.windows.forEach(el => el.classList.remove('is-active'));
+        if (top) {
+            this.activeWindow = top;
+            this.windows.get(top).classList.add('is-active');
         }
     }
 
-    closeActiveWindow() {
-        if (this.activeWindow) {
-            this.closeWindow(this.activeWindow);
-        }
+    setDockState(appName, running) {
+        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
+        if (dockItem) dockItem.classList.toggle('active', running);
+    }
+
+    focusDockItem(appName) {
+        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
+        if (dockItem) dockItem.focus({ preventScroll: true });
     }
 }
 
-// Initialize the MacOS interface when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded - Initializing MacOS Interface');
     window.macOS = new MacOSInterface();
 
     const openParam = new URLSearchParams(window.location.search).get('open');
-    if (openParam) {
-        window.macOS.openApp(openParam);
-    }
+    if (openParam) window.macOS.openApp(openParam);
 });

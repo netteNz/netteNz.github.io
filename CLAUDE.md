@@ -1,270 +1,110 @@
-# nettenzOS Portfolio — Project Context Map
+# nettenzOS Portfolio: Project Context Map
 
-**Project:** macOS-inspired portfolio website with terminal emulator, audio visualization, and project showcase  
-**Deployment:** GitHub Pages (`https://github.com/netteNz/netteNz.github.io`)  
-**Tech Stack:** Vanilla HTML/CSS/JS, TailwindCSS, GSAP, Web Audio API, PyScript, Prism.js  
-**Design System:** Material Design 3 Expressive tokens + terminal-green dark theme  
+**Project:** macOS-inspired portfolio: desktop shell, Work window, terminal emulator
+**Deployment:** GitHub Pages (`https://github.com/netteNz/netteNz.github.io`), no build step
+**Stack (index.html):** Vanilla HTML/CSS/JS, GSAP 3.12.5 (CDN), Recursive (Google Fonts), gtag
+**Design:** dark minimal shell (GitHub Dark neutrals, mauve used sparingly) + a vibrant Catppuccin Mocha terminal. The segmented level meter is the signature element
+
+> PyScript, Prism, ScrollTrigger and the Tailwind CDN were removed from `index.html`.
+> `earthquakes_pr.html` still loads Tailwind + PyScript because it actually uses them.
 
 ---
 
-## Directory Structure
+## Files
 
+| File | Role |
+|---|---|
+| `index.html` | Desktop shell: splash, `<noscript>` fallback, menu bar, desktop, dock (`<nav aria-label="Apps">`), `<template>`s for the window frame and each app |
+| `earthquakes_pr.html` | Standalone Folium map via PyScript (`projects/earthquake-map/main.py`, `pyscript.toml`). Shares `main.css` tokens |
+| `assets/js/projects-data.js` | **Single source of truth for project copy** (`window.PROJECTS`) |
+| `assets/js/terminal-engine.js` | Shell emulator. Builds `~/projects/<slug>/README.md` from `PROJECTS` |
+| `assets/js/macos.js` | Window manager, dock, menu clock, level meter, splash, Work window renderer |
+| `assets/css/main.css` | All tokens and component styles (no Tailwind) |
+
+Script load order is plain `defer`: `gsap`, then `projects-data.js`, then `terminal-engine.js`, then `macos.js`. There is no dependency polling.
+
+## Project data
+
+```js
+window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* bullets */] }]
 ```
-netteNz.github.io/
-├── index.html                      # Main landing page (macOS desktop UI shell)
-├── earthquakes_pr.html             # Puerto Rico seismic data visualization
-├── README.md                        # Project overview & quick start
-├── DESIGN_PRINCIPLES.md            # Complete design token & component system
-├── CLAUDE.md                        # This file: codebase map & context
-├── pyscript.toml                   # PyScript configuration for in-browser Python
-│
-├── assets/
-│   ├── css/
-│   │   └── main.css                # All design tokens, component styles, animations
-│   ├── js/
-│   │   ├── macos.js                # Window management, dock, menu bar logic
-│   │   └── terminal-engine.js      # Terminal emulator, command parsing
-│   ├── documents/
-│   │   └── elr_2025_resume.pdf     # PDF resume (served via window)
-│   └── icons/
-│       ├── github.svg              # GitHub link icon (contact footer)
-│       └── linkedin.svg            # LinkedIn link icon (contact footer)
-│
-├── projects/
-│   └── earthquake-map/             # (referenced, not deployed in this repo)
-│
-├── .claude/
-│   └── settings.local.json         # Claude Code project settings
-├── .vscode/
-│   ├── settings.json               # VS Code workspace config
-│   └── tasks.json                  # Build/dev tasks (if any)
-│
-└── .gitignore                      # Git ignore patterns
-```
+- Consumers: `macOS.renderWork()` (Work window rows) and `TerminalEngine` (fs, READMEs, shortcuts, help, tab completion).
+- **The `<noscript>` list in `index.html` is static and must be updated by hand** when `PROJECTS` changes.
+- Security: Work rows are built with `createElement`/`textContent`. The terminal escapes all data with `escapeHtml()`. Links pass `safeUrl()` (http/https only) and use `rel="noopener noreferrer"`. Keep it this way, and never pass data through `innerHTML` unescaped.
 
----
+## Design tokens (`:root` in main.css)
 
-## File Descriptions
+| Token | Hex | Use |
+|---|---|---|
+**Shell (dark minimal, GitHub Dark neutrals)**
 
-### Root HTML Files
+| Token | Hex | Use |
+|---|---|---|
+| `--console` | `#0d1117` | page / desktop base, terminal bg |
+| `--panel` / `--panel-raised` | `#161b22` / `#1c2128` | window body / headers, dock |
+| `--rule` | `#30363d` | hairlines, outlines |
+| `--ink` / `--ink-muted` | `#e6edf3` / `#8b949e` | text (muted is 5.6:1 on panel); `--ink` is also the primary-button fill |
+| `--accent` | `#cba6f7` | Catppuccin mauve, **sparingly**: focus ring, link hover, selection. Never as a fill or a heading colour |
+| `--meter-safe/-mid/-peak` | `#a6e3a1` / `#f9e2af` / `#f38ba8` | meter segments only |
 
-| File | Purpose | Key Elements |
-|------|---------|---|
-| `index.html` | Desktop UI shell; desktop wallpaper, menu bar, dock, window system | `<body>` contains: `.menu-bar`, `.dock-container`, `.windows-container`, `.wallpaper` |
-| `earthquakes_pr.html` | Standalone seismic visualization (Puerto Rico); interactive map data | Imported via window in terminal as project demo |
+**Terminal (Catppuccin Mocha on the GitHub base):** the `--ctp-*` tokens are used only inside `.terminal-content`.
+- Prompt and `.t-ok`: green. Path, directories and `.t-accent` labels: blue. Headings (`.t-accent.t-strong`): mauve.
+- Links: sapphire. Errors (`.t-error`): red. Muted text: subtext0. Caret: rosewater.
+- Every pair is ≥ 8:1 on `#0d1117`.
 
-### Core Styles: `assets/css/main.css`
+- **Type:** Recursive only. Use `--axes-ui` (`MONO 0`) for UI, `--axes-mono` (`MONO 1`) for the terminal and code only, and `--axes-heading` (`CASL 0.5`) for headings. Sizes come from the `--fs-12/14/16/20/28/40` scale, with 1.5 leading.
+- **Radius by hierarchy:** windows `--radius-window` 10px, buttons `--radius-control` 6px, tags `--radius-tag` 4px.
+- `--terminal-*` are aliases for the terminal markup. The old `--md-*` tokens are gone.
+- **Components:** `.level-meter` (8 `<span>`s, `.is-lit`), `.btn .btn-primary/.btn-secondary`, `.tag`/`.tag-row`, `.work-list`/`.work-row`, `:focus-visible` (2px mauve ring).
 
-**Role:** Single source of truth for all design tokens, components, animations, and responsiveness.
+**Copy and style rules:**
+- Sentence case everywhere; no all-caps labels.
+- No `·`-joined meta strings and no `→` on links.
+- No 01/02 numbering, no gradient washes, no identical card grids.
+- No single-word accent in headlines.
+- No mono for small UI labels.
+- CTAs say exactly what they do.
 
-**Sections:**
-- **CSS custom properties** (`:root`): M3 color roles, surface tonal scale, typography, duration/easing, shape scale
-- **Base styles**: body, scrollbar, global text selection
-- **Layout layers**: menu bar, dock, windows container, desktop icons
-- **Component patterns**: `.window`, `.window-header`, `.traffic-light`, `.dock-item`, `.dock-label`, `.terminal-*`, `.md-btn-*`, `.md-chip`, `.glass-dark`
-- **Animation keyframes**: `windowEnterM3`, `indicator-breath`, `blob-float-*`, `signal-pulse`, `battery-warning`, `blink-caret`, `typing`, `spin`, `pulse`, `fadeInDark`, `chart-grow`
-- **Responsive breakpoints**: `≤768px`, `≤480px` (media queries)
-- **Accessibility**: `@media (prefers-reduced-motion: reduce)` and `.software-rendering` class for low-end GPUs
+## Window manager (`macos.js`)
 
-**Key Facts:**
-- All sizes, colors, timing use CSS custom properties — never raw values
-- Every interactive element uses M3 state-layer pattern (`::`before pseudo-element)
-- Dock and windows have multi-layer `box-shadow` + `backdrop-filter: blur()`
-- Terminal accent colors: green `#00ff41`, blue `#38bdf8`, yellow `#fbbf24`, red `#f87171`
+- Apps: `welcome`, `about`, `projects` (titled "Work"; `?open=work` and `?open=projects` both deep-link), `terminal`, `contact`. Default sizes are in `APP_SIZES`, clamped to the viewport.
+- **Dragging:** Pointer Events with `setPointerCapture`, disabled at ≤768px and when maximized.
+- **Minimize:** hides the window (`.minimized`). The dock dot stays, and a dock click restores it. Reopening an open app only focuses it.
+- **Keyboard:** Esc closes the active window, except when focus is in `.terminal-input`, and returns focus to its dock button.
+- **Meter:** `bumpMeter(level)` lights the meter when a window opens, on terminal keystrokes, and on link hover. It decays back to rest and is a no-op under reduced motion or `.software-rendering`.
+- **Splash:** about 1.4s (meter + boot log, exit at 1.1s, 0.3s fade). It is skipped on deep links, under reduced motion, and once `sessionStorage.seenSplash` is set.
+- **GSAP** is used only for window open, close, minimize-restore and maximize, and is skipped when `motionOK()` is false.
 
-### macOS UI Logic: `assets/js/macos.js`
+## Terminal (`terminal-engine.js`)
 
-**Role:** Window management, dock behavior, menu bar status updates, desktop state.
+- **Commands:** `help ls cd pwd cat readme projects|work whoami neofetch matrix clear exit`. Simple `a && b` chaining works.
+- **Paths:** `cd`, `ls` and `cat` resolve relative paths, `..` and `~/...`.
+- **Project shortcuts:** each slug, plus the aliases in `PROJECT_ALIASES`, opens `live || repo` in a new tab.
+- **Input:** queried by `.terminal-input` (there is no `#terminal-input` ID).
 
-**Responsibilities:**
-1. **Window system**: create/open/minimize/maximize/close windows
-2. **Dragging & resizing**: make windows draggable and resizable
-3. **Dock interactions**: bounce on hover, launch apps, show tooltips
-4. **Menu bar**: clock, battery level, WiFi signal, status icon animations
-5. **Desktop icons**: click handlers for file/folder shortcuts
-6. **State persistence**: track window z-index, active window
+## Mobile (≤768px)
 
-**Key Objects/Patterns:**
-- Window instances tracked in global state
-- Event delegation for traffic lights (close, minimize, maximize)
-- Transform-based dragging (no repositioning reflow)
-- Battery level class: `.battery-level-{high,medium,low}` triggers color/animation
+- Windows become full-screen sheets (`inset: 32px 0 64px 0`) with no drag and no maximize.
+- The dock becomes a full-width tab bar with labels.
+- Desktop icons, menu items and the clock are hidden.
 
-### Terminal Emulator: `assets/js/terminal-engine.js`
+## Run
 
-**Role:** POSIX-like shell emulator; command parsing, file system simulation, project shortcuts.
-
-**Built-in Commands:**
-- `help` — show command list
-- `ls` — list files/projects
-- `cd <dir>` — change directory
-- `pwd` — print working directory
-- `cat <file>` — read file contents
-- `whoami` — user info
-- `readme` — show README.md
-- `projects` — open projects window
-- `neofetch` — system info
-- `matrix` — "Matrix" effect (scrolling green text)
-- `clear` — clear terminal
-- `exit` — close terminal window
-
-**Project Shortcuts:** `web-audio-player`, `earthquake-visualization`, `rl-trading-bot`, `veto-system` — map to project cards or external links
-
-**Features:**
-- Command history (arrow up/down navigation)
-- Tab completion for commands & paths
-- File system tree (simulated, not real filesystem access)
-- Output formatting: colored directory/file/exe/symlink listings
-- Typewriter effect on initial prompt reveal
-
-### Configuration Files
-
-| File | Purpose |
-|------|---------|
-| `pyscript.toml` | PyScript runtime config; enables in-browser Python REPL/scripts |
-| `.vscode/settings.json` | Formatter, language settings, linting rules |
-| `.vscode/tasks.json` | Build tasks (if defined; else empty) |
-| `.claude/settings.local.json` | Claude Code project permissions, model, hooks |
-
----
-
-## Key Technologies & Integrations
-
-### 1. **Material Design 3 Expressive** (Design Tokens)
-- Seeded from terminal green `#78ef9d`
-- Eight surface tonal levels (`--md-surface` → `--md-surface-bright`)
-- Four semantic roles (primary, secondary, tertiary, error)
-- State layers: hover (0.08), press (0.12) opacity
-- **Reference:** `DESIGN_PRINCIPLES.md` § 2. Colour System
-
-### 2. **GSAP 3.12.5** (Animation Library)
-- Loaded via CDN; used for smooth window entrance, scroll reveals
-- ScrollTrigger plugin for reveal-on-scroll animations
-- Spring easing used for dock hover bounce
-
-### 3. **Web Audio API** (Audio Visualization)
-- Frequency spectrum analysis via `AnalyserNode`
-- LUFS metering (loudness units relative to full scale)
-- Real-time visualization canvas (referenced in project cards, not in main UI)
-
-### 4. **PyScript 2025.3.1** (In-Browser Python)
-- Core CSS & JS loaded via CDN
-- Allows terminal to execute Python snippets
-- Configured in `pyscript.toml`
-
-### 5. **TailwindCSS** (Utility Classes)
-- Loaded via CDN; used primarily for responsive spacing, flexbox, grid
-- Custom tokens override Tailwind defaults in `main.css`
-- No Tailwind plugins; all custom animations defined in `main.css`
-
-### 6. **Prism.js** (Syntax Highlighting)
-- Okaidia theme for code blocks
-- Python syntax highlighting loaded (used in terminal code display)
-- Applied to `<pre class="language-*">` blocks
-
-### 7. **Google Analytics** (gtag.js)
-- Tracking ID: `G-0L5LLER0MH`
-- Initialized in `<head>` of `index.html`
-
----
-
-## Design System Overview
-
-### Color Palette (CSS Custom Properties)
-```css
-Primary:    #78ef9d  (terminal green)
-Secondary:  #7dd5f6  (cool cyan)
-Tertiary:   #d4b0ff  (soft purple)
-Error:      #ffb4ab  (warm red)
-
-Surfaces:   #0c0c0f → #2a2a2e (eight tonal steps)
-Outline:    #3a3a44 (standard), #1f1f29 (subtle)
+```bash
+python3 -m http.server 8000   # http://localhost:8000
 ```
 
-### Typography
-- **UI shell** (menu bar, dock, buttons): `Lato` sans-serif
-- **Code/Terminal**: `Monaco`, `Menlo`, `Ubuntu Mono` monospace
-- **Markdown viewer**: `Fira Code` monospace
-- **Scale**: 11px (labels) → 20px (headings)
+## Social preview
 
-### Motion Tokens
-```css
-Durations:  100ms, 200ms, 300ms, 400ms, 500ms
-Easing:     standard (most), emphasized (scroll reveals), spring (dock)
+`assets/og.png` (1200x630, used by `og:image`/`twitter:image`) is a headless-Chrome render of a static card: `--console` background, the 24-segment meter, name, title, and a Catppuccin prompt line. Regenerate it whenever the name or job title changes:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+  --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=5000 \
+  --screenshot=assets/og.png file:///path/to/og.html
 ```
 
-### Shape Scale
-```css
-xs: 4px   | sm: 8px   | md: 12px  | lg: 16px
-xl: 20px  | 2xl: 28px | full: 100px (pills, rounded container)
-```
+## TODO
 
-### Component Patterns
-- **M3 State Layer**: All interactive elements use `::before` pseudo-element for hover/press overlays
-- **Glass Effect** (`.glass-dark`): `backdrop-filter: blur(32px)`, inset green highlight
-- **Window System**: Sticky header, draggable, resizable, z-index managed
-- **Dock**: Spring-eased bounce on hover, breathing active indicator
-
----
-
-## Development Patterns
-
-### Adding a New Window
-1. Define a new `.window` div with `data-app` attribute
-2. Add window header with `.window-header` and `.traffic-light` controls
-3. Place content in `.window-content` (scrollable, contained layout)
-4. In `macos.js`, add window instance to global state + event listeners
-5. Styles automatically inherit from `.window` base + `[data-app]` variant
-
-### Adding a Terminal Command
-1. Open `assets/js/terminal-engine.js`
-2. Locate the command parser (switch statement or object map)
-3. Add new command handler with input parsing
-4. Return output as string or HTML (formatted with terminal classes)
-5. Example: `cat` reads from simulated file system; `pwd` returns current path
-
-### Adding a Project to Portfolio
-1. Create project card in HTML or via JavaScript DOM
-2. Link to terminal via project shortcut (e.g., `web-audio-player` maps to window/link)
-3. Add project metadata: title, description, link, technologies
-4. Style via `.project-card` or similar scoped class (extends `.glass-dark` base)
-
-### Responsive Adjustments
-1. Media queries in `main.css` at 768px and 480px breakpoints
-2. Windows scale via `!important` width/height overrides (JS sets inline)
-3. Dock items scale via `transform: scale()` (no layout shift)
-4. Status icons hide progressively (first two hidden at ≤480px)
-
-### Accessibility
-- Wallpaper is `aria-hidden="true"` (decorative)
-- `@media (prefers-reduced-motion: reduce)` disables all animations
-- `.software-rendering` class for low-end GPU fallback
-- Keyboard navigation in terminal (arrow keys, tab completion)
-
----
-
-## Common Tasks
-
-### Modify a Color Token
-→ Edit `:root` in `main.css`; all references update automatically
-
-### Change Window Default Size
-→ Edit `.window` `width/height` in `main.css` or `macos.js` instantiation
-
-### Add New Dock Item
-→ Add `.dock-item` to HTML + icon; add JS handler in `macos.js` `launchApp()`
-
-### Adjust Animation Timing
-→ Edit `--dur-*` or `--ease-*` custom properties in `:root`
-
-### Test on Mobile
-→ Resize browser to ≤768px or ≤480px; media queries kick in; dock scales, windows reflow
-
----
-
-## References
-
-- **Design System Details:** `DESIGN_PRINCIPLES.md` (full token breakdown, component specs)
-- **README:** Quick start, feature list, terminal command reference
-- **GitHub:** `https://github.com/netteNz/netteNz.github.io`
-- **Live Site:** `https://nettenz.github.io/`
+- `earthquakes_pr.html`: the CARTO dark tiles now need an API key, and `get_circle_color` in `main.py` has a 4.0–4.5 gap (rendered red) that doesn't match the legend.
+- `README.md` is out of date.
