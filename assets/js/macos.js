@@ -100,14 +100,14 @@ class MacOSInterface {
 
         try { sessionStorage.setItem('seenSplash', '1'); } catch { /* storage blocked */ }
 
-        // ~0.9s meter fill + 0.3s fade = ~1.2s total
+        // ~0.9s meter fill + boot log, short hold, 0.3s fade = ~1.4s total
         setTimeout(() => {
             splash.classList.add('splash-exit');
             setTimeout(() => {
                 splash.remove();
                 this.openApp('welcome');
             }, 300);
-        }, 900);
+        }, 1100);
     }
 
     motionOK() {

@@ -864,6 +864,34 @@ a.contact-list-value:hover { color: var(--accent); text-decoration: underline; }
 
 @keyframes splash-fill { to { background: var(--seg-lit); } }
 
+/* Boot log: terminal palette. Each line fades in, then its "ok" resolves.
+   The last "ok" lands with the meter's peak segment (~0.86s). */
+.splash-log {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-variation-settings: var(--axes-mono);
+    font-size: var(--fs-12);
+    color: var(--ctp-subtext);
+    white-space: pre;
+}
+
+.splash-leader { color: var(--ink-muted); opacity: 0.45; }
+.splash-ok { color: var(--ctp-green); font-weight: 600; opacity: 0; }
+
+.splash-log-line { opacity: 0; animation: splash-in var(--dur-2) var(--ease-decel) forwards; }
+.splash-log-line .splash-ok { animation: splash-in 0s linear forwards; }
+
+.splash-log-line:nth-child(1)              { animation-delay: 0.15s; }
+.splash-log-line:nth-child(1) .splash-ok   { animation-delay: 0.36s; }
+.splash-log-line:nth-child(2)              { animation-delay: 0.40s; }
+.splash-log-line:nth-child(2) .splash-ok   { animation-delay: 0.61s; }
+.splash-log-line:nth-child(3)              { animation-delay: 0.65s; }
+.splash-log-line:nth-child(3) .splash-ok   { animation-delay: 0.86s; }
+
+@keyframes splash-in { to { opacity: 1; } }
+
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
