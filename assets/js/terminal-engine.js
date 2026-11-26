@@ -207,8 +207,12 @@ class TerminalEngine {
         const input = terminalContent.querySelector('.terminal-input');
         if (input) {
             setTimeout(() => {
-                input.focus({ preventScroll: true });
                 this.scrollToBottom(terminalContent);
+                // Don't steal focus if the command brought another window to the front
+                // (e.g. a project click that opened the README window).
+                const win = terminalContent.closest('.window');
+                if (window.macOS && win && window.macOS.activeWindow !== win.dataset.app) return;
+                input.focus({ preventScroll: true });
             }, 50);
         }
     }
