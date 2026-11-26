@@ -72,7 +72,7 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 - **Minimize:** hides the window (`.minimized`). The dock dot stays, and a dock click restores it. Reopening an open app only focuses it.
 - **Keyboard:** Esc closes the active window, except when focus is in `.terminal-input`, and returns focus to its dock button.
 - **Meter:** `bumpMeter(level)` lights the meter when a window opens, on terminal keystrokes, and on link hover. It decays back to rest and is a no-op under reduced motion or `.software-rendering`.
-- **Splash:** about 1.2s. It is skipped on deep links, under reduced motion, and once `sessionStorage.seenSplash` is set.
+- **Splash:** about 1.4s (meter + boot log, exit at 1.1s, 0.3s fade). It is skipped on deep links, under reduced motion, and once `sessionStorage.seenSplash` is set.
 - **GSAP** is used only for window open, close, minimize-restore and maximize, and is skipped when `motionOK()` is false.
 
 ## Terminal (`terminal-engine.js`)
@@ -94,6 +94,17 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 python3 -m http.server 8000   # http://localhost:8000
 ```
 
+## Social preview
+
+`assets/og.png` (1200x630, used by `og:image`/`twitter:image`) is a headless-Chrome render of a static card: `--console` background, the 24-segment meter, name, title, and a Catppuccin prompt line. Regenerate it whenever the name or job title changes:
+
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --hide-scrollbars \
+  --force-device-scale-factor=1 --window-size=1200,630 --virtual-time-budget=5000 \
+  --screenshot=assets/og.png file:///path/to/og.html
+```
+
 ## TODO
 
-- `assets/og.png` (1200x630) is referenced by `og:image`/`twitter:image` but not generated yet.
+- `earthquakes_pr.html`: the CARTO dark tiles now need an API key, and `get_circle_color` in `main.py` has a 4.0–4.5 gap (rendered red) that doesn't match the legend.
+- `README.md` is out of date.

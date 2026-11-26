@@ -492,6 +492,9 @@ Type the project name to open it in a new tab.</div>`;
         ctx.fillRect(0, 0, width, height);
 
         const frame = () => {
+            // The window can close before the click/keydown listeners attach (500ms below),
+            // so also stop as soon as the canvas is no longer in the document.
+            if (!canvas.isConnected) { cleanup(); return; }
             ctx.globalAlpha = 0.1;
             ctx.fillStyle = bg;
             ctx.fillRect(0, 0, width, height);
