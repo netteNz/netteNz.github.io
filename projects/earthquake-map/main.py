@@ -1,3 +1,4 @@
+import html
 import folium
 import pandas as pd
 from pyodide.http import open_url
@@ -9,13 +10,23 @@ try:
 
     pr = folium.Map(location=[18.2208, -66.5901],
                     zoom_start=9,
-                    tiles='cartodbdark_matter',
+                    tiles=None,
                     prefer_canvas=True,
                     control_scale=True,
                     width='100%',
                     height='100%'
                   )
     
+    # CARTO basemaps now require an API key; Esri World Dark Gray is a keyless
+    # stopgap until tiles are self-hosted.
+    folium.TileLayer(
+        tiles="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+        attr="Tiles &copy; Esri &mdash; Sources: Esri, HERE, Garmin, &copy; OpenStreetMap contributors, and the GIS user community",
+        name="Esri Dark Gray",
+        max_native_zoom=16,
+        max_zoom=16,
+    ).add_to(pr)
+
     pr.get_name()  # Force initialization
     # Additional styling for the map
     pr.get_root().header.add_child(folium.Element("""
@@ -50,14 +61,17 @@ try:
                     )
     df.sort_index()
     
-    # Function to set circle color based on earthquake magnitude
+    # Gap-free magnitude bands. Hexes mirror the legend tokens in
+    # earthquakes_pr.html (Python can't read CSS variables).
     def get_circle_color(magnitude):
-        if magnitude < 4:
-            return '#00FF00'  # Green for small earthquakes
-        elif 4.5 <= magnitude < 5.5:
-            return '#FFFF00'  # Yellow for moderate earthquakes
+        if pd.isna(magnitude) or magnitude < 3.0:
+            return '#a6e3a1'  # minor (Catppuccin green)
+        elif magnitude < 4.0:
+            return '#f9e2af'  # light (Catppuccin yellow)
+        elif magnitude < 5.0:
+            return '#fab387'  # moderate (Catppuccin peach)
         else:
-            return '#FF0000'  # Red for strong earthquakes
+            return '#f38ba8'  # strong (Catppuccin red)
     
     # Loop through each row in the dataframe and create circle markers
     for index, row in df.iterrows():
@@ -69,7 +83,7 @@ try:
         popup_html = f"""
 <div class="earthquake-popup" style="font-family: 'JetBrains Mono', monospace; min-width: 200px; background-color: #1f2937; padding: 12px; border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
     <h3 style="margin-bottom: 8px; color: #ffffff; border-bottom: 1px solid #4b5563; padding-bottom: 5px;">Earthquake Details</h3>
-    <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Location:</span> <span style="color: #ffffff;">{row['place']}</span></div>
+    <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Location:</span> <span style="color: #ffffff;">{html.escape(str(row['place']))}</span></div>
     <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Magnitude:</span> <span style="color: {color}; font-weight: bold;">{row['mag']}</span></div>
     <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Coordinates:</span> <span style="color: #ffffff;">{row['latitude']:.4f}, {row['longitude']:.4f}</span></div>
     <div style="margin: 5px 0;"><span style="color: #9ca3af; font-weight: 500;">Time:</span> <span style="color: #ffffff;">{pd.to_datetime(row['time']).strftime('%Y-%m-%d %H:%M:%S')}</span></div>
