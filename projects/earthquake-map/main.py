@@ -75,8 +75,9 @@ try:
     
     # Loop through each row in the dataframe and create circle markers
     for index, row in df.iterrows():
-        # Adjust radius for visibility, e.g., 3 * magnitude
-        radius = row['mag'] * 3
+        # Adjust radius for visibility, e.g., 3 * magnitude. A missing magnitude
+        # would give radius NaN, which Leaflet can't draw, so fall back to 3.
+        radius = 3 if pd.isna(row['mag']) else row['mag'] * 3
         color = get_circle_color(row['mag'])  # Set color based on magnitude
         
         # Update the popup_html styling for better contrast
