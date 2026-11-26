@@ -350,6 +350,8 @@ class MacOSInterface {
             return node;
         };
         const safeUrl = (url) => {
+            // new URL(undefined, base) resolves to ".../undefined"; reject non-strings first.
+            if (typeof url !== 'string' || !url) return '';
             try {
                 const u = new URL(url, window.location.href);
                 return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : '';

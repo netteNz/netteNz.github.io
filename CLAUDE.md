@@ -88,4 +88,3 @@ python3 -m http.server 8000   # http://localhost:8000
 ## TODO
 
 - `assets/og.png` (1200x630) is referenced by `og:image`/`twitter:image` but not generated yet.
-- `TODO(copy)` on the earthquake entry in `projects-data.js`: confirm the repo URL.

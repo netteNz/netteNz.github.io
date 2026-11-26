@@ -74,14 +74,13 @@ window.PROJECTS = [
         ]
     },
     {
-        // TODO(copy): confirm repo URL. The map loads its CSV from netteNz/earthquakes-pr,
-        // and the map code itself lives in this repo under projects/earthquake-map.
+        // Map code lives in this repo under projects/earthquake-map; data + repo is netteNz/earthquakes-pr.
         slug: 'earthquake-visualization',
         name: 'Earthquake visualization',
         summary: 'Interactive map of Puerto Rico earthquake data, rendered in the browser with Python through PyScript.',
         stack: ['python', 'pandas', 'folium', 'pyscript'],
         live: 'https://nettenz.github.io/earthquakes_pr.html',
-        repo: 'https://github.com/netteNz/earthquakes_pr',
+        repo: 'https://github.com/netteNz/earthquakes-pr',
         readme: [
             'Seismic events plotted on an interactive map',
             'Markers colored by magnitude',
