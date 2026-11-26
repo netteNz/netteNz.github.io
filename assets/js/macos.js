@@ -545,10 +545,73 @@ class MacOSInterface {
         if (appName === 'terminal') {
             this.setupTerminalWithEngine(windowElement, '~');
         } else if (appName === 'projects') {
-            this.setupTerminalWithEngine(windowElement, '~/projects');
+            this.renderWork(windowElement);
         } else if (appName === 'welcome') {
             this.setupWelcomeEvents(windowElement);
         }
+    }
+
+    // Build Work rows from window.PROJECTS. DOM APIs + textContent only: no innerHTML with data.
+    renderWork(windowElement) {
+        const list = windowElement.querySelector('.work-list');
+        if (!list) return;
+        const projects = Array.isArray(window.PROJECTS) ? window.PROJECTS : [];
+        const el = (tag, className, text) => {
+            const node = document.createElement(tag);
+            if (className) node.className = className;
+            if (text !== undefined) node.textContent = text;
+            return node;
+        };
+        const safeUrl = (url) => {
+            try {
+                const u = new URL(url, window.location.href);
+                return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : '';
+            } catch { return ''; }
+        };
+        const link = (label, url, projectName) => {
+            const a = el('a', 'work-link', label);
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.setAttribute('aria-label', `${label}: ${projectName}`);
+            return a;
+        };
+
+        list.replaceChildren();
+        projects.forEach(project => {
+            const row = el('li', 'work-row');
+
+            const main = el('div', 'work-row-main');
+            main.append(el('h2', 'work-name', project.name));
+            main.append(el('p', 'work-summary', project.summary));
+            if (project.stack && project.stack.length) {
+                const tags = el('ul', 'tag-row work-stack');
+                tags.setAttribute('aria-label', 'Stack');
+                project.stack.forEach(t => tags.append(el('li', 'tag', t)));
+                main.append(tags);
+            }
+
+            const links = el('div', 'work-links');
+            const live = safeUrl(project.live);
+            const repo = safeUrl(project.repo);
+            if (live) links.append(link('Live demo', live, project.name));
+            if (repo) links.append(link('Source', repo, project.name));
+            const term = el('button', 'work-link work-link--action', 'Open in terminal');
+            term.type = 'button';
+            term.setAttribute('aria-label', `Open ${project.name} in terminal`);
+            term.addEventListener('click', () => this.openProjectInTerminal(project.slug));
+            links.append(term);
+
+            row.append(main, links);
+            list.append(row);
+        });
+    }
+
+    openProjectInTerminal(slug) {
+        this.openApp('terminal');
+        const engine = this.terminalEngines.get('terminal');
+        if (!engine || !engine.terminalContent) return;
+        engine.executeCommand(`cd ~/projects/${slug} && cat README.md`, engine.terminalContent);
     }
 
     setupWelcomeEvents(windowElement) {
@@ -563,57 +626,32 @@ class MacOSInterface {
         });
     }
 
+    // Synchronous: the window is already in the DOM, and callers such as
+    // openProjectInTerminal() need the engine immediately.
     setupTerminalWithEngine(windowElement, initialPath) {
-        setTimeout(() => {
-            // Ensure .window-content doesn't have terminal-content class (prevent double-nesting)
-            const windowContent = windowElement.querySelector('.window-content');
-            if (windowContent) {
-                windowContent.classList.remove('terminal-content');
+        const content = windowElement.querySelector('.window-content .terminal-content');
+        if (!content || typeof TerminalEngine === 'undefined') return;
+
+        const appName = windowElement.dataset.app;
+        const terminal = new TerminalEngine();
+        this.terminalEngines.set(appName, terminal);
+        terminal.createTerminal(content, initialPath);
+
+        if (content.querySelector('#terminal-typing')) {
+            terminal.runTypingEffect('terminal-typing', window.TERMINAL_ABOUT_PHRASES);
+        }
+
+        // Clicking anywhere in the terminal (except links/buttons) focuses the prompt
+        const focusInput = (e) => {
+            if (e && e.target.closest && e.target.closest('a, button')) return;
+            const input = content.querySelector('.terminal-input');
+            if (input) {
+                input.focus({ preventScroll: true });
+                input.setSelectionRange(input.value.length, input.value.length);
             }
-
-            // Target the actual terminal content (the first .terminal-content child, not the window-content)
-            const content = windowContent ? windowContent.querySelector('.terminal-content') : windowElement.querySelector('.terminal-content');
-            const appName = windowElement.dataset.app;
-
-            if (content) {
-                // Check if TerminalEngine is available
-                if (typeof TerminalEngine === 'undefined') {
-                    console.error('TerminalEngine not loaded!');
-                    content.innerHTML = '<div style="color: red; padding: 20px;">Error: Terminal engine not loaded. Please refresh the page.</div>';
-                    return;
-                }
-
-                // Create new terminal engine instance
-                const terminal = new TerminalEngine();
-                this.terminalEngines.set(appName, terminal);
-
-                // Initialize terminal
-                terminal.createTerminal(content, initialPath);
-
-                // Start typing effect for initial terminal content (about.md display)
-                const typingElement = content.querySelector('#terminal-typing');
-                if (typingElement && appName === 'terminal') {
-                    terminal.runTypingEffect('terminal-typing', window.TERMINAL_ABOUT_PHRASES);
-                }
-
-                // Focus input when clicking anywhere in the window
-                const focusInput = (e) => {
-                    if (e && (e.target.tagName === 'A' || e.target.tagName === 'BUTTON')) {
-                        return;
-                    }
-                    const input = content.querySelector('.terminal-input');
-                    if (input) {
-                        input.focus();
-                        input.setSelectionRange(input.value.length, input.value.length);
-                    }
-                };
-
-                windowElement.addEventListener('click', focusInput);
-
-                // Delay initial focus to ensure DOM is ready
-                setTimeout(() => focusInput(), 200);
-            }
-        }, 100);
+        };
+        windowElement.addEventListener('click', focusInput);
+        setTimeout(() => focusInput(), 50);
     }
 
     closeWindow(appName) {
