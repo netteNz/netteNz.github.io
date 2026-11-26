@@ -12,9 +12,10 @@ const PROJECT_ALIASES = {
 };
 
 const ABOUT_PHRASES = [
-    'AI software engineer',
-    'Building practical systems and tools',
-    'Focused on clean architecture and performance'
+    'AI software development engineer',
+    'Agentic AI systems',
+    'Embedded and hardware projects',
+    'Reinforcement learning for trading'
 ];
 
 class TerminalEngine {
@@ -371,7 +372,7 @@ Type the project name to open it in a new tab.</div>`;
     }
 
     whoamiCommand() {
-        return `<div class="t-muted">Emanuel Lugo Rivera, AI software development engineer with a cybersecurity background</div>`;
+        return `<div class="t-muted">Emanuel Lugo Rivera, AI software development engineer. B.S. in Computer Engineering (cybersecurity), writing code since 2017.</div>`;
     }
 
     catCommand(args) {
