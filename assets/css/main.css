@@ -284,6 +284,9 @@ code, kbd, pre {
 
 .window.minimized { display: none; }
 
+/* Windows take programmatic focus for keyboard users; the content carries the ring */
+.window:focus { outline: none; }
+
 .window.maximized { border-radius: var(--radius-control); }
 
 .window-header {

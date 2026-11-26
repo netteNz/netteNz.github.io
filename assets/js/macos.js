@@ -1,93 +1,36 @@
+// Window manager for the nettenzOS desktop: windows, dock, menu bar, level meter.
+// Load order (all `defer`): gsap -> projects-data.js -> terminal-engine.js -> macos.js.
+
+const MOBILE_QUERY = '(max-width: 768px)';
+
+// Default window sizes per app (clamped to the viewport in positionWindow)
+const APP_SIZES = {
+    welcome:  [560, 330],
+    about:    [760, 640],
+    projects: [820, 640],
+    terminal: [820, 520],
+    contact:  [520, 470]
+};
+
 class MacOSInterface {
     constructor() {
         this.windows = new Map();
         this.zIndex = 100;
         this.activeWindow = null;
         this.terminalEngines = new Map();
-        this.performanceOptimizations();
-        this.waitForDependencies();
-    }
+        this.mobile = window.matchMedia(MOBILE_QUERY);
 
-    waitForDependencies() {
-        // Wait for GSAP, TerminalEngine, AND critical DOM elements
-        const desktop = document.getElementById('desktop');
-        const dockItems = document.querySelectorAll('.dock-item');
-        
-        if (typeof gsap === 'undefined' || 
-            typeof TerminalEngine === 'undefined' ||
-            !desktop ||
-            dockItems.length === 0) {
-            console.log('Waiting for dependencies...', {
-                gsap: typeof gsap !== 'undefined',
-                TerminalEngine: typeof TerminalEngine !== 'undefined',
-                desktop: !!desktop,
-                dockItems: dockItems.length
-            });
-            setTimeout(() => this.waitForDependencies(), 50);
-            return;
-        }
-
-        // Initialize GSAP plugins
-        if (typeof ScrollTrigger !== 'undefined') {
-            gsap.registerPlugin(ScrollTrigger);
-        }
+        this.detectRenderingMode();
+        this.templates = {
+            window:   document.getElementById('window-template'),
+            about:    document.getElementById('about-app'),
+            projects: document.getElementById('projects-app'),
+            terminal: document.getElementById('terminal-app'),
+            welcome:  document.getElementById('welcome-app'),
+            contact:  document.getElementById('contact-app')
+        };
 
         this.init();
-        this.initGSAPAnimations();
-    }
-
-    initGSAPAnimations() {
-        const desktop = document.getElementById('desktop');
-        if (!desktop) return;
-
-        // Animate page load
-        gsap.from(desktop, {
-            opacity: 0,
-            duration: 0.8,
-            ease: 'power2.out'
-        });
-
-        // Enhanced dock hover animations with null checks
-        document.querySelectorAll('.dock-item').forEach(item => {
-            const icon = item.querySelector('div');
-            if (!icon) return; // Skip if icon doesn't exist
-
-            // Set initial transform origin for better animations
-            gsap.set(icon, { transformOrigin: 'center center' });
-
-            item.addEventListener('mouseenter', () => {
-                gsap.to(icon, {
-                    scale: 1.2,
-                    y: -8,
-                    duration: 0.3,
-                    ease: 'back.out(1.7)'
-                });
-            });
-
-            item.addEventListener('mouseleave', () => {
-                gsap.to(icon, {
-                    scale: 1,
-                    y: 0,
-                    duration: 0.3,
-                    ease: 'power2.out'
-                });
-            });
-        });
-    }
-
-    performanceOptimizations() {
-        // Debounce window updates
-        this.debouncedUpdateTime = this.debounce(() => this.updateTime(), 1000);
-
-        // Use requestAnimationFrame for smooth animations
-        this.animationQueue = [];
-        this.isAnimating = false;
-
-        // Detect hardware/software rendering mode
-        this.detectRenderingMode();
-
-        // Preload templates
-        this.preloadTemplates();
     }
 
     detectRenderingMode() {
@@ -117,12 +60,9 @@ class MacOSInterface {
 
         if (isSoftwareRendering || prefersReducedMotion) {
             document.documentElement.classList.add('software-rendering');
-            console.log('🖥️ Software rendering mode enabled for better performance');
         }
 
-        // Store for other components to check
         this.isSoftwareRendering = isSoftwareRendering;
-        this.prefersReducedMotion = prefersReducedMotion;
 
         // Listen for reduced motion preference changes
         window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
@@ -134,34 +74,10 @@ class MacOSInterface {
         });
     }
 
-    debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-            const later = () => {
-                clearTimeout(timeout);
-                func(...args);
-            };
-            clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
-        };
-    }
-
-    preloadTemplates() {
-        // Cache template elements for better performance
-        this.templates = {
-            window:   document.getElementById('window-template'),
-            about:    document.getElementById('about-app'),
-            projects: document.getElementById('projects-app'),
-            terminal: document.getElementById('terminal-app'),
-            welcome:  document.getElementById('welcome-app'),
-            contact:  document.getElementById('contact-app')
-        };
-    }
-
     init() {
         this.updateTime();
-        this.setupEventListeners();
         setInterval(() => this.updateTime(), 1000);
+        this.setupEventListeners();
         this.meterRest = 3;
         this.meterLevel = this.meterRest;
         this.setMeter(this.meterRest);
@@ -255,20 +171,13 @@ class MacOSInterface {
             this.bumpMeter(5);
         });
 
-        // Global keyboard shortcuts
+        // Esc closes the active window, except while typing in the terminal
         document.addEventListener('keydown', (e) => {
-            if (e.metaKey || e.ctrlKey) {
-                switch (e.key) {
-                    case 'w':
-                        e.preventDefault();
-                        this.closeActiveWindow();
-                        break;
-                    case 'Escape':
-                        e.preventDefault();
-                        this.closeActiveWindow();
-                        break;
-                }
-            }
+            if (e.key !== 'Escape' || e.defaultPrevented) return;
+            if (e.target.closest && e.target.closest('.terminal-input')) return;
+            if (!this.activeWindow) return;
+            e.preventDefault();
+            this.requestClose(this.activeWindow, { restoreFocus: true });
         });
     }
 
@@ -277,271 +186,113 @@ class MacOSInterface {
         if (!this.templates[appName]) return;
         this.bumpMeter(6);
 
-        // Check if app is already open
+        // Already open: restore if minimized, then just focus it
         if (this.windows.has(appName)) {
+            const existing = this.windows.get(appName);
+            if (existing.classList.contains('minimized')) this.restoreWindow(appName);
             this.focusWindow(appName);
-            // Shake animation for existing window with GSAP
-            const windowElement = this.windows.get(appName);
-            if (typeof gsap !== 'undefined') {
-                gsap.to(windowElement, {
-                    x: -10,
-                    duration: 0.05,
-                    repeat: 5,
-                    yoyo: true,
-                    ease: 'power1.inOut',
-                    onComplete: () => {
-                        gsap.set(windowElement, { x: 0 });
-                    }
-                });
-            }
             return;
         }
 
         const windowElement = this.createWindow(appName);
-
-        // Override dimensions for specific apps
-        if (appName === 'welcome') {
-            windowElement.style.width = '560px';
-            windowElement.style.height = '330px';
-        }
-
+        if (!windowElement) return;
         this.windows.set(appName, windowElement);
 
-        // Position window
+        const [w, h] = APP_SIZES[appName] || [820, 600];
+        windowElement.style.width = `${w}px`;
+        windowElement.style.height = `${h}px`;
         if (appName === 'welcome') {
             this.centerWindow(windowElement);
         } else {
             this.positionWindow(windowElement);
         }
 
-        // Add to DOM
-        const container = document.getElementById('windows-container') || document.body;
-        container.appendChild(windowElement);
+        document.getElementById('windows-container').appendChild(windowElement);
 
-        // Animate with GSAP
-        if (typeof gsap !== 'undefined') {
-            gsap.set(windowElement, {
-                scale: 0.8,
-                opacity: 0,
-                y: 50
-            });
-
-            gsap.to(windowElement, {
-                scale: 1,
-                opacity: 1,
-                y: 0,
-                duration: 0.4,
-                ease: 'back.out(1.4)'
-            });
-        } else {
-            // Fallback CSS animation
-            windowElement.classList.add('window-enter');
+        if (typeof gsap !== 'undefined' && this.motionOK()) {
+            gsap.fromTo(windowElement,
+                { scale: 0.96, opacity: 0, y: 12 },
+                { scale: 1, opacity: 1, y: 0, duration: 0.25, ease: 'power2.out', clearProps: 'transform,opacity' });
         }
 
-        // Focus the new window
-        this.focusWindow(appName);
-
-        // Setup window-specific functionality
         this.setupWindowEvents(windowElement, appName);
-
-        // Mark dock item as active
-        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
-        if (dockItem) dockItem.classList.add('active');
+        this.focusWindow(appName);
+        this.setDockState(appName, true);
     }
 
     createWindow(appName) {
         const template = this.templates.window;
-        if (!template) return null;
+        const contentTemplate = this.templates[appName];
+        if (!template || !contentTemplate) return null;
 
         const windowElement = template.content.cloneNode(true).querySelector('.window');
-
-        // Set window properties
+        const title = windowElement.querySelector('.window-title');
         windowElement.dataset.app = appName;
-        windowElement.querySelector('.window-title').textContent = this.getAppTitle(appName);
+        title.textContent = this.getAppTitle(appName);
+        title.id = `window-title-${appName}`;
+        windowElement.setAttribute('aria-labelledby', title.id);
 
-        // Update window header with terminal styling
-        const header = windowElement.querySelector('.window-header');
-        header.className = 'window-header';
-        // Ensure header stays on top
-        header.style.position = 'sticky';
-        header.style.top = '0';
-        header.style.zIndex = '10';
-        // header background controlled via CSS per-app rules ([data-app] .window-header)
-
-        // Update window controls
-        const controls = header.querySelector('.window-controls');
-        if (controls) {
-            controls.style.position = 'relative';
-            controls.style.zIndex = '11';
-            const closeBtn = controls.children[0];
-            const minimizeBtn = controls.children[1];
-            const maximizeBtn = controls.children[2];
-
-            if (closeBtn) closeBtn.className = 'window-control window-close';
-            if (minimizeBtn) minimizeBtn.className = 'window-control window-minimize';
-            if (maximizeBtn) maximizeBtn.className = 'window-control window-maximize';
-        }
-
-        // Load app content
-        const contentTemplate = this.templates[appName];
-        if (contentTemplate) {
-            const content = contentTemplate.content.cloneNode(true);
-            const windowContent = windowElement.querySelector('.window-content');
-            // Ensure content is scrollable and doesn't overlap header
-            windowContent.style.overflowY = 'auto';
-            windowContent.style.position = 'relative';
-            windowContent.appendChild(content);
-
-            // Apply terminal styling to content (but NOT the terminal-content class)
-            this.applyTerminalStyling(windowContent, appName);
-
-            // IMPORTANT: Explicitly remove terminal-content class from window-content
-            // to prevent double-nesting issues (the template already has this class)
-            windowContent.classList.remove('terminal-content');
-        }
-
+        windowElement.querySelector('.window-content').appendChild(contentTemplate.content.cloneNode(true));
         return windowElement;
-    }
-
-    applyTerminalStyling(contentElement, appName) {
-        // Skip terminal styling for apps with their own design
-        if (appName === 'about' || appName === 'welcome' || appName === 'contact') {
-            return;
-        }
-
-        // Apply general terminal styling for other apps
-        contentElement.style.background = 'var(--terminal-bg)';
-        contentElement.style.color = 'var(--terminal-text)';
-        contentElement.style.fontFamily = "'Monaco', 'Menlo', 'Ubuntu Mono', monospace";
     }
 
     getAppTitle(appName) {
         const titles = {
-            'about':    'about.md',
-            'projects': 'Work',
-            'terminal': 'Terminal',
-            'welcome':  'Welcome',
-            'contact':  'Contact'
+            about:    'about.md',
+            projects: 'Work',
+            terminal: 'Terminal',
+            welcome:  'Welcome',
+            contact:  'Contact'
         };
-        return titles[appName] || `${appName}.app`;
+        return titles[appName] || appName;
     }
 
+    // Cascade new windows and keep them inside the viewport (above the dock)
     positionWindow(windowElement) {
-        const offset = this.windows.size * 30;
-        const maxOffset = 200;
-        const actualOffset = Math.min(offset, maxOffset);
+        const menuH = 32;
+        const dockSpace = 88;
+        const maxW = window.innerWidth - 32;
+        const maxH = window.innerHeight - menuH - dockSpace - 16;
+        const w = Math.min(parseInt(windowElement.style.width, 10) || 820, maxW);
+        const h = Math.min(parseInt(windowElement.style.height, 10) || 600, maxH);
+        windowElement.style.width = `${w}px`;
+        windowElement.style.height = `${h}px`;
 
-        windowElement.style.left = `${100 + actualOffset}px`;
-        windowElement.style.top = `${100 + actualOffset}px`;
-        windowElement.style.zIndex = ++this.zIndex;
+        const offset = Math.min(this.windows.size * 28, 168);
+        const left = Math.min(120 + offset, Math.max(16, window.innerWidth - w - 16));
+        const top = Math.min(menuH + 24 + offset, Math.max(menuH + 8, window.innerHeight - dockSpace - h));
+        windowElement.style.left = `${left}px`;
+        windowElement.style.top = `${top}px`;
     }
 
     centerWindow(windowElement) {
-        const w = parseInt(windowElement.style.width) || 560;
-        const h = parseInt(windowElement.style.height) || 330;
-        windowElement.style.left = `${Math.max(0, (window.innerWidth - w) / 2)}px`;
-        windowElement.style.top  = `${Math.max(40, (window.innerHeight - h) / 2)}px`;
-        windowElement.style.zIndex = ++this.zIndex;
+        const w = Math.min(parseInt(windowElement.style.width, 10) || 560, window.innerWidth - 32);
+        const h = parseInt(windowElement.style.height, 10) || 330;
+        windowElement.style.width = `${w}px`;
+        windowElement.style.left = `${Math.max(16, (window.innerWidth - w) / 2)}px`;
+        windowElement.style.top = `${Math.max(40, (window.innerHeight - h) / 2 - 24)}px`;
     }
 
     setupWindowEvents(windowElement, appName) {
         const header = windowElement.querySelector('.window-header');
-        const closeBtn = windowElement.querySelector('.window-close');
-        const minimizeBtn = windowElement.querySelector('.window-minimize');
-        const maximizeBtn = windowElement.querySelector('.window-maximize');
 
-        // Window dragging
         this.makeDraggable(windowElement, header);
 
-        // Window controls with GSAP
-        if (closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (typeof gsap !== 'undefined') {
-                    gsap.to(windowElement, {
-                        scale: 0.8,
-                        opacity: 0,
-                        y: 50,
-                        duration: 0.3,
-                        ease: 'back.in(1.4)',
-                        onComplete: () => {
-                            this.closeWindow(appName);
-                        }
-                    });
-                } else {
-                    this.closeWindow(appName);
-                }
-            });
-        }
-
-        if (minimizeBtn) {
-            // Disable minimize functionality
-            minimizeBtn.style.opacity = '0.3';
-            minimizeBtn.style.cursor = 'not-allowed';
-            minimizeBtn.disabled = true;
-        }
-
-        if (maximizeBtn) {
-            maximizeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.toggleMaximizeWindow(appName);
-            });
-        }
-
-        // Window focus
-        windowElement.addEventListener('mousedown', () => this.focusWindow(appName));
-
-        // App-specific setup
-        this.setupAppSpecificEvents(windowElement, appName);
-    }
-
-    makeDraggable(windowElement, handle) {
-        let isDragging = false;
-        let currentX, currentY, initialX, initialY;
-
-        handle.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('window-control')) return;
-
-            isDragging = true;
-            initialX = e.clientX - windowElement.offsetLeft;
-            initialY = e.clientY - windowElement.offsetTop;
-
-            windowElement.style.cursor = 'grabbing';
+        windowElement.querySelector('.window-close').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.requestClose(appName);
+        });
+        windowElement.querySelector('.window-minimize').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.minimizeWindow(appName);
+        });
+        windowElement.querySelector('.window-maximize').addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleMaximizeWindow(appName);
         });
 
-        document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                e.preventDefault();
-                currentX = e.clientX - initialX;
-                currentY = e.clientY - initialY;
+        windowElement.addEventListener('pointerdown', () => this.focusWindow(appName, { keepFocus: true }));
 
-                // Constrain to viewport
-                const maxX = window.innerWidth - windowElement.offsetWidth;
-                const maxY = window.innerHeight - windowElement.offsetHeight;
-
-                currentX = Math.max(0, Math.min(currentX, maxX));
-                currentY = Math.max(32, Math.min(currentY, maxY));
-
-                // Use GSAP for smooth dragging
-                if (typeof gsap !== 'undefined') {
-                    gsap.set(windowElement, {
-                        left: currentX + 'px',
-                        top: currentY + 'px'
-                    });
-                } else {
-                    windowElement.style.left = `${currentX}px`;
-                    windowElement.style.top = `${currentY}px`;
-                }
-            }
-        });
-
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            windowElement.style.cursor = '';
-        });
-    }
-
-    setupAppSpecificEvents(windowElement, appName) {
         if (appName === 'terminal') {
             this.setupTerminalWithEngine(windowElement, '~');
         } else if (appName === 'projects') {
@@ -551,7 +302,43 @@ class MacOSInterface {
         }
     }
 
-    // Build Work rows from window.PROJECTS. DOM APIs + textContent only: no innerHTML with data.
+    // Pointer Events + pointer capture: works for mouse, pen and touch, and
+    // attaches no document-level listeners. Disabled on the mobile sheet layout.
+    makeDraggable(windowElement, handle) {
+        let startX = 0, startY = 0, originLeft = 0, originTop = 0, dragging = false;
+
+        handle.addEventListener('pointerdown', (e) => {
+            if (e.button !== 0 || e.target.closest('.window-control')) return;
+            if (this.mobile.matches || windowElement.classList.contains('maximized')) return;
+            dragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            originLeft = windowElement.offsetLeft;
+            originTop = windowElement.offsetTop;
+            handle.setPointerCapture(e.pointerId);
+            windowElement.classList.add('dragging');
+        });
+
+        handle.addEventListener('pointermove', (e) => {
+            if (!dragging) return;
+            const maxX = window.innerWidth - windowElement.offsetWidth;
+            const maxY = window.innerHeight - 40; // keep the header reachable
+            const x = Math.max(0, Math.min(originLeft + e.clientX - startX, maxX));
+            const y = Math.max(32, Math.min(originTop + e.clientY - startY, maxY));
+            windowElement.style.left = `${x}px`;
+            windowElement.style.top = `${y}px`;
+        });
+
+        const end = (e) => {
+            if (!dragging) return;
+            dragging = false;
+            windowElement.classList.remove('dragging');
+            if (handle.hasPointerCapture(e.pointerId)) handle.releasePointerCapture(e.pointerId);
+        };
+        handle.addEventListener('pointerup', end);
+        handle.addEventListener('pointercancel', end);
+    }
+
     renderWork(windowElement) {
         const list = windowElement.querySelector('.work-list');
         if (!list) return;
@@ -654,99 +441,127 @@ class MacOSInterface {
         setTimeout(() => focusInput(), 50);
     }
 
-    closeWindow(appName) {
-        if (!this.windows.has(appName)) return;
-
+    requestClose(appName, { restoreFocus = false } = {}) {
         const windowElement = this.windows.get(appName);
-
-        if (windowElement.parentNode) {
-            windowElement.parentNode.removeChild(windowElement);
+        if (!windowElement) return;
+        const done = () => {
+            this.closeWindow(appName);
+            if (restoreFocus) this.focusDockItem(appName);
+        };
+        if (typeof gsap !== 'undefined' && this.motionOK()) {
+            gsap.to(windowElement, { scale: 0.96, opacity: 0, y: 12, duration: 0.18, ease: 'power2.in', onComplete: done });
+        } else {
+            done();
         }
+    }
 
-        // Clean up terminal engine instance
+    closeWindow(appName) {
+        const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+
+        windowElement.remove();
         this.terminalEngines.delete(appName);
         this.windows.delete(appName);
+        this.setDockState(appName, false);
+        if (this.activeWindow === appName) this.focusTopWindow();
+    }
 
-        if (this.activeWindow === appName) {
-            this.activeWindow = null;
+    // Minimize hides the window; the dock keeps its running dot and restores it.
+    minimizeWindow(appName) {
+        const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+        windowElement.classList.add('minimized');
+        if (this.activeWindow === appName) this.focusTopWindow();
+        this.focusDockItem(appName);
+    }
+
+    restoreWindow(appName) {
+        const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+        windowElement.classList.remove('minimized');
+        if (typeof gsap !== 'undefined' && this.motionOK()) {
+            gsap.fromTo(windowElement, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.2, ease: 'power2.out', clearProps: 'transform,opacity' });
         }
-
-        // Remove active indicator from dock
-        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
-        if (dockItem) dockItem.classList.remove('active');
     }
 
     toggleMaximizeWindow(appName) {
-        if (!this.windows.has(appName)) return;
-
         const windowElement = this.windows.get(appName);
+        if (!windowElement || this.mobile.matches) return;
+
         const isMaximized = windowElement.classList.contains('maximized');
+        const duration = this.motionOK() ? 0.3 : 0;
+        let target;
 
-        if (typeof gsap !== 'undefined') {
-            if (!isMaximized) {
-                // Store original dimensions
-                windowElement.dataset.originalLeft = windowElement.style.left;
-                windowElement.dataset.originalTop = windowElement.style.top;
-                windowElement.dataset.originalWidth = windowElement.style.width;
-                windowElement.dataset.originalHeight = windowElement.style.height;
-
-                // Maximize animation
-                gsap.to(windowElement, {
-                    left: '20px',
-                    top: '40px',
-                    width: 'calc(100vw - 120px)',
-                    height: 'calc(100vh - 60px)',
-                    duration: 0.4,
-                    ease: 'power2.out'
-                });
-
-                windowElement.classList.add('maximized');
-            } else {
-                // Restore animation
-                gsap.to(windowElement, {
-                    left: windowElement.dataset.originalLeft,
-                    top: windowElement.dataset.originalTop,
-                    width: windowElement.dataset.originalWidth,
-                    height: windowElement.dataset.originalHeight,
-                    duration: 0.4,
-                    ease: 'power2.out'
-                });
-
-                windowElement.classList.remove('maximized');
-            }
+        if (!isMaximized) {
+            windowElement.dataset.originalLeft = windowElement.style.left;
+            windowElement.dataset.originalTop = windowElement.style.top;
+            windowElement.dataset.originalWidth = windowElement.style.width;
+            windowElement.dataset.originalHeight = windowElement.style.height;
+            // Fill the desktop between the menu bar and the dock
+            target = { left: '8px', top: '40px', width: `${window.innerWidth - 16}px`, height: `${window.innerHeight - 40 - 88}px` };
         } else {
-            windowElement.classList.toggle('maximized');
+            target = {
+                left: windowElement.dataset.originalLeft,
+                top: windowElement.dataset.originalTop,
+                width: windowElement.dataset.originalWidth,
+                height: windowElement.dataset.originalHeight
+            };
+        }
+
+        windowElement.classList.toggle('maximized', !isMaximized);
+        if (typeof gsap !== 'undefined' && duration) {
+            gsap.to(windowElement, { ...target, duration, ease: 'power2.out' });
+        } else {
+            Object.assign(windowElement.style, target);
         }
     }
 
-    focusWindow(appName) {
-        if (!this.windows.has(appName)) return;
-
+    focusWindow(appName, { keepFocus = false } = {}) {
         const windowElement = this.windows.get(appName);
+        if (!windowElement) return;
+
         windowElement.style.zIndex = ++this.zIndex;
         this.activeWindow = appName;
+        this.windows.forEach((el, name) => el.classList.toggle('is-active', name === appName));
 
-        // Focus the terminal input if it exists
+        if (keepFocus) return;
         const input = windowElement.querySelector('.terminal-input');
-        if (input) {
-            setTimeout(() => input.focus(), 10);
+        setTimeout(() => (input || windowElement).focus({ preventScroll: true }), 10);
+    }
+
+    // After a close/minimize, the highest visible window becomes active
+    focusTopWindow() {
+        let top = null;
+        let topZ = -1;
+        this.windows.forEach((el, name) => {
+            const z = parseInt(el.style.zIndex, 10) || 0;
+            if (!el.classList.contains('minimized') && z > topZ) {
+                top = name;
+                topZ = z;
+            }
+        });
+        this.activeWindow = null;
+        this.windows.forEach(el => el.classList.remove('is-active'));
+        if (top) {
+            this.activeWindow = top;
+            this.windows.get(top).classList.add('is-active');
         }
     }
 
-    closeActiveWindow() {
-        if (this.activeWindow) {
-            this.closeWindow(this.activeWindow);
-        }
+    setDockState(appName, running) {
+        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
+        if (dockItem) dockItem.classList.toggle('active', running);
+    }
+
+    focusDockItem(appName) {
+        const dockItem = document.querySelector(`.dock-item[data-app="${appName}"]`);
+        if (dockItem) dockItem.focus({ preventScroll: true });
     }
 }
 
-// Initialize the MacOS interface when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded - Initializing MacOS Interface');
     window.macOS = new MacOSInterface();
 
     const openParam = new URLSearchParams(window.location.search).get('open');
-    if (openParam) {
-        window.macOS.openApp(openParam);
-    }
+    if (openParam) window.macOS.openApp(openParam);
 });
