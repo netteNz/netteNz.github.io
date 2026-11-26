@@ -101,26 +101,5 @@ window.PROJECTS = [
             'Tools for reaching team consensus',
             'TypeScript and React'
         ]
-    },
-    {
-        // TODO(copy): confirm from repo
-        slug: 'cli-agent',
-        name: 'CLI agent',
-        summary: 'Context-aware terminal assistant powered by Gemini.',
-        stack: ['gemini'],
-        repo: 'https://github.com/netteNz/cli-agent',
-        readme: [
-            'Context-aware assistant that runs in the terminal',
-            'Powered by Gemini'
-        ]
-    },
-    {
-        // TODO(copy): confirm from repo
-        slug: 'audio-visualizer',
-        name: 'Audio visualizer',
-        summary: 'Audio visualization project.',
-        stack: [],
-        repo: 'https://github.com/netteNz/audio-visualizer',
-        readme: []
     }
 ];
