@@ -146,6 +146,7 @@ code, kbd, pre {
 /* ===== Level meter (signature element) =====
    Static at rest. JS (macOS.bumpMeter) toggles .is-lit in response to input. */
 .level-meter {
+    flex-shrink: 0; /* no text content, so flex parents would otherwise collapse it to 0px */
     display: inline-flex;
     align-items: stretch;
     gap: 2px;

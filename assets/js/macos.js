@@ -5,7 +5,7 @@ const MOBILE_QUERY = '(max-width: 768px)';
 
 // Default window sizes per app (clamped to the viewport in positionWindow)
 const APP_SIZES = {
-    welcome:  [560, 330],
+    welcome:  [560, 370],
     about:    [760, 640],
     projects: [820, 640],
     terminal: [820, 520],
