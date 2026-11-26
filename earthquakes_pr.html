@@ -129,11 +129,11 @@
             flex-shrink: 0;
         }
 
-        /* Magnitude severity scale (USGS-style green, yellow, orange, red). Reuses the
-           meter colours, which encode the same "safe to peak" idea; orange is page-local. */
+        /* Magnitude severity scale (Catppuccin green, yellow, peach, red). Reuses the
+           meter colours, which encode the same "safe to peak" idea; peach is page-local. */
         .eq-dot-minor    { background: var(--meter-safe); }
         .eq-dot-light    { background: var(--meter-mid); }
-        .eq-dot-moderate { background: #F97316; }
+        .eq-dot-moderate { background: #fab387; }
         .eq-dot-strong   { background: var(--meter-peak); }
 
         /* ─── Loading dialog ─── */
@@ -245,15 +245,15 @@
                 </div>
                 <div class="eq-legend-item">
                     <span class="eq-dot eq-dot-light"></span>
-                    <span>3.0 – 4.0</span>
+                    <span>3.0 – 3.9</span>
                 </div>
                 <div class="eq-legend-item">
                     <span class="eq-dot eq-dot-moderate"></span>
-                    <span>4.1 – 5.0</span>
+                    <span>4.0 – 4.9</span>
                 </div>
                 <div class="eq-legend-item">
                     <span class="eq-dot eq-dot-strong"></span>
-                    <span>&gt; 5.0</span>
+                    <span>5.0+</span>
                 </div>
             </div>
         </div>
