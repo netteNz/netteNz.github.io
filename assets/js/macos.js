@@ -1,5 +1,5 @@
 // Window manager for the nettenzOS desktop: windows, dock, menu bar, level meter.
-// Load order (all `defer`): gsap -> projects-data.js -> terminal-engine.js -> macos.js.
+// Load order (all `defer`): gsap, dompurify -> projects-data.js -> terminal-engine.js -> readme-viewer.js -> macos.js.
 
 const MOBILE_QUERY = '(max-width: 768px)';
 
@@ -9,8 +9,26 @@ const APP_SIZES = {
     about:    [760, 640],
     projects: [820, 640],
     terminal: [820, 520],
-    contact:  [520, 470]
+    contact:  [520, 470],
+    readme:   [760, 640]
 };
+
+// Messages for ReadmeViewer failure reasons. Each ends by pointing at the fallback below it.
+const README_FAILURES = {
+    'rate-limit': "GitHub's rate limit for this browser is used up. The summary is below; the full README is on GitHub.",
+    'not-found':  'This repository has no README on GitHub. The summary is below.',
+    'offline':    'GitHub could not be reached. Check your connection and reopen this window; the summary is below.',
+    'default':    'The README could not be loaded here. The summary is below; the full README is on GitHub.'
+};
+
+// http(s) only. new URL(undefined, base) resolves to ".../undefined", so reject non-strings first.
+function safeUrl(url) {
+    if (typeof url !== 'string' || !url) return '';
+    try {
+        const u = new URL(url, window.location.href);
+        return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : '';
+    } catch { return ''; }
+}
 
 class MacOSInterface {
     constructor() {
@@ -27,7 +45,8 @@ class MacOSInterface {
             projects: document.getElementById('projects-app'),
             terminal: document.getElementById('terminal-app'),
             welcome:  document.getElementById('welcome-app'),
-            contact:  document.getElementById('contact-app')
+            contact:  document.getElementById('contact-app'),
+            readme:   document.getElementById('readme-app')
         };
 
         this.init();
@@ -242,7 +261,8 @@ class MacOSInterface {
             projects: 'Work',
             terminal: 'Terminal',
             welcome:  'Welcome',
-            contact:  'Contact'
+            contact:  'Contact',
+            readme:   'README.md'
         };
         return titles[appName] || appName;
     }
@@ -299,6 +319,8 @@ class MacOSInterface {
             this.renderWork(windowElement);
         } else if (appName === 'welcome') {
             this.setupWelcomeEvents(windowElement);
+        } else if (appName === 'readme') {
+            this.setupReadmeEvents(windowElement);
         }
     }
 
@@ -349,14 +371,6 @@ class MacOSInterface {
             if (text !== undefined) node.textContent = text;
             return node;
         };
-        const safeUrl = (url) => {
-            // new URL(undefined, base) resolves to ".../undefined"; reject non-strings first.
-            if (typeof url !== 'string' || !url) return '';
-            try {
-                const u = new URL(url, window.location.href);
-                return u.protocol === 'https:' || u.protocol === 'http:' ? u.href : '';
-            } catch { return ''; }
-        };
         const link = (label, url, projectName) => {
             const a = el('a', 'work-link', label);
             a.href = url;
@@ -371,7 +385,21 @@ class MacOSInterface {
             const row = el('li', 'work-row');
 
             const main = el('div', 'work-row-main');
-            main.append(el('h2', 'work-name', project.name));
+            const live = safeUrl(project.live);
+            const repo = safeUrl(project.repo);
+            const home = live || repo;
+            const heading = el('h2', 'work-name');
+            if (home) {
+                const a = el('a', '', project.name);
+                a.href = home;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.setAttribute('aria-label', `${project.name}: open ${live ? 'live demo' : 'source on GitHub'}`);
+                heading.append(a);
+            } else {
+                heading.textContent = project.name;
+            }
+            main.append(heading);
             main.append(el('p', 'work-summary', project.summary));
             if (project.stack && project.stack.length) {
                 const tags = el('ul', 'tag-row work-stack');
@@ -381,26 +409,95 @@ class MacOSInterface {
             }
 
             const links = el('div', 'work-links');
-            const live = safeUrl(project.live);
-            const repo = safeUrl(project.repo);
             if (live) links.append(link('Live demo', live, project.name));
             if (repo) links.append(link('Source', repo, project.name));
-            const term = el('button', 'work-link work-link--action', 'Open in terminal');
-            term.type = 'button';
-            term.setAttribute('aria-label', `Open ${project.name} in terminal`);
-            term.addEventListener('click', () => this.openProjectInTerminal(project.slug));
-            links.append(term);
+            const readme = el('button', 'work-link work-link--action', 'README');
+            readme.type = 'button';
+            readme.setAttribute('aria-label', `Read the ${project.name} README`);
+            readme.addEventListener('click', () => this.openReadme(project.slug));
+            links.append(readme);
 
             row.append(main, links);
             list.append(row);
         });
     }
 
-    openProjectInTerminal(slug) {
-        this.openApp('terminal');
-        const engine = this.terminalEngines.get('terminal');
-        if (!engine || !engine.terminalContent) return;
-        engine.executeCommand(`cd ~/projects/${slug} && cat README.md`, engine.terminalContent);
+    // ---- README window: one reused instance showing a project's GitHub README ----
+    setupReadmeEvents(windowElement) {
+        // In-page links (#section) scroll inside the window; they never change the page URL.
+        windowElement.querySelector('.readme-body').addEventListener('click', (e) => {
+            const a = e.target.closest && e.target.closest('a[href^="#"]');
+            if (!a) return;
+            e.preventDefault();
+            let id = a.getAttribute('href').slice(1);
+            try { id = decodeURIComponent(id); } catch { /* keep raw */ }
+            const body = e.currentTarget;
+            const target = [`user-content-${id}`, id]
+                .map(candidate => body.querySelector(`[id="${CSS.escape(candidate)}"]`))
+                .find(Boolean);
+            if (target) target.scrollIntoView({ behavior: this.motionOK() ? 'smooth' : 'auto', block: 'start' });
+        });
+    }
+
+    openReadme(slug) {
+        const projects = Array.isArray(window.PROJECTS) ? window.PROJECTS : [];
+        const project = projects.find(p => p.slug === slug);
+        if (!project) return;
+
+        this.openApp('readme');
+        const win = this.windows.get('readme');
+        if (!win) return;
+
+        const token = (this.readmeToken = (this.readmeToken || 0) + 1);
+        const status = win.querySelector('.readme-status');
+        const body = win.querySelector('.readme-body');
+        const fallback = win.querySelector('.readme-fallback');
+        const gh = win.querySelector('.readme-github');
+        const scroller = win.querySelector('.window-content');
+
+        win.querySelector('.window-title').textContent = `${project.slug}/README.md`;
+        body.replaceChildren();
+        fallback.replaceChildren();
+        fallback.hidden = true;
+        status.textContent = 'Loading README from GitHub\u2026';
+        scroller.scrollTop = 0;
+
+        const repo = safeUrl(project.repo);
+        gh.hidden = !repo;
+        if (repo) {
+            gh.href = repo;
+            gh.setAttribute('aria-label', `View ${project.name} on GitHub`);
+        }
+
+        const viewer = window.ReadmeViewer;
+        const result = viewer ? viewer.load(project) : Promise.resolve({ ok: false, reason: 'error' });
+        result.catch(() => ({ ok: false, reason: 'error' })).then((res) => {
+            // Drop stale results: a newer request started, or the window was closed
+            if (token !== this.readmeToken || this.windows.get('readme') !== win) return;
+
+            if (res.ok) {
+                status.textContent = '';
+                body.append(res.fragment);
+                return;
+            }
+
+            status.textContent = README_FAILURES[res.reason] || README_FAILURES.default;
+            const summary = document.createElement('p');
+            summary.className = 'readme-summary';
+            summary.textContent = project.summary || '';
+            fallback.append(summary);
+            if (Array.isArray(project.readme) && project.readme.length) {
+                const list = document.createElement('ul');
+                list.className = 'md-list';
+                project.readme.forEach(line => {
+                    const li = document.createElement('li');
+                    li.textContent = line;
+                    list.append(li);
+                });
+                fallback.append(list);
+            }
+            fallback.hidden = false;
+        });
     }
 
     setupWelcomeEvents(windowElement) {
@@ -415,8 +512,7 @@ class MacOSInterface {
         });
     }
 
-    // Synchronous: the window is already in the DOM, and callers such as
-    // openProjectInTerminal() need the engine immediately.
+    // Synchronous: the window is already in the DOM, so the engine is usable immediately.
     setupTerminalWithEngine(windowElement, initialPath) {
         const content = windowElement.querySelector('.window-content .terminal-content');
         if (!content || typeof TerminalEngine === 'undefined') return;

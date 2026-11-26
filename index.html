@@ -404,10 +404,22 @@
         <div class="work">
             <div class="work-header">
                 <h1 class="work-title">Work</h1>
-                <p class="work-intro">Projects I build outside work: hardware, trading tools and browser experiments. Each one also opens in the terminal.</p>
+                <p class="work-intro">Projects I build outside work: hardware, trading tools and browser experiments. Click a name to open it, or read its README here.</p>
             </div>
             <!-- Rows are built from window.PROJECTS by macOS.renderWork() -->
             <ul class="work-list" aria-label="Projects"></ul>
+        </div>
+    </template>
+
+    <template id="readme-app">
+        <div class="readme">
+            <p class="readme-status" role="status"></p>
+            <!-- Sanitized GitHub README fragment is appended here by macOS.openReadme() -->
+            <div class="readme-body"></div>
+            <div class="readme-fallback" hidden></div>
+            <div class="readme-footer">
+                <a class="work-link readme-github" target="_blank" rel="noopener noreferrer" hidden>View on GitHub</a>
+            </div>
         </div>
     </template>
 

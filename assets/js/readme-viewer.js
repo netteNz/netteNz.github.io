@@ -97,6 +97,14 @@
             s.setAttribute('srcset', rewriteSrcset(s.getAttribute('srcset'), owner, repo));
         });
 
+        // Wrap tables so wide ones scroll sideways inside their own box
+        fragment.querySelectorAll('table').forEach(table => {
+            const wrap = document.createElement('div');
+            wrap.className = 'readme-table';
+            table.replaceWith(wrap);
+            wrap.append(table);
+        });
+
         fragment.querySelectorAll('a[href]').forEach(a => {
             const href = a.getAttribute('href');
             if (href.trim().startsWith('#')) return; // in-page: handled by the window

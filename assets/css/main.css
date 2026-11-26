@@ -978,6 +978,136 @@ a.contact-list-value:hover { color: var(--accent); text-decoration: underline; }
     .work-links { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding-top: 0; }
 }
 
+/* Project name as a link: keeps the heading look, mauve underline on hover */
+.work-name a {
+    color: inherit;
+    text-decoration: none;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+}
+
+.work-name a:hover { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); }
+
+/* ===== README window =====
+   Reuses the About (.md-*) look. Rendered GitHub markdown lives under .readme-body. */
+.readme {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 28px 32px 32px;
+    color: var(--ink);
+    font-size: var(--fs-16);
+    line-height: var(--leading);
+}
+
+.readme-status { max-width: 75ch; color: var(--ink-muted); font-size: var(--fs-14); }
+.readme-status:empty { display: none; }
+
+.readme-fallback { max-width: 75ch; margin-top: 16px; }
+.readme-fallback .readme-summary { color: var(--ink); margin-bottom: 12px; }
+
+.readme-footer {
+    margin-top: auto;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+}
+
+.readme-body { max-width: 75ch; overflow-wrap: anywhere; }
+.readme-body:empty { display: none; }
+.readme-body:not(:empty) { margin-bottom: 24px; }
+.readme-body > :first-child { margin-top: 0; }
+
+.readme-body h1,
+.readme-body h2,
+.readme-body h3,
+.readme-body h4,
+.readme-body h5,
+.readme-body h6 {
+    font-variation-settings: var(--axes-heading);
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 28px 0 12px;
+}
+
+.readme-body h1 { font-size: var(--fs-28); }
+.readme-body h2 { font-size: var(--fs-20); padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+.readme-body h3 { font-size: var(--fs-16); }
+.readme-body h4,
+.readme-body h5,
+.readme-body h6 { font-size: var(--fs-14); }
+
+.readme-body .markdown-heading { margin: 0; }
+.readme-body .markdown-heading > :is(h1, h2, h3, h4, h5, h6) { margin: 28px 0 12px; }
+
+.readme-body p,
+.readme-body ul,
+.readme-body ol,
+.readme-body pre,
+.readme-body blockquote,
+.readme-body details { margin: 0 0 16px; }
+
+.readme-body ul,
+.readme-body ol { padding-left: 24px; color: var(--ink-muted); }
+.readme-body li { margin-bottom: 4px; }
+.readme-body li > ul,
+.readme-body li > ol { margin: 4px 0 0; }
+.readme-body li::marker { color: var(--rule); }
+
+.readme-body a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule); }
+.readme-body a:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+.readme-body code,
+.readme-body kbd,
+.readme-body pre {
+    font-family: var(--font-mono);
+    font-variation-settings: var(--axes-mono);
+    font-size: var(--fs-14);
+}
+
+.readme-body code,
+.readme-body kbd {
+    padding: 1px 5px;
+    background: var(--panel-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-tag);
+}
+
+.readme-body pre {
+    padding: 12px 16px;
+    overflow-x: auto;
+    background: var(--panel-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-control);
+}
+
+.readme-body pre code { padding: 0; background: none; border: 0; border-radius: 0; }
+.readme-body .highlight { margin: 0 0 16px; }
+.readme-body .highlight pre { margin: 0; }
+
+.readme-body blockquote {
+    padding: 0 16px;
+    color: var(--ink-muted);
+    border-left: 3px solid var(--rule);
+}
+
+.readme-body blockquote > :last-child { margin-bottom: 0; }
+
+.readme-body img { max-width: 100%; height: auto; }
+
+.readme-body hr { height: 0; margin: 24px 0; border: 0; border-top: 1px solid var(--rule); }
+
+/* Tables scroll sideways inside their own box instead of widening the window */
+.readme-table { max-width: 100%; margin: 0 0 16px; overflow-x: auto; }
+.readme-body table { border-collapse: collapse; }
+
+.readme-body th,
+.readme-body td { padding: 6px 12px; border: 1px solid var(--rule); text-align: left; }
+.readme-body th { background: var(--panel-raised); font-weight: 600; }
+
+@media (max-width: 600px) {
+    .readme { padding: 20px 16px 32px; }
+}
+
 /* ===== Mobile: windows become full-screen sheets, dock becomes a tab bar ===== */
 @media (max-width: 768px) {
     .menu-items,
