@@ -3,7 +3,7 @@
 **Project:** macOS-inspired portfolio: desktop shell, Work window, terminal emulator
 **Deployment:** GitHub Pages (`https://github.com/netteNz/netteNz.github.io`), no build step
 **Stack (index.html):** Vanilla HTML/CSS/JS, GSAP 3.12.5 (CDN), Recursive (Google Fonts), gtag
-**Design:** "Signal chain": navy panels, one amber accent, a segmented level meter as the signature element
+**Design:** dark minimal shell (GitHub Dark neutrals, mauve used sparingly) + a vibrant Catppuccin Mocha terminal. The segmented level meter is the signature element
 
 > PyScript, Prism, ScrollTrigger and the Tailwind CDN were removed from `index.html`.
 > `earthquakes_pr.html` still loads Tailwind + PyScript because it actually uses them.
@@ -36,17 +36,26 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 
 | Token | Hex | Use |
 |---|---|---|
-| `--console` | `#101A2C` | page / desktop base, terminal bg |
-| `--panel` / `--panel-raised` | `#16233A` / `#1D2C47` | window body / headers, dock |
-| `--rule` | `#2A3A57` | hairlines, outlines |
-| `--ink` / `--ink-muted` | `#E6EDF7` / `#8EA0BD` | text (muted is 5.9:1 on panel) |
-| `--signal` | `#FFB547` | **the one accent**: prompt, focus ring, primary button, links |
-| `--meter-safe` / `--meter-peak` | `#4FD18B` / `#FF5D5D` | meter segments only |
+**Shell (dark minimal, GitHub Dark neutrals)**
+
+| Token | Hex | Use |
+|---|---|---|
+| `--console` | `#0d1117` | page / desktop base, terminal bg |
+| `--panel` / `--panel-raised` | `#161b22` / `#1c2128` | window body / headers, dock |
+| `--rule` | `#30363d` | hairlines, outlines |
+| `--ink` / `--ink-muted` | `#e6edf3` / `#8b949e` | text (muted is 5.6:1 on panel); `--ink` is also the primary-button fill |
+| `--accent` | `#cba6f7` | Catppuccin mauve, **sparingly**: focus ring, link hover, selection. Never as a fill or a heading colour |
+| `--meter-safe/-mid/-peak` | `#a6e3a1` / `#f9e2af` / `#f38ba8` | meter segments only |
+
+**Terminal (Catppuccin Mocha on the GitHub base):** the `--ctp-*` tokens are used only inside `.terminal-content`.
+- Prompt and `.t-ok`: green. Path, directories and `.t-accent` labels: blue. Headings (`.t-accent.t-strong`): mauve.
+- Links: sapphire. Errors (`.t-error`): red. Muted text: subtext0. Caret: rosewater.
+- Every pair is ≥ 8:1 on `#0d1117`.
 
 - **Type:** Recursive only. Use `--axes-ui` (`MONO 0`) for UI, `--axes-mono` (`MONO 1`) for the terminal and code only, and `--axes-heading` (`CASL 0.5`) for headings. Sizes come from the `--fs-12/14/16/20/28/40` scale, with 1.5 leading.
 - **Radius by hierarchy:** windows `--radius-window` 10px, buttons `--radius-control` 6px, tags `--radius-tag` 4px.
 - `--terminal-*` are aliases for the terminal markup. The old `--md-*` tokens are gone.
-- **Components:** `.level-meter` (8 `<span>`s, `.is-lit`), `.btn .btn-primary/.btn-secondary`, `.tag`/`.tag-row`, `.work-list`/`.work-row`, `:focus-visible` (2px amber ring).
+- **Components:** `.level-meter` (8 `<span>`s, `.is-lit`), `.btn .btn-primary/.btn-secondary`, `.tag`/`.tag-row`, `.work-list`/`.work-row`, `:focus-visible` (2px mauve ring).
 
 **Copy and style rules:**
 - Sentence case everywhere; no all-caps labels.

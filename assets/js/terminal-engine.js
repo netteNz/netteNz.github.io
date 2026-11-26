@@ -235,7 +235,7 @@ class TerminalEngine {
         if (Object.prototype.hasOwnProperty.call(commands, cmd)) {
             return commands[cmd]();
         }
-        return `<div class="t-muted">zsh: command not found: ${this.escapeHtml(cmd)}. Type 'help' for available commands.</div>`;
+        return `<div class="t-error">zsh: command not found: ${this.escapeHtml(cmd)}. Type 'help' for available commands.</div>`;
     }
 
     // ---- Command implementations ----
@@ -302,7 +302,7 @@ Type the project name to open it in a new tab.</div>`;
         const dir = this.resolvePath(target);
 
         if (!dir || !dir.contents) {
-            return `<div class="t-muted">ls: ${this.escapeHtml(args && args[0] ? args[0] : target)}: No such file or directory</div>`;
+            return `<div class="t-error">ls: ${this.escapeHtml(args && args[0] ? args[0] : target)}: No such file or directory</div>`;
         }
 
         // Clicking an item should resolve relative to the listed directory
@@ -362,7 +362,7 @@ Type the project name to open it in a new tab.</div>`;
             return null;
         }
 
-        return `<div class="t-muted">cd: no such file or directory: ${this.escapeHtml(args[0])}</div>`;
+        return `<div class="t-error">cd: no such file or directory: ${this.escapeHtml(args[0])}</div>`;
     }
 
     pwdCommand() {
@@ -399,7 +399,7 @@ Type the project name to open it in a new tab.</div>`;
             return this.readmeCommand();
         }
 
-        return `<div class="t-muted">cat: ${this.escapeHtml(fileName)}: No such file or directory</div>`;
+        return `<div class="t-error">cat: ${this.escapeHtml(fileName)}: No such file or directory</div>`;
     }
 
     readmeCommand() {
@@ -451,7 +451,7 @@ Type the project name to open it in a new tab.</div>`;
                 <div><span class="t-accent">Uptime</span>: ${this.getUptime()}</div>
                 <div><span class="t-accent">Shell</span>: zsh 5.8</div>
                 <div><span class="t-accent">Resolution</span>: ${window.innerWidth}x${window.innerHeight}</div>
-                <div><span class="t-accent">Theme</span>: Signal chain</div>
+                <div><span class="t-accent">Theme</span>: Catppuccin Mocha on GitHub Dark</div>
                 <div><span class="t-accent">Terminal</span>: Custom WebTerm</div>
                 <div><span class="t-accent">Projects</span>: ${this.projects.length}</div>
             </div>
@@ -469,7 +469,7 @@ Type the project name to open it in a new tab.</div>`;
         return {
             type: 'action',
             action: () => this.startMatrixEffect(),
-            message: '<div class="t-accent">Wake up, Neo...</div>'
+            message: '<div class="t-ok">Wake up, Neo...</div>'
         };
     }
 
@@ -484,8 +484,8 @@ Type the project name to open it in a new tab.</div>`;
         const height = canvas.height = terminalContent.offsetHeight;
         const cols = Math.floor(width / 20) + 1;
         const ypos = Array(cols).fill(0);
-        const accent = getComputedStyle(document.documentElement).getPropertyValue('--signal').trim() || '#FFB547';
-        const bg = getComputedStyle(document.documentElement).getPropertyValue('--console').trim() || '#101A2C';
+        const accent = getComputedStyle(document.documentElement).getPropertyValue('--ctp-green').trim() || '#a6e3a1';
+        const bg = getComputedStyle(document.documentElement).getPropertyValue('--console').trim() || '#0d1117';
 
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, width, height);
@@ -577,7 +577,7 @@ Type the project name to open it in a new tab.</div>`;
             setTimeout(() => window.open(url, '_blank', 'noopener,noreferrer'), 500);
             return `<div class="t-muted">Opening ${this.escapeHtml(slug)}...</div>`;
         }
-        return `<div class="t-muted">Project not found: ${this.escapeHtml(slug)}</div>`;
+        return `<div class="t-error">Project not found: ${this.escapeHtml(slug)}</div>`;
     }
 
     clearCommand() {

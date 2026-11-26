@@ -132,7 +132,7 @@
         /* Magnitude severity scale (USGS-style green, yellow, orange, red). Reuses the
            meter colours, which encode the same "safe to peak" idea; orange is page-local. */
         .eq-dot-minor    { background: var(--meter-safe); }
-        .eq-dot-light    { background: var(--signal); }
+        .eq-dot-light    { background: var(--meter-mid); }
         .eq-dot-moderate { background: #F97316; }
         .eq-dot-strong   { background: var(--meter-peak); }
 
@@ -156,7 +156,7 @@
             height: 40px;
             margin-bottom: 1.25rem;
             border: 3px solid var(--rule);
-            border-top-color: var(--signal);
+            border-top-color: var(--accent);
             border-radius: 50%;
             animation: eq-spin 1s linear infinite;
         }
