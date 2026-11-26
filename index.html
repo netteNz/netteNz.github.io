@@ -25,7 +25,7 @@
     <meta property="og:title" content="nettenzOS | AI Software Development Engineer, DJ, Cybersecurity Specialist.">
     <meta property="og:description"
         content="Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ &mdash; building AI-powered products, real-time web audio visualizers, and DJ streaming tools.">
-    <meta property="og:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
+    <meta property="og:image" content="https://nettenz.github.io/assets/og.png">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
@@ -33,10 +33,9 @@
     <meta name="twitter:title" content="nettenzOS | AI Software Development Engineer, DJ, Cybersecurity Specialist.">
     <meta name="twitter:description"
         content="Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ &mdash; building AI-powered products, real-time web audio visualizers, and DJ streaming tools.">
-    <meta name="twitter:image" content="https://placehold.co/1200x630?text=nettenz+Portfolio">
+    <meta name="twitter:image" content="https://nettenz.github.io/assets/og.png">
 
 
-    <!-- Favicon -->
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0L5LLER0MH"></script>
     <script>
@@ -47,232 +46,26 @@
         gtag('config', 'G-0L5LLER0MH');
     </script>
 
-    <!-- Resource Hints for Performance -->
-    <link rel="preconnect" href="https://cdn.tailwindcss.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <!-- Performance-optimized Animation Libraries -->
-    <!-- GSAP - Highly performant animation library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="assets/js/projects-data.js" defer></script>
-    <script src="assets/js/terminal-engine.js?v=2" defer></script>
-    <script src="assets/js/macos.js" defer></script>
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Recursive:wght,CASL,MONO@300..800,0..1,0..1&display=swap">
     <link rel="stylesheet" href="assets/css/main.css?v=3">
-    <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
-    <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-okaidia.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/components/prism-python.min.js" defer></script>
-    <style>
-        body {
-            font-family: 'Lato', sans-serif;
-            background: var(--md-surface);
-        }
+    <noscript>
+        <style>
+            #splash-screen, .menu-bar, #desktop, .dock-container { display: none; }
+            body { overflow: auto; }
+            .noscript-fallback { max-width: 720px; margin: 0 auto; padding: 32px 16px; }
+        </style>
+    </noscript>
 
-
-        pre[class*="language-"] {
-            background-color: var(--md-surface-container-low) !important;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            overflow-x: hidden;
-            font-size: 1rem;
-            width: 90%;
-            max-width: 900px;
-            margin: 2rem auto;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--md-outline-variant);
-        }
-
-        code[class*="language-"] {
-            font-family: 'Fira Code', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            color: var(--md-on-surface);
-            background: transparent;
-        }
-
-        /* Syntax colors — mapped onto the site's M3 token roles so code blocks
-           read as part of the same system instead of a separate GitHub-Dark theme */
-        .token.comment,
-        .token.prolog,
-        .token.doctype,
-        .token.cdata {
-            color: var(--md-on-surface-variant);
-            font-style: italic;
-        }
-
-        .token.punctuation {
-            color: var(--md-on-surface);
-        }
-
-        .token.property,
-        .token.constant,
-        .token.symbol,
-        .token.deleted {
-            color: var(--md-error);
-        }
-
-        .token.boolean,
-        .token.number {
-            color: var(--terminal-accent-yellow);
-        }
-
-        .token.string,
-        .token.char {
-            color: var(--md-secondary);
-        }
-
-        .token.selector,
-        .token.inserted,
-        .token.attr-name {
-            color: var(--md-primary);
-        }
-
-        .token.function,
-        .token.class-name {
-            color: var(--terminal-accent-blue);
-        }
-
-        .token.keyword,
-        .token.atrule {
-            color: var(--terminal-accent-red);
-        }
-
-        .token.operator,
-        .token.entity,
-        .token.url {
-            color: var(--md-tertiary);
-        }
-
-        .token.regex,
-        .token.variable {
-            color: var(--md-tertiary);
-        }
-
-        /* Responsive adjustments for the contact section */
-        @media (max-width: 768px) {
-            pre[class*="language-"] {
-                padding: 1rem;
-                font-size: 0.9rem;
-                width: 95%;
-            }
-
-            .contact-section {
-                min-height: auto !important;
-                padding: 4rem 0;
-            }
-        }
-
-        /* Add these styles to center contact details */
-        .contact-section pre {
-            text-align: left;
-            margin-left: auto;
-            margin-right: auto;
-            white-space: pre-wrap;
-            /* Allow wrapping */
-            word-break: break-word;
-            /* Break words that are too long */
-        }
-
-        /* For smaller screens, ensure text remains properly aligned */
-        @media (max-width: 768px) {
-            .contact-section pre {
-                width: 95%;
-                max-width: 100%;
-            }
-        }
-
-        /* Very small screens */
-        @media (max-width: 480px) {
-            pre[class*="language-"] {
-                font-size: 0.8rem;
-                padding: 0.75rem;
-            }
-
-            .contact-section {
-                padding: 2rem 0;
-            }
-        }
-
-        /* Keyframes for chart animation */
-        @keyframes chart-grow {
-            from {
-                height: 0%;
-            }
-
-            to {
-                height: var(--final-height, 70%);
-            }
-        }
-
-        .animate-chart {
-            animation: chart-grow 2.5s ease-out forwards;
-            --final-height: 70%;
-        }
-
-        @keyframes point-rise {
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes draw-line {
-            to {
-                stroke-dashoffset: 0;
-            }
-        }
-
-        @keyframes fill-area {
-            to {
-                transform: scaleY(1);
-            }
-        }
-
-        @keyframes move-point {
-            0% {
-                cx: 0;
-                cy: 65;
-            }
-
-            20% {
-                cx: 20;
-                cy: 70;
-            }
-
-            40% {
-                cx: 40;
-                cy: 55;
-            }
-
-            60% {
-                cx: 60;
-                cy: 35;
-            }
-
-            80% {
-                cx: 80;
-                cy: 15;
-            }
-
-            100% {
-                cx: 100;
-                cy: 5;
-            }
-        }
-
-        @keyframes fade-in {
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Add any additional custom styles here */
-    </style>
+    <!-- Load order matters (defer keeps it): GSAP, data, terminal, window manager -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="assets/js/projects-data.js?v=3" defer></script>
+    <script src="assets/js/terminal-engine.js?v=3" defer></script>
+    <script src="assets/js/macos.js?v=3" defer></script>
 
     <script type="application/ld+json">
     {
@@ -318,249 +111,204 @@
     </script>
 </head>
 
-<body class="h-screen overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-black font-['Lato']">
-    <!-- Boot splash -->
+<body>
+    <!-- Boot splash (skipped on deep links, reduced motion, and after the first view per session) -->
     <div id="splash-screen" aria-hidden="true">
         <div class="splash-inner">
             <div class="splash-wordmark">nettenzOS</div>
-            <div class="splash-meter" role="status" aria-label="Loading">
+            <div class="splash-meter">
                 <div></div><div></div><div></div><div></div><div></div><div></div>
                 <div></div><div></div><div></div><div></div><div></div><div></div>
                 <div></div><div></div><div></div><div></div><div></div><div></div>
                 <div></div><div></div><div></div><div></div><div></div><div></div>
-            </div>
-            <div class="splash-log">
-                <div class="splash-log-line">init terminal-engine ..... <span class="splash-ok">ok</span></div>
-                <div class="splash-log-line">mount ~/projects ......... <span class="splash-ok">ok</span></div>
-                <div class="splash-log-line">load audio engine ........ <span class="splash-ok">ok</span></div>
             </div>
         </div>
     </div>
 
-    <!-- SEO fallback: visible to crawlers, hidden visually -->
+    <!-- SEO / no-JS fallback. Static HTML: keep in sync with assets/js/projects-data.js by hand. -->
     <noscript>
-        <main>
-            <h1>nettenzOS &mdash; Portfolio of nettenz</h1>
-            <p>Portfolio of an AI Software Development Engineer, Cybersecurity Specialist, and DJ &mdash; building AI-powered products, real-time web audio visualizers, and DJ streaming tools.</p>
+        <main class="noscript-fallback">
+            <h1>Emanuel Lugo Rivera</h1>
+            <p>AI software engineer. I build AI-powered products with Python, TypeScript and React, and make audio, hardware and security tools in my spare time.</p>
             <section>
                 <h2>About</h2>
-                <p>B.S. Computer Engineering. Day-to-day: React, Python, TypeScript. Currently exploring agentic AI, RAG pipelines, and making LLMs produce deterministic outputs.</p>
+                <p>B.S. in Computer Engineering with a cybersecurity specialization. Currently exploring agentic AI, RAG pipelines, and making LLMs produce deterministic outputs.</p>
             </section>
             <section>
-                <h2>Tech Stack</h2>
-                <p>Frontend: React, TypeScript, Next.js, TailwindCSS. Backend: Python, Node.js, FastAPI, Flask, Django. Tools: Docker, Git, Linux. Security: Penetration Testing, Vulnerability Assessment.</p>
-            </section>
-            <section>
-                <h2>Projects</h2>
+                <h2>Work</h2>
                 <ul>
-                    <li>Web Audio Player &mdash; Real-time web audio visualizer and LUFS meter</li>
-                    <li>Earthquake Visualization &mdash; Interactive seismic data explorer</li>
-                    <li>RL Trading Bot &mdash; Reinforcement learning agent for stock trading</li>
-                    <li>CLI Agent &mdash; Context-aware terminal assistant powered by Gemini</li>
-                    <li>Veto System &mdash; Collaborative decision-making tool</li>
+                    <li><a href="https://github.com/netteNz/oled-bonnet">OLED system HUD</a>: a system-monitor display for a Raspberry Pi, built on a partial-update OLED driver.</li>
+                    <li><a href="https://github.com/netteNz/trading-dashboard">Trading dashboard</a>: a self-hosted charting dashboard with a custom indicator engine and live streaming.</li>
+                    <li><a href="https://github.com/netteNz/reinforcement-learning-stocks">RL trading bot</a>: reinforcement learning agent for stock trading, trained with PPO (stable-baselines3) in a custom Gymnasium environment.</li>
+                    <li><a href="https://github.com/netteNz/macropad-profiles">MacroPad firmware</a>: CircuitPython firmware giving an RP2040 macro pad per-app key profiles and an OLED UI.</li>
+                    <li><a href="https://nettenz.github.io/web-audio-app">Web audio player</a>: real-time audio visualizer built on the Web Audio API, with LUFS loudness metering and a live frequency spectrum.</li>
+                    <li><a href="https://nettenz.github.io/earthquakes_pr.html">Earthquake visualization</a>: interactive map of Puerto Rico earthquake data, rendered in the browser with Python through PyScript.</li>
+                    <li><a href="https://nettenz.github.io/veto-tsd/">Veto system</a>: team decision-making tool where members vote on options and can veto them.</li>
                 </ul>
             </section>
             <section>
                 <h2>Links</h2>
                 <ul>
+                    <li><a href="assets/documents/elr_2025_resume.pdf">Download resume</a></li>
                     <li><a href="https://github.com/netteNz">github.com/netteNz</a></li>
-                    <li><a href="https://www.linkedin.com/in/lugo-emanuel/">LinkedIn</a></li>
+                    <li><a href="https://www.linkedin.com/in/lugo-emanuel/">linkedin.com/in/lugo-emanuel</a></li>
                 </ul>
             </section>
         </main>
     </noscript>
-    <!-- macOS Menu Bar -->
-    <div class="menu-bar fixed top-0 left-0 right-0 h-8 backdrop-blur-md z-50 flex items-center px-4">
-        <div class="flex items-center space-x-2 sm:space-x-4 truncate">
-            <div class="text-white text-sm font-medium">nettenzOS</div>
-            <div class="flex space-x-3 sm:space-x-4 text-sm text-gray-300">
-                <span class="hover:text-white cursor-pointer transition-colors" data-app="about">About</span>
-                <span class="hover:text-white cursor-pointer transition-colors" data-app="projects">Projects</span>
-            </div>
+
+    <!-- Menu bar -->
+    <header class="menu-bar">
+        <div class="menu-left">
+            <span class="menu-brand">nettenzOS</span>
+            <nav class="menu-items" aria-label="Main">
+                <button type="button" class="menu-item" data-app="about">About</button>
+                <button type="button" class="menu-item" data-app="projects">Work</button>
+            </nav>
         </div>
-        <div class="ml-auto flex items-center space-x-2 sm:space-x-3 text-white text-sm">
-            <!-- System Status Icons -->
-            <div class="flex items-center space-x-2 menu-bar-icons">
-                <!-- WiFi Icon -->
-                <svg class="w-4 h-4 text-white status-icon wifi-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                        d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
-                </svg>
-
-                <!-- Bluetooth Icon -->
-                <svg class="w-4 h-4 text-blue-400 status-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path
-                        d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z" />
-                </svg>
-
-                <!-- Battery Icon -->
-                <div class="flex items-center space-x-1 battery-icon">
-                    <svg class="w-4 h-4 text-green-400 status-icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M15.67 4H14V2c0-0.55-0.45-1-1-1h-2c-0.55 0-1 0.45-1 1v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c0.74 0 1.34-0.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z" />
-                        <rect x="9" y="6" width="6" height="12" rx="1" fill="currentColor" />
-                    </svg>
-                    <span class="text-xs battery-level-text">87%</span>
-                </div>
-            </div>
-
-            <span id="current-time" class="text-sm">3:01 PM</span>
+        <div class="menu-right">
+            <div class="level-meter" aria-hidden="true"><span class="is-lit"></span><span class="is-lit"></span><span class="is-lit"></span><span></span><span></span><span></span><span></span><span></span></div>
+            <span id="current-time" class="menu-clock"></span>
         </div>
-    </div>
+    </header>
 
-    <!-- Desktop Area -->
-    <div id="desktop" class="pt-8 h-full relative overflow-hidden">
-        <!-- Ambient wallpaper -->
+    <!-- Desktop -->
+    <div id="desktop">
         <div class="wallpaper" aria-hidden="true"></div>
 
-        <!-- Desktop Icons -->
         <div class="desktop-icons">
-            <div class="desktop-icon" data-app="projects">
-                <div class="desktop-icon-image">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            <button type="button" class="desktop-icon" data-app="projects">
+                <span class="desktop-icon-image" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" />
                     </svg>
-                </div>
-                <span class="desktop-icon-label">Projects</span>
-            </div>
+                </span>
+                <span class="desktop-icon-label">Work</span>
+            </button>
         </div>
 
-        <!-- Windows Container -->
-        <div id="windows-container" class="absolute inset-0 pt-8"></div>
+        <div id="windows-container"></div>
     </div>
 
-
-    <!-- Bottom Dock -->
-    <div class="dock-container">
+    <!-- Dock -->
+    <nav class="dock-container" aria-label="Apps">
         <div class="dock">
-            <!-- About -->
-            <div class="dock-item" data-app="about">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <button type="button" class="dock-item" data-app="about">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <circle cx="12" cy="8" r="4" />
                     <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
                 </svg>
                 <span class="dock-label">About</span>
-            </div>
+            </button>
 
-            <!-- Terminal -->
-            <div class="dock-item" data-app="terminal">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <button type="button" class="dock-item" data-app="projects">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" />
+                </svg>
+                <span class="dock-label">Work</span>
+            </button>
+
+            <button type="button" class="dock-item" data-app="terminal">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="3" y="4" width="18" height="16" rx="2" />
                     <path d="M7 9l3 3-3 3" />
                     <path d="M13 15h4" />
                 </svg>
                 <span class="dock-label">Terminal</span>
-            </div>
+            </button>
 
-            <!-- Contact -->
-            <div class="dock-item" data-app="contact">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <button type="button" class="dock-item" data-app="contact">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <rect x="3" y="5" width="18" height="14" rx="2" />
                     <path d="M3 7l9 6 9-6" />
                 </svg>
                 <span class="dock-label">Contact</span>
-            </div>
-
+            </button>
         </div>
-    </div>
+    </nav>
 
-
-    <!-- Window Templates -->
+    <!-- Window frame -->
     <template id="window-template">
-        <div class="window absolute overflow-hidden" style="width: 900px; height: 650px;">
+        <div class="window" role="dialog" aria-modal="false" tabindex="-1">
             <div class="window-header">
                 <div class="window-controls">
-                    <button class="window-control window-close" title="Close"></button>
-                    <button class="window-control window-minimize" title="Minimize"></button>
-                    <button class="window-control window-maximize" title="Maximize"></button>
+                    <button type="button" class="window-control window-close" title="Close" aria-label="Close"></button>
+                    <button type="button" class="window-control window-minimize" title="Minimize" aria-label="Minimize"></button>
+                    <button type="button" class="window-control window-maximize" title="Maximize" aria-label="Maximize"></button>
                 </div>
                 <div class="window-title"></div>
-                <div style="width: 64px;"></div>
+                <div class="window-header-spacer" aria-hidden="true"></div>
             </div>
             <div class="window-content"></div>
         </div>
     </template>
 
-    <!-- App Content Templates -->
+    <!-- App content -->
     <template id="about-app">
         <div class="md-file-content">
-            <!-- File Header -->
             <div class="md-file-header">
-                <span class="md-file-hash">#</span>
-                <h1 class="md-file-name">ABOUT.md</h1>
+                <span class="md-file-hash" aria-hidden="true">#</span>
+                <h1 class="md-file-name">about.md</h1>
             </div>
 
-            <!-- Profile Hero Section -->
-            <div class="md-section md-section--hero">
-                <div class="md-hero-inner">
-                    <div class="md-avatar" aria-hidden="true">EL</div>
-                    <div class="md-hero-text">
-                        <h2 class="md-heading md-heading--name">Emanuel Lugo Rivera</h2>
-                        <p class="md-role-line">
-                            <span class="md-role--primary">ai software engineer</span>
-                            <span class="md-role-sep">&middot;</span>
-                            <span class="md-role--secondary">cybersecurity</span>
-                            <span class="md-role-sep">&middot;</span>
-                            <span class="md-role--tertiary">dj &amp; audio</span>
-                        </p>
-                    </div>
+            <div class="md-hero-inner">
+                <div class="md-avatar" aria-hidden="true">EL</div>
+                <div class="md-hero-text">
+                    <h2 class="md-heading--name">Emanuel Lugo Rivera</h2>
+                    <p class="md-role-line">AI software engineer with a cybersecurity background. I also DJ and build audio tools.</p>
                 </div>
             </div>
 
-            <!-- About Section -->
-            <div class="md-section">
-                <h2 class="md-heading"><span class="md-hash">##</span> About</h2>
+            <section class="md-section">
+                <h2 class="md-heading"><span class="md-hash" aria-hidden="true">##</span> About</h2>
                 <ul class="md-list">
                     <li>B.S. in Computer Engineering</li>
-                    <li>Day job: building AI-powered products with React, Python, TypeScript</li>
+                    <li>Day job: building AI-powered products with React, Python and TypeScript</li>
                     <li>Off hours: security research, audio tools, DJ sets</li>
                 </ul>
-            </div>
+            </section>
 
-            <!-- Current Focus -->
-            <div class="md-section">
-                <h2 class="md-heading"><span class="md-hash">##</span> Currently</h2>
+            <section class="md-section">
+                <h2 class="md-heading"><span class="md-hash" aria-hidden="true">##</span> Currently</h2>
                 <ul class="md-list">
-                    <li>Exploring <code class="md-code md-code--primary">agentic AI</code> development</li>
-                    <li>Working with <code class="md-code md-code--secondary">RAG pipelines</code></li>
+                    <li>Exploring agentic AI development</li>
+                    <li>Working with RAG pipelines</li>
                     <li>Making LLMs useful with deterministic outputs</li>
                     <li>Building audio tools and streaming setups</li>
                 </ul>
-            </div>
+            </section>
 
-            <!-- Tech Stack -->
-            <div class="md-section">
-                <h2 class="md-heading"><span class="md-hash">##</span> Tech Stack</h2>
+            <section class="md-section">
+                <h2 class="md-heading"><span class="md-hash" aria-hidden="true">##</span> Tech stack</h2>
                 <div class="md-stack-group">
-                    <span class="md-stack-label">frontend</span>
-                    <div class="md-token-row">
-                        <code class="md-code md-code--primary">react</code>
-                        <code class="md-code md-code--primary">typescript</code>
-                        <code class="md-code md-code--primary">next.js</code>
-                    </div>
+                    <span class="md-stack-label">Frontend</span>
+                    <ul class="tag-row">
+                        <li class="tag">react</li>
+                        <li class="tag">typescript</li>
+                        <li class="tag">next.js</li>
+                    </ul>
                 </div>
                 <div class="md-stack-group">
-                    <span class="md-stack-label">backend</span>
-                    <div class="md-token-row">
-                        <code class="md-code md-code--secondary">python</code>
-                        <code class="md-code md-code--secondary">node.js</code>
-                        <code class="md-code md-code--secondary">fastapi</code>
-                    </div>
+                    <span class="md-stack-label">Backend</span>
+                    <ul class="tag-row">
+                        <li class="tag">python</li>
+                        <li class="tag">node.js</li>
+                        <li class="tag">fastapi</li>
+                    </ul>
                 </div>
                 <div class="md-stack-group">
-                    <span class="md-stack-label">tools</span>
-                    <div class="md-token-row">
-                        <code class="md-code">docker</code>
-                        <code class="md-code">git</code>
-                        <code class="md-code">linux</code>
-                    </div>
+                    <span class="md-stack-label">Tools</span>
+                    <ul class="tag-row">
+                        <li class="tag">docker</li>
+                        <li class="tag">git</li>
+                        <li class="tag">linux</li>
+                    </ul>
                 </div>
-            </div>
+            </section>
 
-            <!-- Links Section -->
-            <div class="md-section">
-                <h2 class="md-heading"><span class="md-hash">##</span> Links</h2>
+            <section class="md-section">
+                <h2 class="md-heading"><span class="md-hash" aria-hidden="true">##</span> Links</h2>
                 <ul class="md-list md-links">
                     <li>
                         <a href="assets/documents/elr_2025_resume.pdf" download class="md-link">
@@ -568,26 +316,25 @@
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                                 <polyline points="14 2 14 8 20 8" />
                             </svg>
-                            <span class="md-link-text">resume.pdf</span>
+                            Download resume
                         </a>
                     </li>
                     <li>
                         <a href="https://github.com/netteNz" target="_blank" rel="noopener noreferrer" class="md-link">
-                            <img src="assets/icons/github.svg" width="14" height="14" alt="GitHub" style="filter:invert(1);opacity:0.85;">
-                            <span class="md-link-text">github.com/netteNz</span>
+                            <img src="assets/icons/github.svg" width="14" height="14" alt="" class="icon-invert">
+                            github.com/netteNz
                         </a>
                     </li>
                     <li>
                         <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer" class="md-link">
-                            <img src="assets/icons/linkedin.svg" width="14" height="14" alt="LinkedIn" style="filter:invert(1);opacity:0.85;">
-                            <span class="md-link-text">linkedin.com/in/lugo-emanuel</span>
+                            <img src="assets/icons/linkedin.svg" width="14" height="14" alt="" class="icon-invert">
+                            linkedin.com/in/lugo-emanuel
                         </a>
                     </li>
                 </ul>
-            </div>
+            </section>
         </div>
     </template>
-
 
     <template id="contact-app">
         <div class="contact-content">
@@ -595,14 +342,14 @@
                 <div class="contact-avatar" aria-hidden="true">EL</div>
                 <div class="contact-hero-text">
                     <span class="contact-name">Emanuel Lugo Rivera</span>
-                    <span class="contact-subtitle">Let's connect</span>
+                    <span class="contact-subtitle">The fastest way to reach me is LinkedIn.</span>
                 </div>
             </div>
 
             <ul class="contact-list">
                 <li class="contact-list-row">
-                    <div class="contact-list-icon contact-icon-linkedin">
-                        <img src="assets/icons/linkedin.svg" width="18" height="18" alt="" style="filter:invert(1);opacity:0.9;">
+                    <div class="contact-list-icon">
+                        <img src="assets/icons/linkedin.svg" width="18" height="18" alt="" class="icon-invert">
                     </div>
                     <div class="contact-list-body">
                         <span class="contact-list-label">LinkedIn</span>
@@ -610,8 +357,8 @@
                     </div>
                 </li>
                 <li class="contact-list-row">
-                    <div class="contact-list-icon contact-icon-github">
-                        <img src="assets/icons/github.svg" width="18" height="18" alt="" style="filter:invert(1);opacity:0.9;">
+                    <div class="contact-list-icon">
+                        <img src="assets/icons/github.svg" width="18" height="18" alt="" class="icon-invert">
                     </div>
                     <div class="contact-list-body">
                         <span class="contact-list-label">GitHub</span>
@@ -621,145 +368,47 @@
             </ul>
 
             <div class="contact-actions">
-                <a href="assets/documents/elr_2025_resume.pdf" download class="md-btn-filled">Download resume</a>
-                <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer" class="md-btn-outlined">Message on LinkedIn</a>
-            </div>
-        </div>
-    </template>
-
-    <template id="projects-app">
-        <div class="terminal-content">
-            <div>
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$
-                <span style="color: var(--terminal-text);">ls</span>
-            </div>
-            <div style="margin-bottom: 4px;">
-                <div class="terminal-ls-output">
-                    <span class="terminal-item terminal-dir" data-name="web-audio-player"
-                        data-type="directory">web-audio-player/</span>
-                    <span class="terminal-item terminal-dir" data-name="earthquake-visualization"
-                        data-type="directory">earthquake-visualization/</span>
-                    <span class="terminal-item terminal-dir" data-name="rl-trading-bot"
-                        data-type="directory">rl-trading-bot/</span>
-                    <span class="terminal-item terminal-dir" data-name="cli-agent"
-                        data-type="directory">cli-agent/</span>
-                    <span class="terminal-item terminal-dir" data-name="audio-visualizer"
-                        data-type="directory">audio-visualizer/</span>
-                    <span class="terminal-item terminal-dir" data-name="veto-system"
-                        data-type="directory">veto-system/</span>
-                </div>
-            </div>
-
-            <div>
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$
-                <span style="color: var(--terminal-text);">echo</span> <span
-                    style="color: var(--terminal-accent-yellow);">"Type 'help' for available commands"</span>
-            </div>
-            <div style="margin-bottom: 4px; color: var(--terminal-text-secondary);">
-                Type 'help' for available commands
-            </div>
-
-            <div class="terminal-input-line">
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~/projects</span>$
-                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1"
-                    style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
+                <a href="assets/documents/elr_2025_resume.pdf" download class="btn btn-primary">Download resume</a>
+                <a href="https://www.linkedin.com/in/lugo-emanuel/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Message on LinkedIn</a>
             </div>
         </div>
     </template>
 
     <template id="welcome-app">
         <div class="welcome-content">
-            <div class="welcome-boot-log" aria-live="polite">
-                <div class="wbl-line"><span class="wbl-tag wbl-tag--ok">OK</span>nettenzOS kernel loaded</div>
-                <div class="wbl-line"><span class="wbl-tag wbl-tag--ok">OK</span>~/projects mounted</div>
-                <div class="wbl-line"><span class="wbl-tag wbl-tag--ok">OK</span>Window manager ready</div>
-                <div class="wbl-line wbl-line--ready"><span class="wbl-tag wbl-tag--go">→</span>System ready. Welcome.</div>
-            </div>
-            <div class="welcome-divider"></div>
-            <div class="welcome-guide">
-                <p class="welcome-guide-title">Where would you like to go?</p>
-                <div class="welcome-nav">
-                    <button class="welcome-nav-btn" data-open="about">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
-                        </svg>
-                        <div class="wnb-text">
-                            <span class="wnb-label">About</span>
-                            <span class="wnb-desc">Who I am &amp; my stack</span>
-                        </div>
-                        <svg class="wnb-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-                    </button>
-                    <button class="welcome-nav-btn" data-open="projects">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                            <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
-                        </svg>
-                        <div class="wnb-text">
-                            <span class="wnb-label">Projects</span>
-                            <span class="wnb-desc">Browse my work</span>
-                        </div>
-                        <svg class="wnb-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-                    </button>
-                    <button class="welcome-nav-btn" data-open="terminal">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                            <rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3"/><path d="M13 15h4"/>
-                        </svg>
-                        <div class="wnb-text">
-                            <span class="wnb-label">Terminal</span>
-                            <span class="wnb-desc">Explore via CLI — type <code>help</code></span>
-                        </div>
-                        <svg class="wnb-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-                    </button>
-                </div>
-                <p class="welcome-hint">Or drag this window &mdash; it&rsquo;s a real desktop.</p>
+            <div class="level-meter level-meter--lg" aria-hidden="true"><span class="is-lit"></span><span class="is-lit"></span><span class="is-lit"></span><span></span><span></span><span></span><span></span><span></span></div>
+            <h1 class="welcome-name">Emanuel Lugo Rivera</h1>
+            <p class="welcome-lede">I build AI-powered products with Python, TypeScript and React, and make audio, hardware and security tools in my spare time.</p>
+            <div class="welcome-actions">
+                <button type="button" class="btn btn-primary" data-open="projects">See my work</button>
+                <a href="assets/documents/elr_2025_resume.pdf" download class="btn btn-secondary">Download resume</a>
+                <button type="button" class="btn btn-secondary" data-open="terminal">Open terminal</button>
             </div>
         </div>
     </template>
 
     <template id="terminal-app">
         <div class="terminal-content">
-            <div>
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ <span
-                    style="color: var(--terminal-text);">cat</span> <span class="terminal-path">about.md</span>
-            </div>
-            <div style="margin-bottom: 12px;">
-                <div style="color: var(--terminal-text); line-height: 1.5; font-family: 'Fira Code', monospace;">
-                    <div style="margin-top: 12px; margin-bottom: 12px;">
-                        <span style="color: var(--terminal-accent); font-weight: bold;">Hi, I'm Emanuel!</span>
-                    </div>
-                    <div style="height: 1.5em; display: flex; align-items: center; margin-bottom: 20px;">
-                        <span style="color: #fff; margin-right: 10px;">&gt;</span>
-                        <span id="terminal-typing" style="color: #fff; font-weight: bold;"></span><span
-                            class="typing-cursor"
-                            style="color: #fff; font-weight: bold; animation: blink 1s step-end infinite;">|</span>
-                    </div>
-                    <div style="color: var(--terminal-text-secondary); margin-bottom: 12px;">Type <span
-                            style="color: var(--terminal-accent);">ls projects</span> to see my work!</div>
-                </div>
+            <div class="terminal-line"><span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat about.md</div>
+            <div class="t-about">
+                <div class="t-accent t-strong">Hi, I'm Emanuel.</div>
+                <div class="t-typing-line"><span>&gt;</span> <span id="terminal-typing" class="t-strong"></span><span class="typing-cursor">|</span></div>
+                <div class="t-muted">Type <span class="t-accent">ls projects</span> to see my work.</div>
             </div>
 
-            <div>
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ <span
-                    style="color: var(--terminal-text);">cat</span> <span class="terminal-path">~/.skills</span>
-            </div>
-            <div style="margin-bottom: 4px; color: var(--terminal-text-secondary);">
+            <div class="terminal-line"><span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ cat ~/.skills</div>
+            <div class="t-section t-muted">
                 Frontend: React, TypeScript, TailwindCSS, Vite<br>
                 Backend: Python, Node.js, Flask, Django<br>
-                Security: Penetration Testing, Vulnerability Assessment<br>
+                Security: Penetration Testing, Vulnerability Assessment
             </div>
 
-            <div>
-                <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ <span
-                    style="color: var(--terminal-text);">echo</span> <span
-                    style="color: var(--terminal-accent-yellow);">"Type 'help' for available commands"</span>
-            </div>
-            <div style="margin-bottom: 4px; color: var(--terminal-text-secondary);">
-                Type 'help' for available commands
-            </div>
+            <div class="terminal-line"><span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$ echo "Type 'help' for available commands"</div>
+            <div class="t-section t-muted">Type 'help' for available commands</div>
 
             <div class="terminal-input-line">
                 <span class="terminal-prompt">emanuel@nettenzOS</span>:<span class="terminal-path">~</span>$
-                <input type="text" id="terminal-input" class="terminal-input bg-transparent outline-none flex-1 ml-1"
-                    style="color: var(--terminal-accent); caret-color: var(--terminal-accent);" autofocus>
+                <input type="text" class="terminal-input" aria-label="Terminal command" autocomplete="off" autocapitalize="off" spellcheck="false">
             </div>
         </div>
     </template>

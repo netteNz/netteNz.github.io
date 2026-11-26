@@ -20,11 +20,11 @@
     <!-- Fonts & Tailwind -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Recursive:wght,CASL,MONO@300..800,0..1,0..1&display=swap">
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Main design system — M3 vars, wallpaper, glass, dock, etc. -->
-    <link rel="stylesheet" href="./assets/css/main.css">
+    <!-- Shared design tokens (palette, type, motion) -->
+    <link rel="stylesheet" href="./assets/css/main.css?v=3">
 
     <!-- PyScript -->
     <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
@@ -36,16 +36,19 @@
             padding: 0;
             height: 100%;
             overflow: hidden;
-            font-family: 'Lato', sans-serif;
-            background: var(--md-surface);
+            font-family: var(--font-ui);
+            background: var(--console);
         }
+
+        /* This page's menu bar has three groups; keep them packed left with the clock pushed right */
+        .menu-bar { justify-content: flex-start; gap: 0; }
 
         /* Wallpaper sits behind everything */
         .page-wallpaper {
             position: fixed;
             inset: 0;
             top: 32px;
-            background: var(--desktop-bg);
+            background: var(--console);
             z-index: 0;
         }
 
@@ -87,34 +90,21 @@
         }
 
         .eq-legend-inner {
-            background: linear-gradient(
-                180deg,
-                rgba(30, 30, 40, 0.78) 0%,
-                rgba(10, 10, 16, 0.92) 100%
-            );
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: var(--shape-lg);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            box-shadow:
-                inset 0 1px 0 rgba(255, 255, 255, 0.10),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.35),
-                0 8px 24px rgba(0, 0, 0, 0.55),
-                0 24px 56px rgba(0, 0, 0, 0.35);
+            background: var(--panel-raised);
+            border: 1px solid var(--rule);
+            border-radius: var(--radius-window);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
             padding: 14px 18px;
             min-width: 168px;
         }
 
         .eq-legend-title {
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 10px;
+            font-size: var(--fs-14);
             font-weight: 600;
-            color: var(--md-primary);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 11px;
-            padding-bottom: 9px;
-            border-bottom: 1px solid var(--md-outline-variant);
+            color: var(--ink);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--rule);
         }
 
         .eq-legend-items {
@@ -127,9 +117,9 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            font-size: 12px;
-            color: var(--md-on-surface-variant);
+            font-size: var(--fs-12);
+            color: var(--ink-muted);
+            font-variant-numeric: tabular-nums;
         }
 
         .eq-dot {
@@ -139,14 +129,12 @@
             flex-shrink: 0;
         }
 
-        /* Magnitude severity scale: reuses site accent tokens where the hue already
-           matches (green/yellow/red); --eq-accent-orange is a page-local addition
-           since the token system has no orange role, kept between the yellow and
-           red accents to preserve the USGS-style green→yellow→orange→red convention. */
-        .eq-dot-minor    { background: var(--md-primary); box-shadow: 0 0 6px rgba(120, 239, 157, 0.6); }
-        .eq-dot-light    { background: var(--terminal-accent-yellow); box-shadow: 0 0 6px rgba(251, 191, 36, 0.6); }
-        .eq-dot-moderate { background: var(--eq-accent-orange, #f97316); box-shadow: 0 0 6px rgba(249, 115, 22, 0.6); }
-        .eq-dot-strong   { background: var(--terminal-accent-red); box-shadow: 0 0 6px rgba(248, 113, 113, 0.6); }
+        /* Magnitude severity scale (USGS-style green, yellow, orange, red). Reuses the
+           meter colours, which encode the same "safe to peak" idea; orange is page-local. */
+        .eq-dot-minor    { background: var(--meter-safe); }
+        .eq-dot-light    { background: var(--signal); }
+        .eq-dot-moderate { background: #F97316; }
+        .eq-dot-strong   { background: var(--meter-peak); }
 
         /* ─── Loading dialog ─── */
         #loading {
@@ -158,34 +146,49 @@
             align-items: center;
             justify-content: center;
             padding: 2rem;
+            color: var(--ink);
         }
+
+        #loading::backdrop { background: rgba(16, 26, 44, 0.6); }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 1.25rem;
+            border: 3px solid var(--rule);
+            border-top-color: var(--signal);
+            border-radius: 50%;
+            animation: eq-spin 1s linear infinite;
+        }
+
+        .loading-text { font-size: var(--fs-16); color: var(--ink-muted); }
+
+        @keyframes eq-spin { to { transform: rotate(360deg); } }
 
         /* Back nav pill inside menu bar */
         .nav-back-btn {
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            font-size: 13px;
-            color: var(--md-on-surface-variant);
+            font-size: var(--fs-14);
+            color: var(--ink-muted);
             text-decoration: none;
-            padding: 2px 10px;
-            border-radius: var(--shape-full);
+            padding: 2px 8px;
+            border-radius: var(--radius-control);
             transition:
                 color var(--dur-2) var(--ease-standard),
                 background var(--dur-2) var(--ease-standard);
         }
 
         .nav-back-btn:hover {
-            color: var(--md-on-surface);
-            background: rgba(120, 239, 157, 0.08);
+            color: var(--ink);
+            background: var(--ink-hover);
         }
 
         .nav-page-label {
-            font-size: 13px;
+            font-size: var(--fs-14);
             font-weight: 500;
-            color: var(--md-primary);
-            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-            letter-spacing: 0.01em;
+            color: var(--ink);
         }
     </style>
 </head>
@@ -194,8 +197,8 @@
     <!-- ─── macOS Menu Bar ─── -->
     <div class="menu-bar fixed top-0 left-0 right-0 h-8 backdrop-blur-md z-50 flex items-center px-4">
         <div class="flex items-center space-x-2 sm:space-x-3 truncate">
-            <span class="text-white text-sm font-medium hidden sm:inline">nettenzOS</span>
-            <span class="text-gray-600 text-xs hidden sm:inline">›</span>
+            <span class="menu-brand hidden sm:inline">nettenzOS</span>
+            <span class="t-muted hidden sm:inline" aria-hidden="true">›</span>
             <span class="nav-page-label truncate">earthquakes-pr</span>
         </div>
 
@@ -209,25 +212,8 @@
         </div>
 
         <div class="ml-auto flex items-center space-x-2 sm:space-x-3 text-white text-sm">
-            <div class="flex items-center space-x-2 menu-bar-icons">
-                <!-- WiFi -->
-                <svg class="w-4 h-4 text-white status-icon wifi-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.07 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
-                </svg>
-                <!-- Bluetooth -->
-                <svg class="w-4 h-4 text-blue-400 status-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M17.71 7.71L12 2h-1v7.59L6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 11 14.41V22h1l5.71-5.71-4.3-4.29 4.3-4.29zM13 5.83l1.88 1.88L13 9.59V5.83zm1.88 10.46L13 18.17v-3.76l1.88 1.88z"/>
-                </svg>
-                <!-- Battery -->
-                <div class="flex items-center space-x-1 battery-icon">
-                    <svg class="w-4 h-4 text-green-400 status-icon" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M15.67 4H14V2c0-0.55-0.45-1-1-1h-2c-0.55 0-1 0.45-1 1v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c0.74 0 1.34-0.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/>
-                        <rect x="9" y="6" width="6" height="12" rx="1" fill="currentColor"/>
-                    </svg>
-                    <span class="text-xs battery-level-text">87%</span>
-                </div>
-            </div>
-            <span id="current-time" class="text-sm"></span>
+            <div class="level-meter" aria-hidden="true"><span class="is-lit"></span><span class="is-lit"></span><span class="is-lit"></span><span></span><span></span><span></span><span></span><span></span></div>
+            <span id="current-time" class="menu-clock"></span>
         </div>
     </div>
 

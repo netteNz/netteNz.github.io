@@ -150,7 +150,6 @@ class MacOSInterface {
         // Cache template elements for better performance
         this.templates = {
             window:   document.getElementById('window-template'),
-            finder:   document.getElementById('finder-app'),
             about:    document.getElementById('about-app'),
             projects: document.getElementById('projects-app'),
             terminal: document.getElementById('terminal-app'),
@@ -163,29 +162,68 @@ class MacOSInterface {
         this.updateTime();
         this.setupEventListeners();
         setInterval(() => this.updateTime(), 1000);
-        this.updateBatteryStatus();
-        setInterval(() => this.updateBatteryStatus(), 30000);
+        this.meterRest = 3;
+        this.meterLevel = this.meterRest;
+        this.setMeter(this.meterRest);
         this.initSplash();
     }
 
     initSplash() {
         const splash = document.getElementById('splash-screen');
-        if (!splash) return;
-
-        // Skip on deep links or reduced motion — jump straight to desktop
         const hasDeepLink = new URLSearchParams(window.location.search).get('open');
-        if (hasDeepLink || this.prefersReducedMotion) {
-            splash.remove();
+
+        let seen = false;
+        try { seen = sessionStorage.getItem('seenSplash') === '1'; } catch { /* storage blocked */ }
+
+        // Skip on deep links, reduced motion / software rendering, or after the first view this session
+        if (!splash || hasDeepLink || seen || !this.motionOK()) {
+            if (splash) splash.remove();
+            if (!hasDeepLink) this.openApp('welcome');
             return;
         }
 
+        try { sessionStorage.setItem('seenSplash', '1'); } catch { /* storage blocked */ }
+
+        // ~0.9s meter fill + 0.3s fade = ~1.2s total
         setTimeout(() => {
             splash.classList.add('splash-exit');
             setTimeout(() => {
                 splash.remove();
                 this.openApp('welcome');
-            }, 500);
-        }, 2000);
+            }, 300);
+        }, 900);
+    }
+
+    motionOK() {
+        return !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            && !document.documentElement.classList.contains('software-rendering');
+    }
+
+    // ---- Level meter (signature element) ----
+    // Static at rest; bumps in response to input and decays back one segment per tick.
+    setMeter(level) {
+        document.querySelectorAll('.level-meter').forEach(meter => {
+            Array.from(meter.children).forEach((seg, i) => seg.classList.toggle('is-lit', i < level));
+        });
+    }
+
+    bumpMeter(level = 5) {
+        if (!this.motionOK()) return;
+        const target = Math.max(this.meterRest, Math.min(8, Math.round(level)));
+        if (target <= this.meterLevel && this.meterTimer) return;
+        this.meterLevel = target;
+        this.setMeter(target);
+
+        clearInterval(this.meterTimer);
+        this.meterTimer = setInterval(() => {
+            if (this.meterLevel <= this.meterRest) {
+                clearInterval(this.meterTimer);
+                this.meterTimer = null;
+                return;
+            }
+            this.meterLevel -= 1;
+            this.setMeter(this.meterLevel);
+        }, 70);
     }
 
     updateTime() {
@@ -197,59 +235,24 @@ class MacOSInterface {
         });
         const timeElement = document.getElementById('current-time');
         if (timeElement && timeElement.textContent !== timeString) {
-            if (typeof gsap !== 'undefined') {
-                gsap.fromTo(timeElement,
-                    { opacity: 0.7 },
-                    { opacity: 1, duration: 0.3, ease: 'power1.out' }
-                );
-            }
             timeElement.textContent = timeString;
         }
     }
 
-    updateBatteryStatus() {
-        if ('getBattery' in navigator) {
-            navigator.getBattery().then((battery) => {
-                const percentage = Math.round(battery.level * 100);
-                const batteryText = document.querySelector('.battery-level-text');
-                if (batteryText) {
-                    batteryText.textContent = `${percentage}%`;
-                }
-
-                // Update battery icon color based on level
-                const batteryIcon = document.querySelector('.battery-icon svg');
-                if (batteryIcon) {
-                    if (percentage <= 20) {
-                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-low');
-                    } else if (percentage <= 50) {
-                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-medium');
-                    } else {
-                        batteryIcon.setAttribute('class', 'w-4 h-4 status-icon battery-level-high');
-                    }
-                }
-            });
-        }
-    }
-
     setupEventListeners() {
-        // Dock item clicks
-        document.querySelectorAll('.dock-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                const appName = item.dataset.app;
-                this.openApp(appName);
-            });
+        // Dock, menu bar and desktop icons are all <button data-app>
+        document.querySelectorAll('.dock-item, .menu-item, .desktop-icon').forEach(item => {
+            item.addEventListener('click', () => this.openApp(item.dataset.app));
         });
 
-        // Navbar item clicks
-        document.querySelectorAll('[data-app]').forEach(item => {
-            if (!item.classList.contains('dock-item')) {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const appName = item.dataset.app;
-                    this.openApp(appName);
-                });
-            }
+        // Meter reacts to link hover (throttled)
+        let lastHover = 0;
+        document.addEventListener('pointerover', (e) => {
+            if (!e.target.closest || !e.target.closest('a, .btn')) return;
+            const now = performance.now();
+            if (now - lastHover < 150) return;
+            lastHover = now;
+            this.bumpMeter(5);
         });
 
         // Global keyboard shortcuts
@@ -270,6 +273,10 @@ class MacOSInterface {
     }
 
     openApp(appName) {
+        if (appName === 'work') appName = 'projects';
+        if (!this.templates[appName]) return;
+        this.bumpMeter(6);
+
         // Check if app is already open
         if (this.windows.has(appName)) {
             this.focusWindow(appName);
@@ -294,8 +301,8 @@ class MacOSInterface {
 
         // Override dimensions for specific apps
         if (appName === 'welcome') {
-            windowElement.style.width = '480px';
-            windowElement.style.height = '370px';
+            windowElement.style.width = '560px';
+            windowElement.style.height = '330px';
         }
 
         this.windows.set(appName, windowElement);
@@ -410,12 +417,11 @@ class MacOSInterface {
 
     getAppTitle(appName) {
         const titles = {
-            'finder':   'Finder',
-            'about':    'about.md ~ Emanuel Lugo',
-            'projects': 'projects/ ~ Portfolio',
-            'terminal': 'Terminal ~ nettenzOS',
-            'welcome':  'welcome.sh ~ Get Started',
-            'contact':  'contact.md ~ Let\'s Connect'
+            'about':    'about.md',
+            'projects': 'Work',
+            'terminal': 'Terminal',
+            'welcome':  'Welcome',
+            'contact':  'Contact'
         };
         return titles[appName] || `${appName}.app`;
     }
@@ -431,8 +437,8 @@ class MacOSInterface {
     }
 
     centerWindow(windowElement) {
-        const w = parseInt(windowElement.style.width) || 480;
-        const h = parseInt(windowElement.style.height) || 370;
+        const w = parseInt(windowElement.style.width) || 560;
+        const h = parseInt(windowElement.style.height) || 330;
         windowElement.style.left = `${Math.max(0, (window.innerWidth - w) / 2)}px`;
         windowElement.style.top  = `${Math.max(40, (window.innerHeight - h) / 2)}px`;
         windowElement.style.zIndex = ++this.zIndex;
@@ -540,15 +546,13 @@ class MacOSInterface {
             this.setupTerminalWithEngine(windowElement, '~');
         } else if (appName === 'projects') {
             this.setupTerminalWithEngine(windowElement, '~/projects');
-        } else if (appName === 'about') {
-            this.setupAboutTypingEffect(windowElement);
         } else if (appName === 'welcome') {
             this.setupWelcomeEvents(windowElement);
         }
     }
 
     setupWelcomeEvents(windowElement) {
-        windowElement.querySelectorAll('.welcome-nav-btn').forEach(btn => {
+        windowElement.querySelectorAll('[data-open]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const target = btn.dataset.open;
                 if (target) {
@@ -557,21 +561,6 @@ class MacOSInterface {
                 }
             });
         });
-    }
-
-    setupAboutTypingEffect(windowElement) {
-        // Start the typing effect for the About window tagline
-        setTimeout(() => {
-            const typingElement = windowElement.querySelector('#about-typing');
-            if (typingElement && typeof TerminalEngine !== 'undefined') {
-                const terminal = new TerminalEngine();
-                terminal.runTypingEffect('about-typing', [
-                    "AI Software Engineer | Cybersecurity Specialist",
-                    "DJ & Audio Technology Enthusiast",
-                    "Building immersive web experiences"
-                ]);
-            }
-        }, 100);
     }
 
     setupTerminalWithEngine(windowElement, initialPath) {
@@ -604,11 +593,7 @@ class MacOSInterface {
                 // Start typing effect for initial terminal content (about.md display)
                 const typingElement = content.querySelector('#terminal-typing');
                 if (typingElement && appName === 'terminal') {
-                    terminal.runTypingEffect('terminal-typing', [
-                        "Computer Engineer | AI Software Engineer | Cybersecurity",
-                        "Building practical systems and tools",
-                        "Focused on clean architecture and performance"
-                    ]);
+                    terminal.runTypingEffect('terminal-typing', window.TERMINAL_ABOUT_PHRASES);
                 }
 
                 // Focus input when clicking anywhere in the window
@@ -616,7 +601,7 @@ class MacOSInterface {
                     if (e && (e.target.tagName === 'A' || e.target.tagName === 'BUTTON')) {
                         return;
                     }
-                    const input = content.querySelector('#terminal-input');
+                    const input = content.querySelector('.terminal-input');
                     if (input) {
                         input.focus();
                         input.setSelectionRange(input.value.length, input.value.length);
@@ -704,7 +689,7 @@ class MacOSInterface {
         this.activeWindow = appName;
 
         // Focus the terminal input if it exists
-        const input = windowElement.querySelector('#terminal-input');
+        const input = windowElement.querySelector('.terminal-input');
         if (input) {
             setTimeout(() => input.focus(), 10);
         }
