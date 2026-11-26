@@ -105,6 +105,11 @@ class TerminalEngine {
     activateItem(name, type) {
         if (type === 'directory') {
             this.executeCommand(`cd ${name}`, this.terminalContent);
+            // After a successful cd into a project directory, show its README window too
+            const node = this.currentPath.startsWith('~/projects/')
+                ? this.getProjectByName(this.currentPath.split('/').pop())
+                : null;
+            if (node && node.project) window.macOS?.openReadme?.(node.project.slug);
         } else {
             this.executeCommand(`cat ${name}`, this.terminalContent);
         }
@@ -185,7 +190,7 @@ class TerminalEngine {
     executeCommand(command, terminalContent) {
         this.echoCommand(command, terminalContent);
 
-        // Support simple `a && b` chaining (used by the Work window's "Open in terminal")
+        // Support simple `a && b` chaining (kept for typed commands)
         const steps = command.split('&&').map(s => s.trim()).filter(Boolean);
         for (const step of steps) {
             const [cmd, ...args] = step.toLowerCase().split(/\s+/);
@@ -202,8 +207,12 @@ class TerminalEngine {
         const input = terminalContent.querySelector('.terminal-input');
         if (input) {
             setTimeout(() => {
-                input.focus({ preventScroll: true });
                 this.scrollToBottom(terminalContent);
+                // Don't steal focus if the command brought another window to the front
+                // (e.g. a project click that opened the README window).
+                const win = terminalContent.closest('.window');
+                if (window.macOS && win && window.macOS.activeWindow !== win.dataset.app) return;
+                input.focus({ preventScroll: true });
             }, 50);
         }
     }
@@ -391,6 +400,15 @@ Type the project name to open it in a new tab.</div>`;
             const key = Object.keys(currentDir.contents).find(k => k.toLowerCase() === fileName);
             const file = key && currentDir.contents[key];
             if (file && file.type === 'file') {
+                if (currentDir.project && file === currentDir.contents['README.md']) {
+                    // Keep the short terminal summary, then open the full GitHub README window
+                    const slug = currentDir.project.slug;
+                    return {
+                        type: 'action',
+                        message: `${file.content()}<div class="t-muted">Opening README\u2026</div>`,
+                        action: () => window.macOS?.openReadme?.(slug)
+                    };
+                }
                 if (typeof file.content === 'function') return file.content();
                 if (file.content) return file.content;
             }
@@ -578,7 +596,8 @@ Type the project name to open it in a new tab.</div>`;
         const url = node && node.project && this.safeUrl(node.project.live || node.project.repo);
 
         if (url) {
-            setTimeout(() => window.open(url, '_blank', 'noopener,noreferrer'), 500);
+            // Synchronous, so it stays inside the user gesture and popup blockers (Safari) allow it
+            window.open(url, '_blank', 'noopener,noreferrer');
             return `<div class="t-muted">Opening ${this.escapeHtml(slug)}...</div>`;
         }
         return `<div class="t-error">Project not found: ${this.escapeHtml(slug)}</div>`;
