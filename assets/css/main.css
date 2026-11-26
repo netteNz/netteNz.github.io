@@ -930,3 +930,82 @@ a.contact-list-value:hover { color: var(--signal); text-decoration: underline; }
     .work-row { grid-template-columns: 1fr; }
     .work-links { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding-top: 0; }
 }
+
+/* ===== Mobile: windows become full-screen sheets, dock becomes a tab bar ===== */
+@media (max-width: 768px) {
+    .menu-items,
+    .menu-clock,
+    .desktop-icons { display: none; }
+
+    /* !important beats the inline left/top/width/height set by macos.js */
+    .window {
+        inset: var(--menu-h) 0 var(--dock-h) 0 !important;
+        width: auto !important;
+        height: auto !important;
+        border-radius: 0;
+        border-width: 0;
+        box-shadow: none;
+    }
+
+    .window-maximize { display: none; }
+    .window-header-spacer { width: 36px; }
+
+    /* Larger touch targets for the remaining controls */
+    .window-control { position: relative; width: 14px; height: 14px; }
+    .window-control::after { content: ''; position: absolute; inset: -8px; }
+    .window-controls { gap: 14px; }
+
+    .dock-container {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        transform: none;
+    }
+
+    .dock {
+        height: var(--dock-h);
+        padding: 0 4px env(safe-area-inset-bottom, 0);
+        gap: 0;
+        justify-content: space-around;
+        border-radius: 0;
+        border-width: 1px 0 0;
+        box-shadow: none;
+    }
+
+    .dock-item {
+        flex: 1;
+        height: 56px;
+        width: auto;
+        gap: 2px;
+    }
+
+    .dock-item:hover { transform: none; }
+
+    .dock-item svg { width: 22px; height: 22px; }
+
+    /* Labels sit under the icon instead of floating as tooltips */
+    .dock-label {
+        position: static;
+        transform: none;
+        opacity: 1;
+        padding: 0;
+        background: none;
+        border: 0;
+        color: var(--ink-muted);
+    }
+
+    .dock-item.active .dock-label { color: var(--ink); }
+    .dock-item.active::after { bottom: auto; top: 2px; }
+
+    .welcome-content { padding: 24px 16px; }
+    .welcome-name { font-size: var(--fs-28); }
+
+    .md-file-content { padding: 20px 16px 32px; }
+    .md-hero-inner { gap: 16px; }
+    .md-heading--name { font-size: var(--fs-20); }
+    .md-stack-group { grid-template-columns: 1fr; gap: 6px; }
+
+    .contact-hero,
+    .contact-list-row,
+    .contact-actions { padding-left: 16px; padding-right: 16px; }
+}
