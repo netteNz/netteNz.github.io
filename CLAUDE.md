@@ -17,11 +17,12 @@
 | `index.html` | Desktop shell: splash, `<noscript>` fallback, menu bar, desktop, dock (`<nav aria-label="Apps">`), `<template>`s for the window frame and each app |
 | `earthquakes_pr.html` | Standalone Folium map via PyScript (`projects/earthquake-map/main.py`, `pyscript.toml`). Shares `main.css` tokens |
 | `assets/js/projects-data.js` | **Single source of truth for project copy** (`window.PROJECTS`) |
+| `assets/js/readme-viewer.js` | `window.ReadmeViewer.load(project)`: fetches, sanitizes and URL-rewrites a project's GitHub README |
 | `assets/js/terminal-engine.js` | Shell emulator. Builds `~/projects/<slug>/README.md` from `PROJECTS` |
 | `assets/js/macos.js` | Window manager, dock, menu clock, level meter, splash, Work window renderer |
 | `assets/css/main.css` | All tokens and component styles (no Tailwind) |
 
-Script load order is plain `defer`: `gsap`, then `projects-data.js`, then `terminal-engine.js`, then `macos.js`. There is no dependency polling.
+Script load order is plain `defer`: `gsap`, `dompurify`, `projects-data.js`, `terminal-engine.js`, `readme-viewer.js`, then `macos.js`. There is no dependency polling.
 
 ## Project data
 
@@ -31,6 +32,16 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 - Consumers: `macOS.renderWork()` (Work window rows) and `TerminalEngine` (fs, READMEs, shortcuts, help, tab completion).
 - **The `<noscript>` list in `index.html` is static and must be updated by hand** when `PROJECTS` changes.
 - Security: Work rows are built with `createElement`/`textContent`. The terminal escapes all data with `escapeHtml()`. Links pass `safeUrl()` (http/https only) and use `rel="noopener noreferrer"`. Keep it this way, and never pass data through `innerHTML` unescaped.
+
+## README viewer
+
+- **Window:** app `readme` is a single reused window (760x640, mobile sheet at ≤768px). `macOS.openReadme(slug)` opens or focuses it, sets the title to `<slug>/README.md`, and renders loading, success or failure. A request counter drops stale results (open A, then B: only B renders). It is opened from the Work "README" button, a click on a project directory in `ls`, and `cat README.md` in a project directory. It has no dock item.
+- **Fetch:** `GET api.github.com/repos/<owner>/<repo>/readme` with `Accept: application/vnd.github.html+json` (CORS open, no token). Only `https://github.com/<owner>/<repo>` URLs are accepted.
+- **Cache:** raw HTML in `sessionStorage['readme:<owner>/<repo>']`. It is sanitized again on every render, so the cache is never trusted.
+- **Rate limit:** 60 requests per hour per visitor IP. On 403/429, 404 or a network error, the window shows a short message plus the project's `summary` and `readme` bullets, and always a "View on GitHub" link.
+- **Sanitizing:** DOMPurify **3.5.0** (`dist/purify.min.js`, jsDelivr, pinned, `integrity="sha384-DOUwTXbuiiQxlONuue5N42674XXDfjIJ/LTPtJMZ2ZV1Ir4NRQ3OnM/yM505YQAc"`, `crossorigin="anonymous"`). It is a dependency because we insert third-party HTML. If it fails to load, nothing is inserted and the fallback shows. To upgrade, change the version in `index.html` and recompute: `curl -s <url> | openssl dgst -sha384 -binary | openssl base64 -A`.
+- **After sanitizing:** relative `img` become `raw.githubusercontent.com/<owner>/<repo>/HEAD/...`, relative links become `github.com/<owner>/<repo>/blob/HEAD/...`, external links get `target="_blank" rel="noopener noreferrer"`, `a.anchor` permalinks are removed (their ids move onto the headings), images are `loading="lazy"`, and tables are wrapped for horizontal scroll. `#x` links scroll the window to `#user-content-x` and never change the page URL.
+- **Styles:** `.readme-body` in `main.css`, built from existing tokens only. Insert fetched HTML only as the sanitized fragment; everything else uses `textContent`.
 
 ## Design tokens (`:root` in main.css)
 
@@ -67,7 +78,7 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 
 ## Window manager (`macos.js`)
 
-- Apps: `welcome`, `about`, `projects` (titled "Work"; `?open=work` and `?open=projects` both deep-link), `terminal`, `contact`. Default sizes are in `APP_SIZES`, clamped to the viewport.
+- Apps: `welcome`, `about`, `projects` (titled "Work"; `?open=work` and `?open=projects` both deep-link), `terminal`, `contact`, `readme`. Default sizes are in `APP_SIZES`, clamped to the viewport.
 - **Dragging:** Pointer Events with `setPointerCapture`, disabled at ≤768px and when maximized.
 - **Minimize:** hides the window (`.minimized`). The dock dot stays, and a dock click restores it. Reopening an open app only focuses it.
 - **Keyboard:** Esc closes the active window, except when focus is in `.terminal-input`, and returns focus to its dock button.
@@ -79,7 +90,8 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 
 - **Commands:** `help ls cd pwd cat readme projects|work whoami neofetch matrix clear exit`. Simple `a && b` chaining works.
 - **Paths:** `cd`, `ls` and `cat` resolve relative paths, `..` and `~/...`.
-- **Project shortcuts:** each slug, plus the aliases in `PROJECT_ALIASES`, opens `live || repo` in a new tab.
+- **Project shortcuts:** each slug, plus the aliases in `PROJECT_ALIASES`, opens `live || repo` in a new tab. `window.open` is called synchronously (no `setTimeout`) so Safari's popup blocker allows it.
+- **README:** clicking a project directory in `ls` runs `cd` then `openReadme(slug)`. `cat README.md` in a project prints the short summary, then "Opening README…" and opens the window.
 - **Input:** queried by `.terminal-input` (there is no `#terminal-input` ID).
 
 ## Mobile (≤768px)
