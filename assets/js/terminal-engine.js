@@ -72,7 +72,7 @@ class TerminalEngine {
         return `<div class="t-about">
 <div class="t-accent t-strong">Hi, I'm Emanuel.</div>
 <div class="t-typing-line"><span>&gt;</span> <span id="${id}" class="t-strong"></span><span class="typing-cursor">|</span></div>
-<div class="t-muted">Type <span class="t-accent">ls projects</span> to see my work.</div>
+<div>Type <span class="t-accent">ls projects</span> to see my work.</div>
 </div>`;
     }
 
