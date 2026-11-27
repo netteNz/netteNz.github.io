@@ -18,6 +18,15 @@ const ABOUT_PHRASES = [
     'Reinforcement learning for trading'
 ];
 
+// Single source for the skills: rendered by `cat ~/.skills` and by neofetch (also the startup transcript).
+const SKILLS = [
+    ['AI', 'agentic systems, RAG pipelines, MCP servers'],
+    ['ML', 'reinforcement learning, autonomous trading agents'],
+    ['Security', 'penetration testing, vulnerability assessment'],
+    ['Hardware', 'embedded systems, firmware, display tech'],
+    ['Audio', 'DJ, hardware synths, audiophile']
+];
+
 class TerminalEngine {
     constructor() {
         this.currentPath = '~';
@@ -52,6 +61,10 @@ class TerminalEngine {
                             'elr_2025_resume.pdf': { type: 'file' }
                         }
                     },
+                    '.skills': {
+                        type: 'file',
+                        content: () => `<div class="t-section">${this.skillRows()}</div>`
+                    },
                     'about.md': {
                         type: 'file',
                         content: () => {
@@ -72,7 +85,7 @@ class TerminalEngine {
         return `<div class="t-about">
 <div class="t-accent t-strong">Hi, I'm Emanuel.</div>
 <div class="t-typing-line"><span>&gt;</span> <span id="${id}" class="t-strong"></span><span class="typing-cursor">|</span></div>
-<div class="t-muted">Type <span class="t-accent">ls projects</span> to see my work.</div>
+<div>Type <span class="t-accent">ls projects</span> to see my work.</div>
 </div>`;
     }
 
@@ -380,8 +393,9 @@ Type the project name to open it in a new tab.</div>`;
         return `<div class="t-muted">${this.escapeHtml(fullPath)}</div>`;
     }
 
+    // Like the real thing: username first. The title lives in about.md, so it isn't repeated here.
     whoamiCommand() {
-        return `<div class="t-muted">Emanuel Lugo Rivera, AI software development engineer. B.S. in Computer Engineering (cybersecurity), writing code since 2017.</div>`;
+        return `<div>${this.escapeHtml(this.username)}</div><div>Emanuel Lugo Rivera, B.S. Computer Engineering (cybersecurity), writing code since 2017.</div>`;
     }
 
     catCommand(args) {
@@ -462,26 +476,24 @@ Type the project name to open it in a new tab.</div>`;
 /_/          \\_\\
             </div>
             <div class="t-neofetch-info">
-                <div><span class="t-accent">emanuel@nettenzOS</span></div>
+                <div><span class="t-accent">${this.escapeHtml(this.username)}@${this.escapeHtml(this.hostname)}</span></div>
                 <div>-----------------</div>
-                <div><span class="t-accent">OS</span>: nettenzOS (Web Based)</div>
-                <div><span class="t-accent">Host</span>: GitHub Pages</div>
-                <div><span class="t-accent">Kernel</span>: 5.15.0-generic</div>
-                <div><span class="t-accent">Uptime</span>: ${this.getUptime()}</div>
-                <div><span class="t-accent">Shell</span>: zsh 5.8</div>
-                <div><span class="t-accent">Resolution</span>: ${window.innerWidth}x${window.innerHeight}</div>
-                <div><span class="t-accent">Theme</span>: Catppuccin Mocha on GitHub Dark</div>
-                <div><span class="t-accent">Terminal</span>: Custom WebTerm</div>
-                <div><span class="t-accent">Projects</span>: ${this.projects.length}</div>
+                ${this.skillRows()}
+                <div>&nbsp;</div>
+                ${this.skillRows([
+                    ['OS', 'nettenzOS'],
+                    ['Theme', 'Catppuccin Mocha on GitHub Dark'],
+                    ['Projects', String(this.projects.length)]
+                ])}
             </div>
         </div>`;
     }
 
-    getUptime() {
-        const diff = performance.now();
-        const hours = Math.floor(diff / 3600000);
-        const minutes = Math.floor((diff % 3600000) / 60000);
-        return `${hours}h ${minutes}m`;
+    // Aligned key/value rows (`.t-key` fixes the label column width). Defaults to SKILLS.
+    skillRows(rows = SKILLS) {
+        return rows.map(([key, value]) =>
+            `<div><span class="t-accent t-key">${this.escapeHtml(key)}</span> ${this.escapeHtml(value)}</div>`
+        ).join('');
     }
 
     matrixCommand() {

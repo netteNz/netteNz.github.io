@@ -600,6 +600,10 @@ class MacOSInterface {
         this.terminalEngines.set(appName, terminal);
         terminal.createTerminal(content, initialPath);
 
+        // Startup transcript's neofetch comes from the engine, so the skills have one source (SKILLS)
+        const neofetchSlot = content.querySelector('[data-startup="neofetch"]');
+        if (neofetchSlot) neofetchSlot.innerHTML = terminal.neofetchCommand();
+
         if (content.querySelector('#terminal-typing')) {
             terminal.runTypingEffect('terminal-typing', window.TERMINAL_ABOUT_PHRASES);
         }

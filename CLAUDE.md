@@ -42,6 +42,7 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 - **Sanitizing:** DOMPurify **3.5.0** (`dist/purify.min.js`, jsDelivr, pinned, `integrity="sha384-DOUwTXbuiiQxlONuue5N42674XXDfjIJ/LTPtJMZ2ZV1Ir4NRQ3OnM/yM505YQAc"`, `crossorigin="anonymous"`). It is a dependency because we insert third-party HTML. If it fails to load, nothing is inserted and the fallback shows. To upgrade, change the version in `index.html` and recompute: `curl -s <url> | openssl dgst -sha384 -binary | openssl base64 -A`.
 - **After sanitizing:** relative `img` become `raw.githubusercontent.com/<owner>/<repo>/HEAD/...`, relative links become `github.com/<owner>/<repo>/blob/HEAD/...`, external links get `target="_blank" rel="noopener noreferrer"`, `a.anchor` permalinks are removed (their ids move onto the headings), images are `loading="lazy"`, and tables are wrapped for horizontal scroll. `#x` links scroll the window to `#user-content-x` and never change the page URL.
 - **Styles:** `.readme-body` in `main.css`, built from existing tokens only. Insert fetched HTML only as the sanitized fragment; everything else uses `textContent`.
+- **Syntax highlighting:** no highlighter library. GitHub's API HTML already wraps fenced code in Primer `pl-*` spans (DOMPurify keeps `class`); `main.css` maps them to Mocha (keyword mauve, string green, number/constant `--ctp-peach`, function blue, comment italic subtext). Code blocks use the `--console` base.
 
 ## Design tokens (`:root` in main.css)
 
@@ -90,6 +91,7 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 ## Terminal (`terminal-engine.js`)
 
 - **Commands:** `help ls cd pwd cat readme projects|work whoami neofetch matrix clear exit`. Simple `a && b` chaining works.
+- **Skills:** the `SKILLS` array in `terminal-engine.js` is the only copy. `skillRows()` renders it for `cat ~/.skills` (a real file under `~`) and for `neofetch`. The startup transcript runs `neofetch`: `index.html` has an empty `[data-startup="neofetch"]` slot that `setupTerminalWithEngine()` fills from `neofetchCommand()`. Never hardcode skills in the template.
 - **Paths:** `cd`, `ls` and `cat` resolve relative paths, `..` and `~/...`.
 - **Project shortcuts:** each slug, plus the aliases in `PROJECT_ALIASES`, opens `live || repo` in a new tab. `window.open` is called synchronously (no `setTimeout`) so Safari's popup blocker allows it.
 - **README:** clicking a project directory in `ls` runs `cd` then `openReadme(slug)`. `cat README.md` in a project prints the short summary, then "Opening README…" and opens the window.

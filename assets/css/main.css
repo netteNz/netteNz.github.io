@@ -31,6 +31,7 @@
     --ctp-yellow: #f9e2af;
     --ctp-red: #f38ba8;
     --ctp-rosewater: #f5e0dc;
+    --ctp-peach: #fab387;      /* README syntax: numbers / constants */
 
     /* Translucent helpers derived from the palette */
     --ink-hover: rgba(230, 237, 243, 0.06);
@@ -543,10 +544,11 @@ code, kbd, pre {
 .t-typing-line { min-height: 1.5em; }
 .t-readme { white-space: pre-wrap; }
 .t-section { margin-bottom: 12px; }
+.t-key { display: inline-block; min-width: 10ch; } /* aligns key/value columns (skillRows: ~/.skills, neofetch) */
 
 .typing-cursor { animation: blink 1s step-end infinite; }
 
-.t-neofetch { display: flex; gap: 24px; padding: 8px 0; white-space: normal; }
+.t-neofetch { display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 8px 0; white-space: normal; } /* wrap: logo stacks above info on narrow sheets */
 .t-ascii { white-space: pre; line-height: 1.1; }
 .t-neofetch-info { display: flex; flex-direction: column; }
 
@@ -1108,10 +1110,12 @@ a.contact-list-value:hover { color: var(--accent); text-decoration: underline; }
     border-radius: var(--radius-tag);
 }
 
+/* Code blocks share the terminal's base + Mocha Text for maximum contrast */
 .readme-body pre {
     padding: 12px 16px;
     overflow-x: auto;
-    background: var(--panel-raised);
+    color: var(--ctp-text);
+    background: var(--console);
     border: 1px solid var(--rule);
     border-radius: var(--radius-control);
 }
@@ -1119,6 +1123,33 @@ a.contact-list-value:hover { color: var(--accent); text-decoration: underline; }
 .readme-body pre code { padding: 0; background: none; border: 0; border-radius: 0; }
 .readme-body .highlight { margin: 0 0 16px; }
 .readme-body .highlight pre { margin: 0; }
+
+/* Syntax highlighting: GitHub's API HTML already tokenizes fenced code into
+   Primer "pretty lights" spans (pl-*); DOMPurify keeps class attributes.
+   Mapped to Catppuccin Mocha's code conventions. Comments use Subtext0 rather
+   than Overlay2 so every pair stays >= 8:1 on --console. */
+.readme-body .pl-c   { color: var(--ctp-subtext); font-style: italic; }   /* comment */
+.readme-body .pl-k   { color: var(--ctp-mauve); }                         /* keyword */
+.readme-body .pl-s,
+.readme-body .pl-pds { color: var(--ctp-green); }                         /* string + delimiters */
+.readme-body .pl-c1  { color: var(--ctp-peach); }                         /* number, constant, builtin */
+.readme-body .pl-e,
+.readme-body .pl-en  { color: var(--ctp-blue); }                          /* function / class name */
+.readme-body .pl-v   { color: var(--ctp-yellow); }                        /* type / class reference */
+.readme-body .pl-ent { color: var(--ctp-blue); }                          /* markup tag */
+.readme-body .pl-s1,
+.readme-body .pl-smi { color: var(--ctp-text); }                          /* plain identifiers */
+.readme-body .pl-sr,
+.readme-body .pl-cce { color: var(--ctp-sapphire); }                      /* regex, escapes */
+.readme-body .pl-corl { color: var(--ctp-sapphire); text-decoration: underline; }
+.readme-body .pl-bu,
+.readme-body .pl-ii  { color: var(--ctp-red); }                           /* invalid */
+.readme-body .pl-mh  { color: var(--ctp-blue); font-weight: 600; }        /* diff/markdown heading */
+.readme-body .pl-ml  { color: var(--ctp-yellow); }                        /* markdown list */
+.readme-body .pl-mb  { font-weight: 600; }
+.readme-body .pl-mi  { font-style: italic; }
+.readme-body .pl-mi1 { color: var(--ctp-green); }                         /* diff inserted */
+.readme-body .pl-md  { color: var(--ctp-red); }                           /* diff deleted */
 
 .readme-body blockquote {
     padding: 0 16px;
