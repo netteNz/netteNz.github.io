@@ -296,7 +296,9 @@ code, kbd, pre {
     border: 1px solid var(--rule);
     border-radius: var(--radius-window);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px rgba(0, 0, 0, 0.35);
-    overflow: hidden;
+    /* No overflow clip: resize handles sit 4px outside the border.
+       Header and content round their own corners instead (inner radius = outer - 1px border). */
+    --window-inner-radius: calc(var(--radius-window) - 1px);
 }
 
 .window.minimized { display: none; }
@@ -304,7 +306,39 @@ code, kbd, pre {
 /* Windows take programmatic focus for keyboard users; the content carries the ring */
 .window:focus { outline: none; }
 
-.window.maximized { border-radius: var(--radius-control); }
+.window.maximized {
+    border-radius: var(--radius-control);
+    --window-inner-radius: calc(var(--radius-control) - 1px);
+}
+
+/* ===== Resize handles (desktop only; hidden on mobile and when maximized) ===== */
+.window-resize {
+    position: absolute;
+    z-index: 2;
+    touch-action: none;
+}
+.window-resize[data-edge="n"],
+.window-resize[data-edge="s"] { left: 10px; right: 10px; height: 8px; cursor: ns-resize; }
+.window-resize[data-edge="e"],
+.window-resize[data-edge="w"] { top: 10px; bottom: 10px; width: 8px; cursor: ew-resize; }
+.window-resize[data-edge="n"] { top: -4px; }
+.window-resize[data-edge="s"] { bottom: -4px; }
+.window-resize[data-edge="e"] { right: -4px; }
+.window-resize[data-edge="w"] { left: -4px; }
+.window-resize[data-edge="ne"],
+.window-resize[data-edge="nw"],
+.window-resize[data-edge="se"],
+.window-resize[data-edge="sw"] { width: 14px; height: 14px; }
+.window-resize[data-edge="ne"] { top: -4px; right: -4px; cursor: nesw-resize; }
+.window-resize[data-edge="sw"] { bottom: -4px; left: -4px; cursor: nesw-resize; }
+.window-resize[data-edge="nw"] { top: -4px; left: -4px; cursor: nwse-resize; }
+.window-resize[data-edge="se"] { bottom: -4px; right: -4px; cursor: nwse-resize; }
+
+.window.maximized .window-resize { display: none; }
+
+/* Keep the pointer on the handle: no text selection, no link/iframe hover mid-resize */
+.window.resizing { user-select: none; }
+.window.resizing .window-content { pointer-events: none; }
 
 .window-header {
     position: relative;
@@ -316,6 +350,7 @@ code, kbd, pre {
     padding: 0 14px;
     background: var(--panel-raised);
     border-bottom: 1px solid var(--rule);
+    border-radius: var(--window-inner-radius) var(--window-inner-radius) 0 0;
     user-select: none;
     cursor: default;
 }
@@ -351,6 +386,7 @@ code, kbd, pre {
     position: relative;
     background: var(--panel);
     color: var(--ink);
+    border-radius: 0 0 var(--window-inner-radius) var(--window-inner-radius);
     contain: layout style paint;
     overflow-anchor: none;
 }
@@ -1122,8 +1158,10 @@ a.contact-list-value:hover { color: var(--accent); text-decoration: underline; }
         border-radius: 0;
         border-width: 0;
         box-shadow: none;
+        --window-inner-radius: 0px;
     }
 
+    .window-resize,
     .window-maximize { display: none; }
     .window-header-spacer { width: 36px; }
 

@@ -13,6 +13,11 @@ const APP_SIZES = {
     readme:   [760, 640]
 };
 
+// Smallest resizable size: keeps the traffic lights and a truncated title readable
+const MIN_WINDOW = [360, 220];
+const MENU_H = 32;
+const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
+
 // Messages for ReadmeViewer failure reasons. Each ends by pointing at the fallback below it.
 const README_FAILURES = {
     'rate-limit': "GitHub's rate limit for this browser is used up. The summary is below; the full README is on GitHub.",
@@ -297,6 +302,7 @@ class MacOSInterface {
         const header = windowElement.querySelector('.window-header');
 
         this.makeDraggable(windowElement, header);
+        this.makeResizable(windowElement);
 
         windowElement.querySelector('.window-close').addEventListener('click', (e) => {
             e.stopPropagation();
@@ -359,6 +365,73 @@ class MacOSInterface {
         };
         handle.addEventListener('pointerup', end);
         handle.addEventListener('pointercancel', end);
+    }
+
+    // Eight edge/corner handles, same Pointer Events + capture pattern as dragging.
+    // Handles are siblings of the header, so they never trigger the header drag.
+    makeResizable(windowElement) {
+        RESIZE_EDGES.forEach(edge => {
+            const handle = document.createElement('div');
+            handle.className = 'window-resize';
+            handle.dataset.edge = edge;
+            handle.setAttribute('aria-hidden', 'true');
+            windowElement.appendChild(handle);
+
+            let start = null;
+
+            handle.addEventListener('pointerdown', (e) => {
+                if (e.button !== 0) return;
+                if (this.mobile.matches || windowElement.classList.contains('maximized')) return;
+                e.preventDefault(); // no text selection / native drag
+                start = {
+                    x: e.clientX, y: e.clientY,
+                    left: windowElement.offsetLeft, top: windowElement.offsetTop,
+                    width: windowElement.offsetWidth, height: windowElement.offsetHeight
+                };
+                handle.setPointerCapture(e.pointerId);
+                windowElement.classList.add('resizing');
+                this.bumpMeter(4);
+            });
+
+            handle.addEventListener('pointermove', (e) => {
+                if (!start) return;
+                const dx = e.clientX - start.x;
+                const dy = e.clientY - start.y;
+                const [minW, minH] = MIN_WINDOW;
+                const right = start.left + start.width;
+                const bottom = start.top + start.height;
+                let { left, top, width, height } = start;
+
+                // East/south grow from a fixed origin; cap at the viewport edge.
+                if (edge.includes('e')) width = Math.max(minW, Math.min(start.width + dx, window.innerWidth - start.left));
+                if (edge.includes('s')) height = Math.max(minH, Math.min(start.height + dy, window.innerHeight - start.top));
+                // West/north move the origin and keep the opposite edge pinned:
+                // clamp the new origin between the screen edge and (opposite edge - min size).
+                if (edge.includes('w')) {
+                    left = Math.max(0, Math.min(start.left + dx, right - minW));
+                    width = right - left;
+                }
+                if (edge.includes('n')) {
+                    top = Math.max(MENU_H, Math.min(start.top + dy, bottom - minH));
+                    height = bottom - top;
+                }
+
+                // Inline px: positionWindow/maximize-restore read these back as strings
+                windowElement.style.left = `${left}px`;
+                windowElement.style.top = `${top}px`;
+                windowElement.style.width = `${width}px`;
+                windowElement.style.height = `${height}px`;
+            });
+
+            const end = (e) => {
+                if (!start) return;
+                start = null;
+                windowElement.classList.remove('resizing');
+                if (handle.hasPointerCapture(e.pointerId)) handle.releasePointerCapture(e.pointerId);
+            };
+            handle.addEventListener('pointerup', end);
+            handle.addEventListener('pointercancel', end);
+        });
     }
 
     renderWork(windowElement) {
