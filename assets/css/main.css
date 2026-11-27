@@ -508,11 +508,11 @@ code, kbd, pre {
 .t-typing-line { min-height: 1.5em; }
 .t-readme { white-space: pre-wrap; }
 .t-section { margin-bottom: 12px; }
-.t-key { display: inline-block; min-width: 10ch; } /* aligns key/value columns in ~/.skills */
+.t-key { display: inline-block; min-width: 10ch; } /* aligns key/value columns (skillRows: ~/.skills, neofetch) */
 
 .typing-cursor { animation: blink 1s step-end infinite; }
 
-.t-neofetch { display: flex; gap: 24px; padding: 8px 0; white-space: normal; }
+.t-neofetch { display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 8px 0; white-space: normal; } /* wrap: logo stacks above info on narrow sheets */
 .t-ascii { white-space: pre; line-height: 1.1; }
 .t-neofetch-info { display: flex; flex-direction: column; }
 

@@ -90,6 +90,7 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 ## Terminal (`terminal-engine.js`)
 
 - **Commands:** `help ls cd pwd cat readme projects|work whoami neofetch matrix clear exit`. Simple `a && b` chaining works.
+- **Skills:** the `SKILLS` array in `terminal-engine.js` is the only copy. `skillRows()` renders it for `cat ~/.skills` (a real file under `~`) and for `neofetch`. The startup transcript runs `neofetch`: `index.html` has an empty `[data-startup="neofetch"]` slot that `setupTerminalWithEngine()` fills from `neofetchCommand()`. Never hardcode skills in the template.
 - **Paths:** `cd`, `ls` and `cat` resolve relative paths, `..` and `~/...`.
 - **Project shortcuts:** each slug, plus the aliases in `PROJECT_ALIASES`, opens `live || repo` in a new tab. `window.open` is called synchronously (no `setTimeout`) so Safari's popup blocker allows it.
 - **README:** clicking a project directory in `ls` runs `cd` then `openReadme(slug)`. `cat README.md` in a project prints the short summary, then "Opening README…" and opens the window.
