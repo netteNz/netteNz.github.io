@@ -80,7 +80,7 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 
 - Apps: `welcome`, `about`, `projects` (titled "Work"; `?open=work` and `?open=projects` both deep-link), `terminal`, `contact`, `readme`. Default sizes are in `APP_SIZES`, clamped to the viewport.
 - **Dragging:** Pointer Events with `setPointerCapture`, disabled at ≤768px and when maximized.
-- **Resizing:** `makeResizable()` injects 8 `.window-resize` edge/corner handles (4px outside the border, so `.window` has no `overflow: hidden`; header/content round their own corners via `--window-inner-radius`). Min `MIN_WINDOW` 360x220, clamped to the viewport below the menu bar, disabled at ≤768px and when maximized.
+- **Resizing:** `makeResizable()` injects 8 `.window-resize` edge/corner handles (4px outside the border, so `.window` has no `overflow: hidden`; header/content round their own corners via `--window-inner-radius`). Min `MIN_WINDOW` 360x220, clamped between the menu bar and the dock (88px, same as maximize), disabled at ≤768px and when maximized.
 - **Minimize:** hides the window (`.minimized`). The dock dot stays, and a dock click restores it. Reopening an open app only focuses it.
 - **Keyboard:** Esc closes the active window, except when focus is in `.terminal-input`, and returns focus to its dock button.
 - **Meter:** `bumpMeter(level)` lights the meter when a window opens, on terminal keystrokes, and on link hover. It decays back to rest and is a no-op under reduced motion or `.software-rendering`.

@@ -16,6 +16,7 @@ const APP_SIZES = {
 // Smallest resizable size: keeps the traffic lights and a truncated title readable
 const MIN_WINDOW = [360, 220];
 const MENU_H = 32;
+const DOCK_SPACE = 88; // matches positionWindow / maximize: keep windows clear of the dock
 const RESIZE_EDGES = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'];
 
 // Messages for ReadmeViewer failure reasons. Each ends by pointing at the fallback below it.
@@ -404,7 +405,11 @@ class MacOSInterface {
 
                 // East/south grow from a fixed origin; cap at the viewport edge.
                 if (edge.includes('e')) width = Math.max(minW, Math.min(start.width + dx, window.innerWidth - start.left));
-                if (edge.includes('s')) height = Math.max(minH, Math.min(start.height + dy, window.innerHeight - start.top));
+                if (edge.includes('s')) {
+                    // Stop above the dock, but never force-shrink a window already dragged past that line
+                    const maxBottom = Math.max(window.innerHeight - DOCK_SPACE, bottom);
+                    height = Math.max(minH, Math.min(start.height + dy, maxBottom - start.top));
+                }
                 // West/north move the origin and keep the opposite edge pinned:
                 // clamp the new origin between the screen edge and (opposite edge - min size).
                 if (edge.includes('w')) {
