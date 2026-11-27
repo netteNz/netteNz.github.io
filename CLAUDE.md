@@ -41,7 +41,8 @@ window.PROJECTS = [{ slug, name, summary, stack: [], live?, repo?, readme: [/* b
 - **Rate limit:** 60 requests per hour per visitor IP. On 403/429, 404 or a network error, the window shows a short message plus the project's `summary` and `readme` bullets, and always a "View on GitHub" link.
 - **Sanitizing:** DOMPurify **3.5.0** (`dist/purify.min.js`, jsDelivr, pinned, `integrity="sha384-DOUwTXbuiiQxlONuue5N42674XXDfjIJ/LTPtJMZ2ZV1Ir4NRQ3OnM/yM505YQAc"`, `crossorigin="anonymous"`). It is a dependency because we insert third-party HTML. If it fails to load, nothing is inserted and the fallback shows. To upgrade, change the version in `index.html` and recompute: `curl -s <url> | openssl dgst -sha384 -binary | openssl base64 -A`.
 - **After sanitizing:** relative `img` become `raw.githubusercontent.com/<owner>/<repo>/HEAD/...`, relative links become `github.com/<owner>/<repo>/blob/HEAD/...`, external links get `target="_blank" rel="noopener noreferrer"`, `a.anchor` permalinks are removed (their ids move onto the headings), images are `loading="lazy"`, and tables are wrapped for horizontal scroll. `#x` links scroll the window to `#user-content-x` and never change the page URL.
-- **Styles:** `.readme-body` in `main.css`, built from existing tokens only. Insert fetched HTML only as the sanitized fragment; everything else uses `textContent`.
+- **Styles:** `.readme-body` in `main.css`, built from existing tokens only.
+- **Syntax highlighting:** no highlighter library. GitHub's API HTML already wraps fenced code in Primer `pl-*` spans (DOMPurify keeps `class`); `main.css` maps them to Mocha (keyword mauve, string green, number/constant `--ctp-peach`, function blue, comment italic subtext). Code blocks use the `--console` base. Insert fetched HTML only as the sanitized fragment; everything else uses `textContent`.
 
 ## Design tokens (`:root` in main.css)
 
