@@ -507,6 +507,7 @@ code, kbd, pre {
 .t-typing-line { min-height: 1.5em; }
 .t-readme { white-space: pre-wrap; }
 .t-section { margin-bottom: 12px; }
+.t-key { display: inline-block; min-width: 10ch; } /* aligns key/value columns in ~/.skills */
 
 .typing-cursor { animation: blink 1s step-end infinite; }
 
